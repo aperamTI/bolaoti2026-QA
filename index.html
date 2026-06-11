@@ -1017,7 +1017,7 @@
     <div class="card-title">🔐 Identifique-se para palpitar</div>
     <div class="user-select-wrap">
       <label>👤 Usuário ou E-mail</label>
-      <input type="text" id="login-user" placeholder="Ex: Nome Sobrenome ou email@dominio.com">
+      <input type="text" id="login-user" placeholder="Ex: Nome ou Usuário">
     </div>
     <div class="user-select-wrap">
       <label>🔑 Senha</label>
@@ -1029,7 +1029,6 @@
     </div>
     <div id="auth-error-msg" style="color: var(--red-pts); font-size: .85rem; font-weight: 600; margin-top: 12px; text-align: center;"></div>
 
-    <!-- Seção de redefinição de senha (aparece após 3 tentativas erradas) -->
     <div id="reset-section">
       <div class="reset-title">🔒 Muitas tentativas incorretas</div>
       <div id="reset-flow-step1">
@@ -1059,7 +1058,6 @@
     </div>
   </div>
 
-  <!-- Modal de Cadastro -->
   <div class="modal-overlay" id="modal-register">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('modal-register')">✕</button>
@@ -1068,7 +1066,7 @@
         <label>👤 Nome / Usuário</label>
         <input type="text" id="reg-name" placeholder="Ex: João Silva">
       </div>
-      <div class="user-select-wrap">
+      <div class="user-select-wrap" style="display: none;">
         <label>📧 E-mail</label>
         <input type="email" id="reg-email" placeholder="seu@email.com">
       </div>
@@ -1221,7 +1219,6 @@
 
   <div id="admin-panel" style="display:none;">
     
-    <!-- Sub-abas do Admin -->
     <div class="admin-subtabs">
       <button class="admin-subtab active" onclick="switchAdminTab('resultados')">⚽ Resultados</button>
       <button class="admin-subtab" onclick="switchAdminTab('confrontos')">🗓️ Editar Confrontos Mata-Mata</button>
@@ -1229,7 +1226,6 @@
       <button class="admin-subtab" onclick="switchAdminTab('logs')">📋 Logs de Erros</button>
     </div>
 
-    <!-- SUB-ABA: RESULTADOS -->
     <div id="admin-tab-resultados">
       <div class="card">
         <div class="card-title">⚽ Inserir Resultados Reais</div>
@@ -1260,7 +1256,6 @@
       </div>
     </div>
 
-    <!-- SUB-ABA: CONFRONTOS MATA-MATA -->
     <div id="admin-tab-confrontos" style="display:none;">
       <div class="card">
         <div class="card-title">🗓️ Editar Confrontos do Mata-Mata</div>
@@ -1284,7 +1279,6 @@
       </div>
     </div>
 
-    <!-- SUB-ABA: PEDIDOS DE RESET DE SENHA -->
     <div id="admin-tab-resets" style="display:none;">
       <div class="card">
         <div class="card-title">🔑 Pedidos de Redefinição de Senha</div>
@@ -1296,7 +1290,6 @@
       </div>
     </div>
 
-    <!-- SUB-ABA: LOGS DE ERRO -->
     <div id="admin-tab-logs" style="display:none;">
       <div class="card">
         <div class="card-title">📋 Logs de Erros</div>
@@ -1314,13 +1307,11 @@
 
 <div id="toast">✅ Palpites salvos!</div>
 
-<!-- Modal de Perfil -->
 <div class="modal-overlay" id="modal-profile">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('modal-profile')">✕</button>
     <div class="modal-title">👤 Meu Perfil</div>
 
-    <!-- Alterar Nome/Usuário -->
     <div class="modal-section-title" style="margin-bottom:10px;">✏️ Alterar Nome / Usuário</div>
     <div class="user-select-wrap">
       <label>Novo nome / usuário</label>
@@ -1333,8 +1324,7 @@
     <button class="btn-profile green" onclick="updateProfileName()">💾 Salvar Nome</button>
     <div id="profile-name-msg" class="profile-msg"></div>
 
-    <!-- Alterar E-mail -->
-    <div class="modal-section">
+    <div class="modal-section" style="display: none;">
       <div class="modal-section-title">📧 Alterar E-mail</div>
       <div class="user-select-wrap">
         <label>Novo e-mail</label>
@@ -1348,7 +1338,6 @@
       <div id="profile-email-msg" class="profile-msg"></div>
     </div>
 
-    <!-- Alterar Senha -->
     <div class="modal-section">
       <div class="modal-section-title">🔑 Alterar Senha</div>
       <div class="user-select-wrap">
@@ -1369,21 +1358,17 @@
   </div>
 </div>
 
-  </div><!-- /center-content -->
-
-  <aside class="live-sidebar" id="live-sidebar-right">
+  </div><aside class="live-sidebar" id="live-sidebar-right">
     <div class="live-sidebar-title">📅 Hoje &amp; Amanhã</div>
     <div id="live-right-content"><div class="live-empty">Carregando...</div></div>
   </aside>
 
-</div><!-- /page-wrapper -->
-
-<script>
+</div><script>
 // ════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxISvsJXRMRIgiH1YNiP-ajDoqASwZ7fPWSajPW149QrTrAJ5oUralszmGtRvRYuWbY/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzTX0e6V-NanQmUpxfdbxCJLTgzNfZJwHooBSmhbHZAg1XrUl_yT-qPq4WYV-r3doqm/exec"; 
 const ADMIN_PASSWORD = "aperam2026"; 
 
 // ════════════════════════════════════════
@@ -1490,7 +1475,6 @@ const KO_TEMPLATES = [
   { id:39, phase:"final",   slot:1, label:"Grande Final" },
 ];
 
-// Mescla grupos + mata-mata em MATCHES (mata-mata é preenchido depois com dados da planilha)
 let MATCHES = [...GROUP_MATCHES];
 
 let CACHE_DATA = { users: {}, palpites: {}, results: {}, koMatches: {} };
@@ -1500,7 +1484,6 @@ function getResults() { return CACHE_DATA.results; }
 function getUsers()   { return CACHE_DATA.users; }
 function getKO()      { return CACHE_DATA.koMatches || {}; }
 
-// Reconstrói o array MATCHES com os dados dinâmicos do mata-mata
 function rebuildMatches() {
   const ko = getKO();
   const koArray = KO_TEMPLATES.map(tpl => {
@@ -1543,16 +1526,12 @@ async function refreshData() {
 
 // ════════════════════════════════════════
 //  LÓGICA DE RODADA PADRÃO AUTOMÁTICA
-//  Rodada 1 → após 17/06/2026 23:59 → Rodada 2
-//  Rodada 2 → após 23/06/2026 23:59 → Rodada 3
 // ════════════════════════════════════════
 
 function getDefaultRound() {
   const now = new Date();
-  // Último jogo da Rodada 1: 17/06/2026 23:00 → bloqueia ~110min depois
-  const endRound1 = new Date(2026, 5, 18, 1, 30); // 18/jun 01:30 (110min após 23:00)
-  // Último jogo da Rodada 2: 23/06/2026 23:00
-  const endRound2 = new Date(2026, 6, 24, 1, 30); // 24/jun 01:30
+  const endRound1 = new Date(2026, 5, 18, 1, 30); 
+  const endRound2 = new Date(2026, 6, 24, 1, 30); 
   if (now >= endRound2) return 3;
   if (now >= endRound1) return 2;
   return 1;
@@ -1572,7 +1551,6 @@ function logError(msg, user, level = 'error') {
     msg
   };
   ERROR_LOG.push(entry);
-  // Envia ao servidor de forma não-bloqueante
   fetch(API_URL, {
     method: 'POST',
     body: JSON.stringify({ action: 'logError', level, user: entry.user, msg, ts: entry.ts })
@@ -1580,58 +1558,57 @@ function logError(msg, user, level = 'error') {
 }
 
 // ════════════════════════════════════════
-//  LOGIN
+//  LOGIN SEGURO REESCRITO (SEM VALIDAR SENHA LOCALMENTE)
 // ════════════════════════════════════════
 
 let loginAttempts = 0;
 let loginBlockedUser = null;
 
-function resolveUserByIdentifier(identifier) {
-  const users = getUsers();
-  // Tenta pelo nome exato
-  if (users[identifier] !== undefined) return identifier;
-  // Tenta pelo e-mail
-  const usersData = CACHE_DATA.usersData || {};
-  for (const name of Object.keys(usersData)) {
-    if (usersData[name] && usersData[name].email && 
-        usersData[name].email.toLowerCase() === identifier.toLowerCase()) {
-      return name;
-    }
-  }
-  return null;
-}
-
-function handleLogin() {
+async function handleLogin() {
   const identifier = document.getElementById('login-user').value.trim();
   const pass = document.getElementById('login-pass').value;
   const msg = document.getElementById('auth-error-msg');
-  if (!identifier || !pass) { msg.textContent = "⚠️ Insira o usuário/e-mail e a senha."; return; }
-
-  const resolvedUser = resolveUserByIdentifier(identifier);
-  if (!resolvedUser) {
-    loginAttempts++;
-    msg.textContent = "❌ Usuário não encontrado.";
-    logError(`Login falhou: usuário não encontrado (${identifier})`, identifier, 'warn');
-    checkLoginAttempts(identifier);
-    return;
+  
+  if (!identifier || !pass) { 
+    msg.textContent = "⚠️ Insira o usuário e a senha."; 
+    return; 
   }
 
-  const users = getUsers();
-  if (String(users[resolvedUser]) !== String(pass)) {
-    loginAttempts++;
-    msg.textContent = `❌ Senha inválida. Tentativa ${loginAttempts}/3.`;
-    logError(`Login falhou: senha incorreta para ${resolvedUser}`, resolvedUser, 'warn');
-    checkLoginAttempts(resolvedUser);
-    return;
-  }
+  showLoading(true);
 
-  loginAttempts = 0;
-  loginBlockedUser = null;
-  document.getElementById('reset-section').style.display = 'none';
-  setLoggedUser(resolvedUser);
-  msg.textContent = "";
-  checkAuth();
-  showToast(`👋 Bem-vindo, ${resolvedUser}!`);
+  try {
+    let res = await fetch(API_URL, { 
+      method: 'POST', 
+      body: JSON.stringify({ 
+        action: 'login', 
+        identifier: identifier, 
+        pass: pass 
+      }) 
+    });
+    
+    let json = await res.json();
+    
+    if (json.status === 'success') {
+      loginAttempts = 0;
+      loginBlockedUser = null;
+      document.getElementById('reset-section').style.display = 'none';
+      
+      setLoggedUser(json.userName); 
+      msg.textContent = "";
+      checkAuth();
+      showToast(`👋 Bem-vindo, ${json.userName}!`);
+    } else {
+      loginAttempts++;
+      msg.textContent = `❌ ${json.msg || 'Erro ao fazer login'}. Tentativa ${loginAttempts}/3.`;
+      logError(`Login falhou: ${json.msg}`, identifier, 'warn');
+      checkLoginAttempts(identifier);
+    }
+  } catch(e) {
+    msg.textContent = "❌ Erro de conexão com o servidor.";
+    logError(`Erro de rede no login: ${e.message}`, identifier, 'error');
+  }
+  
+  showLoading(false);
 }
 
 function checkLoginAttempts(user) {
@@ -1721,7 +1698,7 @@ function openRegisterModal() {
 
 async function handleRegister() {
   const user = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
+  const email = document.getElementById('reg-email').value.trim(); // Estará vazio pois foi ocultado
   const pass = document.getElementById('reg-pass').value;
   const confirm = document.getElementById('reg-confirm-pass').value;
   const msg = document.getElementById('reg-msg');
@@ -1731,7 +1708,6 @@ async function handleRegister() {
   if (pass.length < 4) { msg.textContent = "⚠️ A senha deve conter ao menos 4 dígitos."; msg.className = 'profile-msg err'; return; }
   if (pass !== confirm) { msg.textContent = "⚠️ As senhas não coincidem."; msg.className = 'profile-msg err'; return; }
   if (getUsers()[user]) { msg.textContent = "❌ Esse nome já está em uso."; msg.className = 'profile-msg err'; return; }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = "⚠️ E-mail inválido."; msg.className = 'profile-msg err'; return; }
   
   showLoading(true);
   try {
@@ -1776,7 +1752,7 @@ function checkAuth() {
 }
 
 // ════════════════════════════════════════
-//  PERFIL DE USUÁRIO
+//  PERFIL DE USUÁRIO (REESCRITO COM VALIDAÇÃO BACKEND)
 // ════════════════════════════════════════
 
 function openProfileModal() {
@@ -1808,9 +1784,7 @@ async function updateProfileName() {
   if (!newName) { msgEl.textContent = '⚠️ Digite o novo nome.'; msgEl.className = 'profile-msg err'; return; }
   if (newName.length < 3) { msgEl.textContent = '⚠️ Nome muito curto (mín. 3 caracteres).'; msgEl.className = 'profile-msg err'; return; }
   if (!pass) { msgEl.textContent = '⚠️ Confirme sua senha.'; msgEl.className = 'profile-msg err'; return; }
-  if (String(getUsers()[user]) !== String(pass)) { msgEl.textContent = '❌ Senha incorreta.'; msgEl.className = 'profile-msg err'; return; }
-  if (newName !== user && getUsers()[newName]) { msgEl.textContent = '❌ Esse nome já está em uso.'; msgEl.className = 'profile-msg err'; return; }
-
+  
   showLoading(true);
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'name', value: newName, pass }) });
@@ -1842,7 +1816,6 @@ async function updateProfileEmail() {
   if (!newEmail) { msgEl.textContent = '⚠️ Digite o novo e-mail.'; msgEl.className = 'profile-msg err'; return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) { msgEl.textContent = '⚠️ E-mail inválido.'; msgEl.className = 'profile-msg err'; return; }
   if (!pass) { msgEl.textContent = '⚠️ Confirme sua senha.'; msgEl.className = 'profile-msg err'; return; }
-  if (String(getUsers()[user]) !== String(pass)) { msgEl.textContent = '❌ Senha incorreta.'; msgEl.className = 'profile-msg err'; return; }
 
   showLoading(true);
   try {
@@ -1872,7 +1845,6 @@ async function updateProfilePassword() {
   const msgEl = document.getElementById('profile-pass-msg');
 
   if (!oldPass) { msgEl.textContent = '⚠️ Digite sua senha atual.'; msgEl.className = 'profile-msg err'; return; }
-  if (String(getUsers()[user]) !== String(oldPass)) { msgEl.textContent = '❌ Senha atual incorreta.'; msgEl.className = 'profile-msg err'; return; }
   if (!newPass || newPass.length < 4) { msgEl.textContent = '⚠️ Nova senha deve ter ao menos 4 dígitos.'; msgEl.className = 'profile-msg err'; return; }
   if (newPass !== confirmPass) { msgEl.textContent = '⚠️ As senhas não coincidem.'; msgEl.className = 'profile-msg err'; return; }
 
@@ -2031,7 +2003,6 @@ function renderMatches() {
     html += `<div class="group-container">`;
     
     if (selectedPhase === 'grupos') {
-      // ── Calcula a rodada padrão ──
       const defaultRound = getDefaultRound();
       
       html += `
@@ -2200,8 +2171,15 @@ function checkAdmin() {
 function switchAdminTab(tab) {
   document.getElementById('admin-tab-resultados').style.display  = tab === 'resultados'  ? 'block' : 'none';
   document.getElementById('admin-tab-confrontos').style.display  = tab === 'confrontos' ? 'block' : 'none';
+  document.getElementById('admin-tab-resets').style.display  = tab === 'resets' ? 'block' : 'none';
+  document.getElementById('admin-tab-logs').style.display  = tab === 'logs' ? 'block' : 'none';
   document.querySelectorAll('.admin-subtab').forEach((btn, i) => {
-    btn.classList.toggle('active', (i === 0 && tab === 'resultados') || (i === 1 && tab === 'confrontos'));
+    btn.classList.toggle('active', 
+      (i === 0 && tab === 'resultados') || 
+      (i === 1 && tab === 'confrontos') ||
+      (i === 2 && tab === 'resets') ||
+      (i === 3 && tab === 'logs')
+    );
   });
 }
 
