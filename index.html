@@ -72,11 +72,11 @@
   body.dark #loading-overlay { background: rgba(15,23,16,0.95); }
   body.dark .admin-ko-card { background: #1a2a1d; border-color: var(--border); }
   body.dark .admin-ko-card input[type=text] { background: #111e13; }
-  
+
   /* --- CORREÇÃO DO FUNDO DOS INPUTS NO MODO ESCURO --- */
   body.dark .score-inputs input[type=number] {
     background: #1a2a1d;
-    color: #4ade80; 
+    color: #4ade80;
   }
   body.dark .score-inputs input[type=number]:focus {
     background: #233626;
@@ -980,7 +980,7 @@
     z-index: 1000;
   }
   #chat-widget.open { transform: translateY(0); }
-  
+
   .chat-header {
     background: var(--green); color: white; padding: 12px 16px;
     font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700;
@@ -995,7 +995,7 @@
   .chat-msg { font-size: 0.85rem; line-height: 1.4; }
   .chat-msg .time { font-size: 0.7rem; color: var(--muted); margin-right: 4px; }
   .chat-msg .user { font-weight: 700; color: var(--green); margin-right: 4px; }
-  
+
   .chat-input-area {
     display: flex; padding: 10px; background: var(--card);
     border-top: 1px solid var(--border);
@@ -1005,7 +1005,7 @@
     border-radius: 20px; font-size: 0.9rem; outline: none;
   }
   .chat-input-area input:focus { border-color: var(--green); }
-  
+
   /* Botão flutuante para abrir o chat */
   #chat-fab {
     position: fixed; bottom: 24px; right: 24px;
@@ -1146,7 +1146,7 @@
         <button class="btn-logout" onclick="handleLogout()">Sair da Conta</button>
       </div>
     </div>
-    
+
     <div class="etapa-row">
       <div class="user-select-wrap">
         <label>📅 Selecione a Etapa da Copa:</label>
@@ -1160,9 +1160,9 @@
       </div>
       <button class="btn-save-top" onclick="savePalpites()" title="Salvar palpites">💾 Salvar</button>
     </div>
-    
+
     <div id="matches-container"></div>
-    
+
     <button class="btn-save" onclick="savePalpites()">💾 Salvar Palpites</button>
   </div>
 </div>
@@ -1209,7 +1209,7 @@
 
 <div id="tab-regras" class="section">
   <div class="sec-title">📜 Regulamento do Bolão</div>
-  
+
   <div class="card">
     <div class="card-title">⚽ Regras de Pontuação Configuradas</div>
     <div class="ranking-wrap">
@@ -1240,7 +1240,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div style="margin-top: 15px; padding: 12px; background: #fffde7; border-left: 4px solid var(--pts3); border-radius: 4px; font-size: 0.88rem;">
       ⚠️ <strong>Critério de Desempate no Ranking:</strong> Se dois ou mais participantes terminarem com o mesmo número de pontos totais, as posições serão decididas sequencialmente por:
       <br><strong>1º Lugar:</strong> Quem tiver mais acertos de <strong>10 pontos</strong> (Placares Exatos).
@@ -1273,7 +1273,7 @@
   </div>
 
   <div id="admin-panel" style="display:none;">
-    
+
     <div class="admin-subtabs">
       <button class="admin-subtab active" onclick="switchAdminTab('resultados')">⚽ Resultados</button>
       <button class="admin-subtab" onclick="switchAdminTab('confrontos')">🗓️ Editar Confrontos Mata-Mata</button>
@@ -1284,7 +1284,7 @@
     <div id="admin-tab-resultados">
       <div class="card">
         <div class="card-title">⚽ Inserir Resultados Reais</div>
-        
+
         <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
           <div class="user-select-wrap" style="flex: 1; min-width: 150px; margin-bottom: 0;">
             <label>📅 Etapa:</label>
@@ -1317,7 +1317,7 @@
         <p style="font-size:.85rem; color:var(--muted); margin-bottom:16px; line-height:1.5;">
           Defina os times, datas e horários dos confrontos conforme forem saindo. Os dados serão salvos na planilha e aparecerão automaticamente para todos os participantes na aba de Palpites.
         </p>
-        
+
         <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:flex-end;">
           <div class="user-select-wrap" style="min-width:150px; flex:1; margin-bottom:0;">
             <label>📅 Fase:</label>
@@ -1440,7 +1440,28 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxb2YqxTJ7WCyO6NdiFUJjB_PYOBk214heeqrpKK7NJS1V6OaYqZ5Ss6phzVAiypcR4/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbyv4bsh0cuVlRYT8_xB6L0rXElOEQA1zjCET8nc3AFZ9jA3PfCZAeQRpzTvQdW58gDl/exec";
+
+// ════════════════════════════════════════
+//  SEGURANÇA: escape de HTML (anti-XSS) + tokens de sessão
+// ════════════════════════════════════════
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+let AUTH_TOKEN = null;   // token de sessão do usuário
+let ADMIN_TOKEN = null;  // token de admin (somente em memória)
+
+function getToken() {
+  try { return localStorage.getItem('bolao_token') || AUTH_TOKEN; } catch (e) { return AUTH_TOKEN; }
+}
+function setToken(t) {
+  AUTH_TOKEN = t;
+  try { t ? localStorage.setItem('bolao_token', t) : localStorage.removeItem('bolao_token'); } catch (e) {}
+}
 
 // ════════════════════════════════════════
 //  PARTIDAS — FASE DE GRUPOS (fixas no código)
@@ -1574,12 +1595,12 @@ function rebuildMatches() {
 }
 
 let memoryLoggedUser = null;
-function getLoggedUser() { 
+function getLoggedUser() {
   try { return localStorage.getItem('bolao_logged_in') || memoryLoggedUser; } catch(e) { return memoryLoggedUser; }
 }
-function setLoggedUser(name) { 
+function setLoggedUser(name) {
   memoryLoggedUser = name;
-  if(name) { try { localStorage.setItem('bolao_logged_in', name); } catch(e) {} } 
+  if(name) { try { localStorage.setItem('bolao_logged_in', name); } catch(e) {} }
   else { try { localStorage.removeItem('bolao_logged_in'); } catch(e) {} }
 }
 
@@ -1601,8 +1622,8 @@ async function refreshData() {
 
 function getDefaultRound() {
   const now = new Date();
-  const endRound1 = new Date(2026, 5, 18, 1, 30); 
-  const endRound2 = new Date(2026, 6, 24, 1, 30); 
+  const endRound1 = new Date(2026, 5, 18, 1, 30);  // 18/06/2026 (mês 5 = junho)
+  const endRound2 = new Date(2026, 5, 24, 1, 30);  // 24/06/2026 (corrigido: era mês 6 = julho)
   if (now >= endRound2) return 3;
   if (now >= endRound1) return 2;
   return 1;
@@ -1629,7 +1650,7 @@ function logError(msg, user, level = 'error') {
 }
 
 // ════════════════════════════════════════
-//  LOGIN SEGURO REESCRITO (SEM VALIDAR SENHA LOCALMENTE)
+//  LOGIN SEGURO (validação 100% no backend + token de sessão)
 // ════════════════════════════════════════
 
 let loginAttempts = 0;
@@ -1639,32 +1660,33 @@ async function handleLogin() {
   const identifier = document.getElementById('login-user').value.trim();
   const pass = document.getElementById('login-pass').value;
   const msg = document.getElementById('auth-error-msg');
-  
-  if (!identifier || !pass) { 
-    msg.textContent = "⚠️ Insira o usuário e a senha."; 
-    return; 
+
+  if (!identifier || !pass) {
+    msg.textContent = "⚠️ Insira o usuário e a senha.";
+    return;
   }
 
   showLoading(true);
 
   try {
-    let res = await fetch(API_URL, { 
-      method: 'POST', 
-      body: JSON.stringify({ 
-        action: 'login', 
-        identifier: identifier, 
-        pass: pass 
-      }) 
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'login',
+        identifier: identifier,
+        pass: pass
+      })
     });
-    
+
     let json = await res.json();
-    
+
     if (json.status === 'success') {
       loginAttempts = 0;
       loginBlockedUser = null;
       document.getElementById('reset-section').style.display = 'none';
-      
-      setLoggedUser(json.userName); 
+
+      setToken(json.token);                 // guarda o token de sessão
+      setLoggedUser(json.userName);
       msg.textContent = "";
       checkAuth();
       showToast(`👋 Bem-vindo, ${json.userName}!`);
@@ -1678,7 +1700,7 @@ async function handleLogin() {
     msg.textContent = "❌ Erro de conexão com o servidor.";
     logError(`Erro de rede no login: ${e.message}`, identifier, 'error');
   }
-  
+
   showLoading(false);
 }
 
@@ -1697,7 +1719,7 @@ function checkLoginAttempts(user) {
 async function requestPasswordReset() {
   const user = loginBlockedUser || document.getElementById('login-user').value.trim();
   if (!user) { document.getElementById('reset-msg').textContent = "⚠️ Informe o usuário no campo acima."; return; }
-  
+
   showLoading(true);
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'requestPasswordReset', user }) });
@@ -1773,20 +1795,21 @@ async function handleRegister() {
   const pass = document.getElementById('reg-pass').value;
   const confirm = document.getElementById('reg-confirm-pass').value;
   const msg = document.getElementById('reg-msg');
-  
+
   if (!user || !pass) { msg.textContent = "⚠️ Preencha nome e senha."; msg.className = 'profile-msg err'; return; }
   if (user.length < 3) { msg.textContent = "⚠️ O nome deve conter ao menos 3 caracteres."; msg.className = 'profile-msg err'; return; }
   if (pass.length < 4) { msg.textContent = "⚠️ A senha deve conter ao menos 4 dígitos."; msg.className = 'profile-msg err'; return; }
   if (pass !== confirm) { msg.textContent = "⚠️ As senhas não coincidem."; msg.className = 'profile-msg err'; return; }
   if (getUsers()[user]) { msg.textContent = "❌ Esse nome já está em uso."; msg.className = 'profile-msg err'; return; }
-  
+
   showLoading(true);
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'register', name: user, pass, email }) });
     let json = await res.json();
     if(json.status === 'success') {
       await refreshData();
-      setLoggedUser(user);
+      setToken(json.token);                 // guarda o token de sessão
+      setLoggedUser(json.userName || user);
       closeModal('modal-register');
       checkAuth();
       showToast(`✅ Perfil cadastrado com sucesso!`);
@@ -1804,7 +1827,12 @@ async function handleRegister() {
 }
 
 function handleLogout() {
-  if (confirm("Sair da sua conta?")) { setLoggedUser(null); checkAuth(); showTab('tab-palpites'); }
+  if (confirm("Sair da sua conta?")) {
+    setLoggedUser(null);
+    setToken(null);                         // limpa o token
+    checkAuth();
+    showTab('tab-palpites');
+  }
 }
 
 function checkAuth() {
@@ -1823,7 +1851,7 @@ function checkAuth() {
 }
 
 // ════════════════════════════════════════
-//  PERFIL DE USUÁRIO (REESCRITO COM VALIDAÇÃO BACKEND)
+//  PERFIL DE USUÁRIO (validação no backend via token)
 // ════════════════════════════════════════
 
 function openProfileModal() {
@@ -1855,12 +1883,13 @@ async function updateProfileName() {
   if (!newName) { msgEl.textContent = '⚠️ Digite o novo nome.'; msgEl.className = 'profile-msg err'; return; }
   if (newName.length < 3) { msgEl.textContent = '⚠️ Nome muito curto (mín. 3 caracteres).'; msgEl.className = 'profile-msg err'; return; }
   if (!pass) { msgEl.textContent = '⚠️ Confirme sua senha.'; msgEl.className = 'profile-msg err'; return; }
-  
+
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'name', value: newName, pass }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', token: getToken(), field: 'name', value: newName, pass }) });
     let json = await res.json();
     if (json.status === 'success') {
+      if (json.token) setToken(json.token);   // token renovado p/ novo nome
       await refreshData();
       setLoggedUser(newName);
       document.getElementById('display-logged-user').textContent = newName;
@@ -1890,7 +1919,7 @@ async function updateProfileEmail() {
 
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'email', value: newEmail, pass }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', token: getToken(), field: 'email', value: newEmail, pass }) });
     let json = await res.json();
     if (json.status === 'success') {
       await refreshData();
@@ -1921,7 +1950,7 @@ async function updateProfilePassword() {
 
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'pass', value: newPass, pass: oldPass }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', token: getToken(), field: 'pass', value: newPass, pass: oldPass }) });
     let json = await res.json();
     if (json.status === 'success') {
       await refreshData();
@@ -1966,12 +1995,12 @@ function calcPts(ph, pa, rh, ra) {
   if (ph === null || ph === undefined || pa === null || pa === undefined) return 0;
   ph = parseInt(ph); pa = parseInt(pa); rh = parseInt(rh); ra = parseInt(ra);
   if (isNaN(ph)||isNaN(pa)||isNaN(rh)||isNaN(ra)) return 0;
-  if (ph === rh && pa === ra) return 10;                
+  if (ph === rh && pa === ra) return 10;
   const pWin = ph > pa ? 1 : ph < pa ? -1 : 0;
   const rWin = rh > ra ? 1 : rh < ra ? -1 : 0;
-  if (pWin === rWin && (ph-pa) === (rh-ra)) return 5;  
-  if ((ph-pa) === (rh-ra)) return 5;                   
-  if (pWin === rWin) return 3;                         
+  if (pWin === rWin && (ph-pa) === (rh-ra)) return 5;
+  if ((ph-pa) === (rh-ra)) return 5;
+  if (pWin === rWin) return 3;
   return 0;
 }
 
@@ -1993,11 +2022,11 @@ function calcUserTotal(user) {
 
 function generateMatchHTML(m, results) {
   const r = results[m.id] || {};
-  const adminDone = r.h !== null && r.h !== undefined; 
-  const timeLocked = isMatchLocked(m.date, m.time); 
+  const adminDone = r.h !== null && r.h !== undefined;
+  const timeLocked = isMatchLocked(m.date, m.time);
   const isDefinir = m.home === "A definir" || m.away === "A definir";
   const disabled = adminDone || timeLocked || isDefinir;
-  
+
   const st = (!adminDone && !isDefinir) ? getMatchStatus(m) : null;
   const isLive  = st && st.status === 'live';
   const isSoon  = st && st.status === 'soon' && st.hoursLeft === 0;
@@ -2043,7 +2072,7 @@ function generateMatchHTML(m, results) {
         </div>`;
     }
   }
-    
+
   return `
   <div class="match-card ${urgencyClass}" id="mc-${m.id}">
     <div class="match-header"><span>${m.date} · ${m.time}</span>${chip}</div>
@@ -2067,21 +2096,21 @@ function renderMatches() {
   const selectedPhase = document.getElementById('sel-etapa')?.value || 'grupos';
   const filteredMatches = MATCHES.filter(m => m.phase === selectedPhase);
   const uniqueGroups = [...new Set(filteredMatches.map(m => m.group))].sort();
-  
+
   let html = '';
   uniqueGroups.forEach(grp => {
     const bannerText = selectedPhase === 'grupos' ? `Grupo ${grp}` : grp;
     html += `<div class="group-container">`;
-    
+
     if (selectedPhase === 'grupos') {
       const defaultRound = getDefaultRound();
-      
+
       html += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
         <div class="group-title-banner" style="margin-bottom:0;">${bannerText}</div>
         <div style="display:flex; align-items:center; gap:8px;">
           ${defaultRound > 1 ? `<span class="round-auto-badge">🔄 Auto R${defaultRound}</span>` : ''}
-          <select style="padding:5px 10px; border-radius:6px; border:1.5px solid var(--border); font-family:'Barlow Condensed', sans-serif; font-size:.95rem; font-weight:700; color:var(--green); outline:none; background:#fff; cursor:pointer;" 
+          <select style="padding:5px 10px; border-radius:6px; border:1.5px solid var(--border); font-family:'Barlow Condensed', sans-serif; font-size:.95rem; font-weight:700; color:var(--green); outline:none; background:#fff; cursor:pointer;"
             id="sel-rnd-${grp.replace(/\s/g,'_')}"
             onchange="showGroupRound('${grp}', this.value)">
             <option value="1" ${defaultRound === 1 ? 'selected' : ''}>Rodada 1</option>
@@ -2090,7 +2119,7 @@ function renderMatches() {
           </select>
         </div>
       </div>`;
-      
+
       [1, 2, 3].forEach(rnd => {
         const groupMatches = filteredMatches.filter(m => m.group === grp && m.round === rnd);
         html += `<div id="grp-${grp}-rnd-${rnd}" style="display: ${rnd === defaultRound ? 'block' : 'none'};">`;
@@ -2146,23 +2175,23 @@ function loadUserPalpites() {
 async function savePalpites() {
   const user = getLoggedUser(); if (!user) { showToast('⚠️ Identifique-se primeiro!'); return; }
   const results = getResults(); let guessesToSend = [];
-  
+
   MATCHES.forEach(m => {
     const r = results[m.id];
-    if (r && r.h !== null && r.h !== undefined) return; 
+    if (r && r.h !== null && r.h !== undefined) return;
     if (isMatchLocked(m.date, m.time)) return;
     const phEl = document.getElementById(`ph-${m.id}`), paEl = document.getElementById(`pa-${m.id}`);
-    if (!phEl || !paEl) return; 
+    if (!phEl || !paEl) return;
     if (phEl.value !== '' && paEl.value !== '') guessesToSend.push({ id: m.id, h: parseInt(phEl.value), a: parseInt(paEl.value) });
   });
 
   if(guessesToSend.length === 0) { showToast('⚠️ Nenhum palpite preenchido (ou jogos fechados).'); return; }
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'savePalpites', user: user, guesses: guessesToSend }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'savePalpites', token: getToken(), guesses: guessesToSend }) });
     let json = await res.json();
     if(json.status === 'success') { await refreshData(); renderRanking(); showToast('✅ Palpites salvos!'); }
-    else { showToast('❌ Erro ao salvar palpites.'); }
+    else { showToast('❌ ' + (json.msg || 'Erro ao salvar palpites.')); }
   } catch(e) { showToast('❌ Erro de conexão.'); }
   showLoading(false);
 }
@@ -2176,16 +2205,16 @@ function renderMyPalpites() {
   const phase = document.getElementById('sel-etapa-meus').value;
   const container = document.getElementById('my-palpites-list');
   if (!user) { container.innerHTML = ''; return; }
-  
+
   const data = getData(), results = getResults();
   let html = '', total = 0;
-  
+
   MATCHES.filter(m => m.phase === phase).forEach(m => {
     const p = data[`${user}__${m.id}`], r = results[m.id];
     const hasP = p && p.h !== undefined && p.h !== null, hasR = r && r.h !== null && r.h !== undefined;
     const pts = hasP && hasR ? calcPts(p.h, p.a, r.h, r.a) : null;
     if (pts !== null) total += pts;
-    
+
     if (hasP || hasR) {
       const ptsColor = pts===10?'var(--pts10)':pts===5?'var(--pts5)':pts===3?'var(--pts3)':'var(--muted)';
       html += `<div class="my-result">
@@ -2199,7 +2228,7 @@ function renderMyPalpites() {
       </div>`;
     }
   });
-  
+
   if (html === '') {
     html = `<p style="text-align:center; color:var(--muted); padding:10px;">Nenhum palpite registrado para esta etapa.</p>`;
   } else {
@@ -2217,7 +2246,7 @@ function renderRanking() {
     const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
     html += `<tr>
       <td><span class="rank-pos ${rank<=3?'top'+rank:''}">${medal||rank}</span></td>
-      <td>${r.name}</td><td><span class="rank-pts">${r.total}</span></td>
+      <td>${escapeHtml(r.name)}</td><td><span class="rank-pts">${r.total}</span></td>
       <td style="color:var(--pts10);font-weight:700;">${r.c10||'–'}</td>
       <td style="color:var(--pts5);font-weight:700;">${r.c5||'–'}</td>
       <td style="color:var(--pts3);font-weight:700;">${r.c3||'–'}</td>
@@ -2233,27 +2262,28 @@ function renderRanking() {
 async function checkAdmin() {
   const pass = document.getElementById('admin-pw').value;
   const msg = document.getElementById('admin-msg');
-  
-  if (!pass) { 
-    msg.textContent = '⚠️ Digite a senha.'; 
-    return; 
+
+  if (!pass) {
+    msg.textContent = '⚠️ Digite a senha.';
+    return;
   }
 
-  // Aciona a tela de loading escurecida que trava tudo
   showLoading(true);
 
   try {
-    let res = await fetch(API_URL, { 
-      method: 'POST', 
-      body: JSON.stringify({ 
-        action: 'verifyAdmin', 
-        pass: pass 
-      }) 
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'verifyAdmin',
+        pass: pass
+      })
     });
-    
+
     let json = await res.json();
-    
+
     if (json.status === 'success') {
+      ADMIN_TOKEN = json.token;             // guarda o token de admin
+      document.getElementById('admin-pw').value = '';
       document.getElementById('admin-panel').style.display = 'block';
       document.getElementById('admin-login-card').style.display = 'none';
       renderAdminMatches();
@@ -2264,7 +2294,7 @@ async function checkAdmin() {
   } catch (e) {
     msg.textContent = '❌ Erro de conexão com o servidor.';
   }
-  
+
   showLoading(false);
 }
 
@@ -2274,8 +2304,8 @@ function switchAdminTab(tab) {
   document.getElementById('admin-tab-resets').style.display  = tab === 'resets' ? 'block' : 'none';
   document.getElementById('admin-tab-logs').style.display  = tab === 'logs' ? 'block' : 'none';
   document.querySelectorAll('.admin-subtab').forEach((btn, i) => {
-    btn.classList.toggle('active', 
-      (i === 0 && tab === 'resultados') || 
+    btn.classList.toggle('active',
+      (i === 0 && tab === 'resultados') ||
       (i === 1 && tab === 'confrontos') ||
       (i === 2 && tab === 'resets') ||
       (i === 3 && tab === 'logs')
@@ -2292,12 +2322,12 @@ function renderAdminMatches() {
   const NavResults = getResults(), container = document.getElementById('admin-matches');
   const selectedPhase = document.getElementById('sel-etapa-admin')?.value || 'grupos';
   let filteredMatches = MATCHES.filter(m => m.phase === selectedPhase);
-  
+
   if (selectedPhase === 'grupos') {
     const r = parseInt(document.getElementById('sel-rodada-admin').value);
     filteredMatches = filteredMatches.filter(m => m.round === r);
   }
-  
+
   container.innerHTML = filteredMatches.map(m => {
     const r = NavResults[m.id] || {}, confirmed = (r.h !== undefined && r.h !== null);
     const roundLabel = m.round ? ` (R${m.round})` : '';
@@ -2305,7 +2335,7 @@ function renderAdminMatches() {
     return `<div class="admin-match">
       <div class="team-label">${m.date} | ${m.group}${roundLabel}</div>
       <div style="flex:2;font-weight:600;font-size:.9rem;">${m.home} × ${m.away}</div>
-      ${isDefinir 
+      ${isDefinir
         ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Confronto não definido — use "Editar Confrontos"</span>`
         : `<input type="number" min="0" max="20" id="adm-h-${m.id}" value="${confirmed?r.h:''}" placeholder="–">
            <span style="font-weight:800;color:var(--muted);">–</span>
@@ -2322,14 +2352,14 @@ async function saveResult(id) {
   if (h === '' || a === '') { showToast('⚠️ Preencha ambos os placares.'); return; }
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveResult', id: id, h: parseInt(h), a: parseInt(a) }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveResult', token: ADMIN_TOKEN, id: id, h: parseInt(h), a: parseInt(a) }) });
     let json = await res.json();
     if(json.status === 'success') {
       await refreshData(); renderAdminMatches(); renderRanking();
       if(getLoggedUser()) { renderMatches(); loadUserPalpites(); }
       if (document.getElementById('sel-view-user').value) renderMyPalpites();
       showToast(`✅ Resultado salvo!`);
-    } else { showToast('❌ Erro ao salvar.'); }
+    } else { showToast('❌ ' + (json.msg || 'Erro ao salvar.')); }
   } catch(e) { showToast('❌ Erro de rede.'); }
   showLoading(false);
 }
@@ -2343,51 +2373,51 @@ function renderKOEditor() {
   const ko = getKO();
   const templates = KO_TEMPLATES.filter(t => t.phase === phase);
   const container = document.getElementById('ko-editor-container');
-  
+
   const phaseNames = { oitavas:'Oitavas de Final', quartas:'Quartas de Final', semi:'Semifinais', final:'Grande Final' };
-  
+
   let html = '';
   templates.forEach(tpl => {
     const saved = ko[tpl.id] || {};
     const confirmed = saved.home && saved.home !== 'A definir';
     const resData = getResults()[tpl.id];
     const hasResult = resData && resData.h !== null && resData.h !== undefined;
-    
+
     html += `<div class="admin-ko-card">
       <div class="ko-match-title">
-        ${phaseNames[phase]} — ${tpl.label}
+        ${escapeHtml(phaseNames[phase])} — ${escapeHtml(tpl.label)}
         ${confirmed ? `<span class="ko-confirmed-badge" style="margin-left:8px;">✔ Definido</span>` : ''}
       </div>
       <div class="admin-ko-grid">
         <div>
           <label>🏠 Time da Casa</label>
-          <input type="text" id="ko-home-${tpl.id}" value="${saved.home || ''}" placeholder="Ex: Brasil">
+          <input type="text" id="ko-home-${tpl.id}" value="${escapeHtml(saved.home || '')}" placeholder="Ex: Brasil">
         </div>
         <div>
           <label>✈️ Time Visitante</label>
-          <input type="text" id="ko-away-${tpl.id}" value="${saved.away || ''}" placeholder="Ex: Argentina">
+          <input type="text" id="ko-away-${tpl.id}" value="${escapeHtml(saved.away || '')}" placeholder="Ex: Argentina">
         </div>
         <div>
           <label>📅 Data (DD/MM/AAAA)</label>
-          <input type="text" id="ko-date-${tpl.id}" value="${saved.date || ''}" placeholder="Ex: 02/07/2026">
+          <input type="text" id="ko-date-${tpl.id}" value="${escapeHtml(saved.date || '')}" placeholder="Ex: 02/07/2026">
         </div>
         <div>
           <label>🕐 Horário (HH:MM)</label>
-          <input type="text" id="ko-time-${tpl.id}" value="${saved.time || ''}" placeholder="Ex: 16:00">
+          <input type="text" id="ko-time-${tpl.id}" value="${escapeHtml(saved.time || '')}" placeholder="Ex: 16:00">
         </div>
       </div>
       <div class="ko-score-row">
         <button class="btn-ko-save" onclick="saveKOMatch(${tpl.id})">💾 Salvar Confronto</button>
-        ${hasResult 
+        ${hasResult
           ? `<span style="font-size:.8rem;color:var(--muted);">Resultado já inserido: <b>${resData.h}–${resData.a}</b></span>`
-          : confirmed 
-            ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Resultado ainda não definido</span>` 
+          : confirmed
+            ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Resultado ainda não definido</span>`
             : ''
         }
       </div>
     </div>`;
   });
-  
+
   container.innerHTML = html || '<p style="color:var(--muted);">Nenhum confronto nesta fase.</p>';
 }
 
@@ -2396,13 +2426,13 @@ async function saveKOMatch(id) {
   const away = document.getElementById(`ko-away-${id}`).value.trim();
   const date = document.getElementById(`ko-date-${id}`).value.trim();
   const time = document.getElementById(`ko-time-${id}`).value.trim();
-  
+
   if (!home || !away) { showToast('⚠️ Preencha pelo menos os nomes dos times.'); return; }
-  
+
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ 
-      action: 'saveKOMatch', 
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({
+      action: 'saveKOMatch', token: ADMIN_TOKEN,
       id: id, home: home, away: away, date: date || 'A definir', time: time || 'A definir'
     })});
     let json = await res.json();
@@ -2412,7 +2442,7 @@ async function saveKOMatch(id) {
       renderAdminMatches();
       if(getLoggedUser()) { renderMatches(); loadUserPalpites(); }
       showToast(`✅ Confronto salvo! (ID ${id})`);
-    } else { showToast('❌ Erro ao salvar confronto.'); }
+    } else { showToast('❌ ' + (json.msg || 'Erro ao salvar confronto.')); }
   } catch(e) { showToast('❌ Erro de rede.'); }
   showLoading(false);
 }
@@ -2513,7 +2543,6 @@ function buildLivePanels() {
   } else {
     leftEl.innerHTML = liveMatches.map(({ m, st }) => {
       const r = results[m.id];
-      // ATUALIZAÇÃO: Se for jogo ao vivo, mostrar 0 ao invés de –
       const scoreH = (r && r.h !== null && r.h !== undefined) ? r.h : '0';
       const scoreA = (r && r.a !== null && r.a !== undefined) ? r.a : '0';
       const homeClean = m.home.replace('🇧🇷 ', '');
@@ -2616,26 +2645,28 @@ function startLiveUpdates() {
 }
 
 // ════════════════════════════════════════
-//  FUNÇÕES DO PAINEL ADMIN FALTANTES
+//  FUNÇÕES DO PAINEL ADMIN
 // ════════════════════════════════════════
 
 async function loadResetRequests() {
   const container = document.getElementById('admin-reset-requests');
   container.innerHTML = '<p style="text-align:center;color:var(--muted);">Carregando...</p>';
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getResetRequests' }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getResetRequests', token: ADMIN_TOKEN }) });
     let json = await res.json();
     if (json.data && json.data.length > 0) {
-      container.innerHTML = json.data.map(r => `
+      container.innerHTML = json.data.map(r => {
+        const u = escapeHtml(r.user), uAttr = escapeHtml(r.user).replace(/'/g, '&#39;');
+        return `
         <div class="reset-req-card">
           <div class="reset-req-info">
-            <div class="reset-req-name">${r.user}</div>
-            <div class="reset-req-date">${new Date(r.date).toLocaleString()}</div>
+            <div class="reset-req-name">${u}</div>
+            <div class="reset-req-date">${escapeHtml(new Date(r.date).toLocaleString())}</div>
           </div>
-          <button class="btn-approve" onclick="approveReset('${r.user}')">Aprovar (Senha: 1234)</button>
-          <button class="btn-deny" onclick="denyReset('${r.user}')">Rejeitar</button>
-        </div>
-      `).join('');
+          <button class="btn-approve" onclick="approveReset('${uAttr}')">Aprovar (Senha: 1234)</button>
+          <button class="btn-deny" onclick="denyReset('${uAttr}')">Rejeitar</button>
+        </div>`;
+      }).join('');
     } else {
       container.innerHTML = '<p style="text-align:center;color:var(--muted);">Nenhum pedido pendente.</p>';
     }
@@ -2648,7 +2679,7 @@ async function approveReset(user) {
   if(!confirm(`Isso redefinirá a senha de ${user} para "1234". Continuar?`)) return;
   showLoading(true);
   try {
-    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'approveReset', user: user }) });
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'approveReset', token: ADMIN_TOKEN, user: user }) });
     showToast('✅ Senha redefinida para 1234!');
     loadResetRequests();
   } catch(e) { showToast('❌ Erro de conexão.'); }
@@ -2659,7 +2690,7 @@ async function denyReset(user) {
   if(!confirm(`Rejeitar pedido de ${user}?`)) return;
   showLoading(true);
   try {
-    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'denyReset', user: user }) });
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'denyReset', token: ADMIN_TOKEN, user: user }) });
     showToast('✅ Pedido rejeitado.');
     loadResetRequests();
   } catch(e) { showToast('❌ Erro de conexão.'); }
@@ -2670,14 +2701,14 @@ async function loadErrorLogs() {
   const container = document.getElementById('admin-logs-container');
   container.innerHTML = '<p style="text-align:center;color:var(--muted);">Carregando logs...</p>';
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAdminLogs' }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAdminLogs', token: ADMIN_TOKEN }) });
     let json = await res.json();
     if (json.data && json.data.length > 0) {
       container.innerHTML = json.data.map(l => `
-        <div class="log-entry log-${l.level || 'info'}">
-          <span class="log-time">[${new Date(l.date).toLocaleString()}]</span> 
-          <span class="log-user">${l.user}</span>
-          <div class="log-msg">${l.msg}</div>
+        <div class="log-entry log-${escapeHtml(l.level || 'info')}">
+          <span class="log-time">[${escapeHtml(new Date(l.date).toLocaleString())}]</span>
+          <span class="log-user">${escapeHtml(l.user)}</span>
+          <div class="log-msg">${escapeHtml(l.msg)}</div>
         </div>
       `).join('');
     } else {
@@ -2692,7 +2723,7 @@ async function clearLogs() {
   if(!confirm("Tem certeza que deseja limpar todos os logs?")) return;
   showLoading(true);
   try {
-    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'clearAdminLogs' }) });
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'clearAdminLogs', token: ADMIN_TOKEN }) });
     showToast('✅ Logs limpos com sucesso.');
     loadErrorLogs();
   } catch(e) { showToast('❌ Erro de conexão.'); }
@@ -2727,7 +2758,7 @@ function toggleChat() {
   chatOpen = !chatOpen;
   const widget = document.getElementById('chat-widget');
   const fab = document.getElementById('chat-fab');
-  
+
   if (chatOpen) {
     widget.classList.add('open');
     fab.style.display = 'none';
@@ -2748,18 +2779,18 @@ async function loadChatMessages() {
   }
 
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getChat' }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getChat', token: getToken() }) });
     let json = await res.json();
-    
+
     if (json.status === 'success' && json.data) {
       const box = document.getElementById('chat-box');
       const isScrolledToBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 20;
 
       box.innerHTML = json.data.map(m => `
         <div class="chat-msg">
-          <span class="time">${m.time}</span>
-          <span class="user">${m.user}:</span>
-          <span class="text">${m.msg}</span>
+          <span class="time">${escapeHtml(m.time)}</span>
+          <span class="user">${escapeHtml(m.user)}:</span>
+          <span class="text">${escapeHtml(m.msg)}</span>
         </div>
       `).join('') || '<div style="text-align:center;color:var(--muted);font-size:.8rem;margin-top:20px;">Nenhuma mensagem ainda.</div>';
 
@@ -2776,27 +2807,27 @@ async function sendChatMessage() {
   const user = getLoggedUser();
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
-  
+
   if (!user) { showToast('⚠️ Identifique-se primeiro!'); return; }
   if (!msg) return;
 
   input.value = '';
-  
+
   const box = document.getElementById('chat-box');
   const now = new Date();
   const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
   box.innerHTML += `
     <div class="chat-msg" style="opacity: 0.6;">
-      <span class="time">${timeStr}</span>
-      <span class="user">${user}:</span>
-      <span class="text">${msg}</span>
+      <span class="time">${escapeHtml(timeStr)}</span>
+      <span class="user">${escapeHtml(user)}:</span>
+      <span class="text">${escapeHtml(msg)}</span>
     </div>`;
   box.scrollTop = box.scrollHeight;
 
   try {
-    await fetch(API_URL, { 
-      method: 'POST', 
-      body: JSON.stringify({ action: 'sendChat', user: user, msg: msg }) 
+    await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'sendChat', token: getToken(), msg: msg })
     });
     loadChatMessages();
   } catch(e) {
