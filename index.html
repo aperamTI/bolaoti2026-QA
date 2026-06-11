@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão TI Aperam – Copa do Mundo 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --green: #006633;
+    --green-mid: #007a3d;
+    --gold: #FFD700;
+    --gold-dim: #c9a800;
+    --pitch: #1a5c2e;
+    --dark: #0d1a10;
+    --surface: #f0f4f1;
+    --card: #ffffff;
+    --text: #111;
+    --muted: #5a6b5c;
+    --border: #d4ddd6;
+    --red-pts: #c0392b;
+    --pts10: #16a34a;
+    --pts5: #2563eb;
+    --pts3: #d97706;
+    --urgent-bg: #fff7ed;
+    --urgent-border: #f97316;
+    --urgent-text: #c2410c;
+    --soon-bg: #fffbeb;
+    --soon-border: #facc15;
+    --soon-text: #92400e;
+  }
+
+  body.dark {
+    --surface: #0f1710;
+    --card: #1a2a1d;
+    --text: #e8f0e9;
+    --muted: #7aaa82;
+    --border: #2a3d2d;
+    --pitch: #0d2414;
+    --dark: #060e08;
+    --pts10: #4ade80;
+    --pts5: #60a5fa;
+    --pts3: #fbbf24;
+    --urgent-bg: #2a1a0a;
+    --urgent-border: #c2410c;
+    --urgent-text: #fb923c;
+    --soon-bg: #1f1a07;
+    --soon-border: #a16207;
+    --soon-text: #fcd34d;
+  }
+  body.dark select,
+  body.dark input[type=text],
+  body.dark input[type=password],
+  body.dark input[type=number] {
+    background: #1a2a1d;
+    color: var(--text);
+    border-color: var(--border);
+  }
+  body.dark .admin-match input[type=number] { background: #1a2a1d; }
+  body.dark .search-box input { background: #1a2a1d; color: var(--text); }
+  body.dark .group-container { background: #141f16; }
+  body.dark .match-card { background: #1a2a1d; }
+  body.dark tr:hover td { background: #1f2f21; }
+  body.dark .user-status-bar { background: #162318; }
+  body.dark .live-card { background: #1a2a1d; }
+  body.dark .live-card.is-live { background: #2a1217; }
+  body.dark .live-card.is-soon { background: #101e2a; }
+  body.dark .match-urgency { background: var(--urgent-bg) !important; border-color: var(--urgent-border) !important; }
+  body.dark .match-urgency .countdown-bar { background: #2a1505 !important; }
+  body.dark .match-soon-warn { background: var(--soon-bg) !important; border-color: var(--soon-border) !important; }
+  body.dark #loading-overlay { background: rgba(15,23,16,0.95); }
+  body.dark .admin-ko-card { background: #1a2a1d; border-color: var(--border); }
+  body.dark .admin-ko-card input[type=text] { background: #111e13; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--pitch) 60%, var(--green) 100%);
+    padding: 28px 24px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 18px,
+      rgba(255,255,255,.03) 18px, rgba(255,255,255,.03) 36px
+    );
+  }
+  header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+  header p {
+    color: rgba(255,255,255,.75);
+    margin-top: 4px;
+    font-size: .9rem;
+    position: relative;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+    background: var(--dark);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    flex: 1;
+    min-width: 110px;
+    padding: 13px 8px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba(255,255,255,.55);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+  }
+  nav button.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  nav button:hover:not(.active) { color: #fff; }
+
+  .section { display: none; padding: 20px 16px 40px; max-width: 860px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--green);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; justify-content: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: .8rem; font-weight: 600;
+  }
+  .badge-10 { background: #dcfce7; color: var(--pts10); border: 1px solid #86efac; }
+  .badge-5  { background: #dbeafe; color: var(--pts5);  border: 1px solid #93c5fd; }
+  .badge-3  { background: #fef3c7; color: var(--pts3);  border: 1px solid #fcd34d; }
+
+  .user-select-wrap { margin-bottom: 20px; }
+  .user-select-wrap label { display: block; font-size: .85rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  select, input[type=text], input[type=password] {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: .95rem;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s;
+  }
+  select:focus, input[type=text]:focus, input[type=password]:focus { border-color: var(--green); }
+
+  .user-status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #eef5e0; padding: 12px 16px; border-radius: 8px;
+    margin-bottom: 20px; border-left: 5px solid var(--green);
+    font-size: .95rem;
+  }
+  .btn-logout {
+    background: #e11d48; color: white; border: none; padding: 6px 14px;
+    border-radius: 6px; cursor: pointer; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; text-transform: uppercase; font-size: .85rem; transition: background .2s;
+  }
+  .btn-logout:hover { background: #be123c; }
+
+  .group-container {
+    background: #f9fbf9;
+    border: 1px dashed var(--green-mid);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .group-title-banner {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem; font-weight: 900;
+    color: white; background: var(--pitch);
+    display: inline-block; padding: 4px 16px;
+    border-radius: 6px; margin-bottom: 0;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+
+  .match-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .match-header {
+    background: var(--pitch);
+    color: rgba(255,255,255,.8);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .match-body {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    gap: 8px;
+  }
+  .team-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+    color: var(--text);
+  }
+  .score-inputs {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .score-inputs input[type=number] {
+    width: 52px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-family: 'Barlow Condensed', sans-serif;
+    padding: 8px 4px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--green);
+    outline: none;
+    -moz-appearance: textfield;
+    background: #f8faf9;
+  }
+  .score-inputs input[type=number]::-webkit-inner-spin-button,
+  .score-inputs input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .score-inputs input[type=number]:focus { border-color: var(--green); background: #fff; }
+  .score-inputs input[type=number]:disabled {
+    background: #e9ecef !important;
+    color: #7f8c8d !important;
+    cursor: not-allowed;
+    border-color: #bdc3c7 !important;
+  }
+  .score-vs { font-weight: 800; color: var(--muted); font-size: 1rem; }
+  .pts-display {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    min-width: 58px; text-align: center;
+    color: var(--muted);
+  }
+  .pts-display.pts10 { color: var(--pts10); }
+  .pts-display.pts5  { color: var(--pts5); }
+  .pts-display.pts3  { color: var(--pts3); }
+
+  .btn-save {
+    width: 100%; padding: 14px;
+    background: var(--green);
+    color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    margin-top: 8px;
+  }
+  .btn-save:hover { background: var(--green-mid); }
+  .btn-save:active { transform: scale(.98); }
+
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--dark); color: #fff;
+    padding: 12px 24px; border-radius: 30px;
+    font-size: .9rem; font-weight: 600;
+    transition: transform .3s; z-index: 999;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  .ranking-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--pitch);
+    color: rgba(255,255,255,.85);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .85rem; letter-spacing: .07em; text-transform: uppercase;
+    padding: 10px 12px; text-align: left;
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: .92rem; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f5f9f6; }
+  .rank-pos { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--muted); }
+  .rank-pos.top1 { color: #c9860a; }
+  .rank-pos.top2 { color: #757575; }
+  .rank-pos.top3 { color: #a0522d; }
+  .rank-pts { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--green); }
+
+  /* ── ADMIN PANEL ── */
+  .admin-match {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .admin-match:last-child { border-bottom: none; }
+  .admin-match .team-label { flex: 1; font-size: .9rem; font-weight: 600; min-width: 80px; }
+  .admin-match input[type=number] {
+    width: 54px; text-align: center;
+    padding: 7px; font-size: 1rem; font-weight: 700;
+    border: 2px solid var(--border); border-radius: 7px;
+    background: #f8faf9; color: var(--text);
+    -moz-appearance: textfield;
+  }
+  .admin-match input[type=number]:focus { border-color: var(--green); outline: none; }
+  .btn-update {
+    padding: 7px 14px; border-radius: 7px;
+    background: var(--green); color: #fff; border: none;
+    font-weight: 600; font-size: .85rem; cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-update:hover { background: var(--green-mid); }
+  .result-confirmed { color: var(--pts10); font-weight: 700; font-size: .85rem; }
+
+  /* ── ADMIN KNOCKOUT CARD ── */
+  .admin-ko-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .admin-ko-card .ko-match-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    color: var(--green);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .admin-ko-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .admin-ko-grid label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .admin-ko-grid input[type=text] {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-size: .88rem;
+    background: #f8faf9;
+    color: var(--text);
+    outline: none;
+  }
+  .admin-ko-grid input[type=text]:focus { border-color: var(--green); }
+  .ko-score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .ko-score-row label { font-size: .8rem; color: var(--muted); font-weight: 600; }
+  .ko-score-row input[type=number] {
+    width: 58px; text-align: center;
+    padding: 7px; font-size: 1rem; font-weight: 700;
+    border: 2px solid var(--border); border-radius: 7px;
+    background: #f8faf9; color: var(--text);
+    -moz-appearance: textfield;
+  }
+  .ko-score-row input[type=number]:focus { border-color: var(--green); outline: none; }
+  .ko-confirmed-badge {
+    font-size: .78rem; font-weight: 700;
+    color: var(--pts10);
+    background: #dcfce7;
+    padding: 3px 9px;
+    border-radius: 8px;
+  }
+  .btn-ko-save {
+    padding: 7px 16px; border-radius: 7px;
+    background: #0369a1; color: #fff; border: none;
+    font-weight: 700; font-size: .85rem; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: .04em;
+    transition: background .2s;
+  }
+  .btn-ko-save:hover { background: #0284c7; }
+
+  /* ── ADMIN TABS ── */
+  .admin-subtabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .admin-subtab {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .admin-subtab.active {
+    background: var(--pitch);
+    color: var(--gold);
+    border-color: var(--pitch);
+  }
+  .admin-subtab:hover:not(.active) { border-color: var(--green); color: var(--green); }
+
+  .chip {
+    display: inline-block; padding: 2px 9px; border-radius: 12px;
+    font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .chip-done { background: #fee2e2; color: #dc2626; }
+  .chip-soon { background: #e0f2fe; color: #0369a1; }
+  .chip-locked { background: #fef08a; color: #a16207; }
+  .chip-live {
+    background: #fee2e2;
+    color: #dc2626;
+    animation: chipPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes chipPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .55; }
+  }
+
+  .dark-toggle {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,.12);
+    border: 1.5px solid rgba(255,255,255,.2);
+    border-radius: 30px;
+    padding: 6px 14px 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    color: rgba(255,255,255,.85);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: background .2s, border-color .2s;
+    z-index: 10;
+    user-select: none;
+  }
+  .dark-toggle:hover { background: rgba(255,255,255,.22); }
+  .dark-toggle .toggle-track {
+    width: 34px; height: 18px;
+    background: rgba(255,255,255,.25);
+    border-radius: 9px;
+    position: relative;
+    transition: background .3s;
+    flex-shrink: 0;
+  }
+  .dark-toggle .toggle-thumb {
+    width: 14px; height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: transform .3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  }
+  body.dark .dark-toggle .toggle-track { background: var(--gold); }
+  body.dark .dark-toggle .toggle-thumb { transform: translateX(16px); }
+
+  .match-urgency {
+    border-color: #f97316 !important;
+    border-width: 2px !important;
+  }
+  .match-urgency .match-header { background: #9a3412; }
+  .match-soon-warn {
+    border-color: #facc15 !important;
+    border-width: 2px !important;
+  }
+  .match-soon-warn .match-header { background: #78350f; }
+
+  .match-countdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 16px 7px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .match-urgency .match-countdown { background: var(--urgent-bg, #fff7ed); }
+  .match-soon-warn .match-countdown { background: var(--soon-bg, #fffbeb); }
+
+  .cd-label { display: flex; align-items: center; gap: 5px; }
+  .match-urgency .cd-label,
+  .match-urgency .cd-timer { color: var(--urgent-text, #c2410c); }
+  .match-soon-warn .cd-label,
+  .match-soon-warn .cd-timer { color: var(--soon-text, #92400e); }
+
+  .cd-timer {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown-bar {
+    height: 3px;
+    margin: 0 0 0;
+    overflow: hidden;
+  }
+  .match-urgency .countdown-bar { background: #fed7aa; }
+  .match-soon-warn .countdown-bar { background: #fef08a; }
+  .countdown-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s linear;
+  }
+  .match-urgency .countdown-bar-fill { background: #f97316; }
+  .match-soon-warn .countdown-bar-fill { background: #eab308; }
+
+  .my-result { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .my-result:last-child { border-bottom: none; }
+  .my-result .match-info { flex: 1; font-size: .9rem; }
+  .my-result .my-guess { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: var(--green); }
+  .my-result .real-score { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: var(--muted); }
+  .my-result .pts-badge {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem;
+    padding: 3px 10px; border-radius: 6px;
+  }
+
+  .sec-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--text); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-title::after {
+    content: '';
+    flex: 1; height: 2px; background: var(--border);
+  }
+
+  .search-box { position: relative; margin-bottom: 14px; }
+  .search-box input {
+    width: 100%; padding: 9px 12px 9px 36px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: .9rem; background: #fff; outline: none;
+  }
+  .search-box input:focus { border-color: var(--green); }
+  .search-box::before {
+    content: '🔍'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    font-size: .9rem;
+  }
+
+  .regras-list { list-style: none; padding-left: 0; }
+  .regras-list li { margin-bottom: 12px; font-size: 0.92rem; line-height: 1.5; color: var(--text); }
+  .regras-list li strong { color: var(--green); }
+
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  .page-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    max-width: 1380px;
+    margin: 0 auto;
+  }
+
+  .live-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 12px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .live-sidebar-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e11d48;
+    animation: pulseLive 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulseLive {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .4; transform: scale(.7); }
+  }
+  .live-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    font-size: .8rem;
+  }
+  .live-card.is-live {
+    border-color: #e11d48;
+    background: #fff5f7;
+  }
+  .live-card.is-soon {
+    border-color: #0369a1;
+    background: #f0f9ff;
+  }
+  .live-card .lc-teams {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+  .live-card .lc-team { flex: 1; line-height: 1.2; }
+  .live-card .lc-team.home { text-align: right; }
+  .live-card .lc-team.away { text-align: left; }
+  .live-card .lc-score {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--dark);
+    text-align: center;
+    min-width: 52px;
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 2px 6px;
+    letter-spacing: .04em;
+  }
+  .live-card.is-live .lc-score {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  .live-card .lc-meta {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .72rem;
+    color: var(--muted);
+  }
+  .live-card .lc-minute {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: .8rem;
+    color: #e11d48;
+  }
+  .live-empty {
+    text-align: center;
+    font-size: .8rem;
+    color: var(--muted);
+    padding: 12px 0;
+    line-height: 1.5;
+  }
+  .live-update-time {
+    font-size: .68rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .center-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .center-content .section { max-width: 860px; margin: 0 auto; }
+
+  .btn-save-top {
+    padding: 9px 18px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .95rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .btn-save-top:hover { background: var(--green-mid); }
+  .btn-save-top:active { transform: scale(.97); }
+
+  .etapa-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .etapa-row .user-select-wrap {
+    max-width: 280px;
+    margin-bottom: 0;
+  }
+  .etapa-row .btn-save-top {
+    margin-left: auto;
+  }
+
+  /* Indicador de rodada automática */
+  .round-auto-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 10px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 1100px) {
+    .live-sidebar { display: none; }
+  }
+  @media (max-width: 700px) {
+    .admin-ko-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .match-body { flex-direction: column; gap: 10px; }
+    .team-name { font-size: 1rem; }
+    .score-inputs input[type=number] { width: 48px; font-size: 1.1rem; }
+    .etapa-row { max-width: 100%; }
+    .admin-ko-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── MODAL DE PERFIL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 28px 24px 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.22);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem; font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none;
+    font-size: 1.4rem; cursor: pointer;
+    color: var(--muted); line-height: 1;
+    padding: 4px;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-section {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 16px;
+  }
+  .modal-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .btn-profile {
+    width: 100%; padding: 11px;
+    border: none; border-radius: 9px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    cursor: pointer; transition: background .2s, transform .1s;
+    margin-top: 8px;
+  }
+  .btn-profile:active { transform: scale(.98); }
+  .btn-profile.green { background: var(--green); color: #fff; }
+  .btn-profile.green:hover { background: var(--green-mid); }
+  .btn-profile.blue  { background: #0369a1; color: #fff; }
+  .btn-profile.blue:hover  { background: #0284c7; }
+  .btn-profile.red   { background: #e11d48; color: #fff; }
+  .btn-profile.red:hover   { background: #be123c; }
+  .profile-msg { font-size: .85rem; font-weight: 600; margin-top: 8px; text-align: center; }
+  .profile-msg.ok  { color: var(--pts10); }
+  .profile-msg.err { color: var(--red-pts); }
+
+  /* ── BOTÃO DE PERFIL NA STATUS BAR ── */
+  .btn-profile-icon {
+    background: var(--green);
+    color: white; border: none;
+    padding: 6px 14px;
+    border-radius: 6px; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; text-transform: uppercase;
+    font-size: .85rem; transition: background .2s;
+    margin-right: 6px;
+  }
+  .btn-profile-icon:hover { background: var(--green-mid); }
+
+  /* ── RESET DE SENHA ── */
+  #reset-section {
+    margin-top: 14px;
+    padding: 14px;
+    background: #fff7ed;
+    border: 1px solid #f97316;
+    border-radius: 10px;
+    display: none;
+  }
+  body.dark #reset-section {
+    background: #2a1a0a;
+    border-color: #c2410c;
+  }
+  #reset-section .reset-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    color: #c2410c; text-transform: uppercase;
+    letter-spacing: .04em; margin-bottom: 10px;
+  }
+
+  /* ── LOG VIEWER ── */
+  .log-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: .82rem;
+    font-family: monospace;
+    line-height: 1.5;
+  }
+  .log-entry.log-error { border-left: 4px solid #dc2626; }
+  .log-entry.log-warn  { border-left: 4px solid #f59e0b; }
+  .log-entry.log-info  { border-left: 4px solid #2563eb; }
+  .log-time { color: var(--muted); font-size: .78rem; }
+  .log-user { font-weight: 700; color: var(--green); }
+  .log-msg  { margin-top: 3px; color: var(--text); }
+  body.dark .log-entry { background: #111e13; }
+
+  /* ── RESET REQUESTS (ADMIN) ── */
+  .reset-req-card {
+    background: var(--card);
+    border: 1.5px solid #f97316;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .reset-req-info { flex: 1; min-width: 150px; }
+  .reset-req-name { font-weight: 700; font-size: .95rem; color: var(--text); }
+  .reset-req-date { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  .btn-approve {
+    background: var(--pts10); color: #fff;
+    border: none; padding: 7px 16px; border-radius: 7px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: .85rem; cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-approve:hover { background: #15803d; }
+  .btn-deny {
+    background: #dc2626; color: #fff;
+    border: none; padding: 7px 16px; border-radius: 7px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: .85rem; cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-deny:hover { background: #b91c1c; }
+
+  input[type=email] {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: .95rem;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s;
+  }
+  input[type=email]:focus { border-color: var(--green); }
+  body.dark input[type=email] {
+    background: #1a2a1d;
+    color: var(--text);
+    border-color: var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div id="loading-overlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; font-weight:700; color:var(--green);">
+  <div style="border: 4px solid var(--border); border-top: 4px solid var(--green); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom:12px;"></div>
+  Sincronizando com o Banco de Dados...
+</div>
+
+<header>
+  <h1>⚽ Bolão TI Aperam — Copa 2026</h1>
+  <p>Faça seus palpites e suba no ranking!</p>
+  <button class="dark-toggle" onclick="toggleDark()" id="dark-btn" title="Alternar modo escuro">
+    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    <span id="dark-btn-label">🌙 Escuro</span>
+  </button>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('tab-palpites')">🎯 Palpites</button>
+  <button onclick="showTab('tab-meus')">📋 Meus Palpites</button>
+  <button onclick="showTab('tab-ranking')">🏆 Ranking</button>
+  <button onclick="showTab('tab-regras')">📜 Regras</button>
+  <button onclick="showTab('tab-admin')">⚙️ Admin</button>
+</nav>
+
+<div class="page-wrapper">
+
+  <aside class="live-sidebar" id="live-sidebar-left">
+    <div class="live-sidebar-title"><span class="live-dot"></span> Ao Vivo</div>
+    <div id="live-left-content"><div class="live-empty">Carregando...</div></div>
+    <div class="live-update-time" id="live-update-time"></div>
+  </aside>
+
+  <div class="center-content">
+
+<div id="tab-palpites" class="section active">
+  <div class="sec-title">🎯 Dar Palpites</div>
+
+  <div class="score-legend">
+    <span class="badge badge-10">✅ 10 pts — Placar Exato</span>
+    <span class="badge badge-5">🎯 5 pts — Vencedor/Empate + Saldo</span>
+    <span class="badge badge-3">↕️ 3 pts — Apenas Vencedor</span>
+  </div>
+
+  <div id="auth-container" class="card" style="max-width: 420px; margin: 30px auto; display: block;">
+    <div class="card-title">🔐 Identifique-se para palpitar</div>
+    <div class="user-select-wrap">
+      <label>👤 Usuário ou E-mail</label>
+      <input type="text" id="login-user" placeholder="Ex: Nome Sobrenome ou email@dominio.com">
+    </div>
+    <div class="user-select-wrap">
+      <label>🔑 Senha</label>
+      <input type="password" id="login-pass" placeholder="Mínimo 4 dígitos" onkeydown="if(event.key==='Enter') handleLogin()">
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-save" style="margin-top:0; flex: 1;" onclick="handleLogin()">🚪 Entrar</button>
+      <button class="btn-save" style="margin-top:0; flex: 1; background: var(--muted);" onclick="openRegisterModal()">📝 Cadastrar</button>
+    </div>
+    <div id="auth-error-msg" style="color: var(--red-pts); font-size: .85rem; font-weight: 600; margin-top: 12px; text-align: center;"></div>
+
+    <!-- Seção de redefinição de senha (aparece após 3 tentativas erradas) -->
+    <div id="reset-section">
+      <div class="reset-title">🔒 Muitas tentativas incorretas</div>
+      <div id="reset-flow-step1">
+        <p style="font-size:.85rem;color:#7c2d12;margin-bottom:10px;">Clique abaixo para redefinir sua senha. Se tiver e-mail cadastrado, você receberá um código. Caso contrário, um pedido será enviado ao admin.</p>
+        <button class="btn-save" style="background:#c2410c;margin-top:0;" onclick="requestPasswordReset()">📧 Redefinir Senha</button>
+      </div>
+      <div id="reset-flow-step2" style="display:none;">
+        <p style="font-size:.85rem;color:#7c2d12;margin-bottom:10px;">Digite o código de 6 dígitos enviado para o seu e-mail:</p>
+        <div class="user-select-wrap" style="margin-bottom:8px;">
+          <input type="text" id="reset-code-input" placeholder="Código de 6 dígitos" maxlength="6">
+        </div>
+        <div class="user-select-wrap" style="margin-bottom:8px;">
+          <input type="password" id="reset-new-pass" placeholder="Nova senha (mín. 4 dígitos)">
+        </div>
+        <div class="user-select-wrap" style="margin-bottom:8px;">
+          <input type="password" id="reset-confirm-pass" placeholder="Confirme a nova senha">
+        </div>
+        <button class="btn-save" style="background:#c2410c;margin-top:0;" onclick="confirmPasswordReset()">✅ Confirmar Redefinição</button>
+      </div>
+      <div id="reset-flow-step3" style="display:none;">
+        <p style="font-size:.85rem;color:#15803d;font-weight:600;">✅ Sua senha foi redefinida com sucesso! Faça login com a nova senha.</p>
+      </div>
+      <div id="reset-flow-pending" style="display:none;">
+        <p style="font-size:.85rem;color:#92400e;font-weight:600;">⏳ Solicitação enviada ao admin. Você será notificado quando aprovado.</p>
+      </div>
+      <div id="reset-msg" style="font-size:.82rem;font-weight:600;margin-top:8px;color:var(--red-pts);"></div>
+    </div>
+  </div>
+
+  <!-- Modal de Cadastro -->
+  <div class="modal-overlay" id="modal-register">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('modal-register')">✕</button>
+      <div class="modal-title">📝 Criar Conta</div>
+      <div class="user-select-wrap">
+        <label>👤 Nome / Usuário</label>
+        <input type="text" id="reg-name" placeholder="Ex: João Silva">
+      </div>
+      <div class="user-select-wrap">
+        <label>📧 E-mail</label>
+        <input type="email" id="reg-email" placeholder="seu@email.com">
+      </div>
+      <div class="user-select-wrap">
+        <label>🔑 Senha</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 4 dígitos">
+      </div>
+      <div class="user-select-wrap">
+        <label>🔑 Confirmar Senha</label>
+        <input type="password" id="reg-confirm-pass" placeholder="Repita a senha">
+      </div>
+      <button class="btn-profile green" onclick="handleRegister()">✅ Criar Conta</button>
+      <div id="reg-msg" class="profile-msg"></div>
+    </div>
+  </div>
+
+  <div id="palpites-workspace" class="card" style="display: none;">
+    <div class="user-status-bar">
+      <span>Usuário: <b id="display-logged-user">--</b></span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="btn-profile-icon" onclick="openProfileModal()">👤 Perfil</button>
+        <button class="btn-logout" onclick="handleLogout()">Sair da Conta</button>
+      </div>
+    </div>
+    
+    <div class="etapa-row">
+      <div class="user-select-wrap">
+        <label>📅 Selecione a Etapa da Copa:</label>
+        <select id="sel-etapa" onchange="renderMatches(); loadUserPalpites();">
+          <option value="grupos">Fase de Grupos</option>
+          <option value="oitavas">Oitavas de Final</option>
+          <option value="quartas">Quartas de Final</option>
+          <option value="semi">Semifinais</option>
+          <option value="final">Grande Final</option>
+        </select>
+      </div>
+      <button class="btn-save-top" onclick="savePalpites()" title="Salvar palpites">💾 Salvar</button>
+    </div>
+    
+    <div id="matches-container"></div>
+    
+    <button class="btn-save" onclick="savePalpites()">💾 Salvar Palpites</button>
+  </div>
+</div>
+
+<div id="tab-meus" class="section">
+  <div class="sec-title">📋 Meus Palpites</div>
+  <div class="card">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+      <div class="user-select-wrap" style="flex: 1; min-width: 200px;">
+        <label>👤 Visualizar palpites de</label>
+        <select id="sel-view-user" onchange="renderMyPalpites()">
+          <option value="">— escolha seu nome —</option>
+        </select>
+      </div>
+      <div class="user-select-wrap" style="flex: 1; min-width: 150px;">
+        <label>📅 Filtro de Etapa</label>
+        <select id="sel-etapa-meus" onchange="renderMyPalpites()">
+          <option value="grupos">Fase de Grupos</option>
+          <option value="oitavas">Oitavas de Final</option>
+          <option value="quartas">Quartas de Final</option>
+          <option value="semi">Semifinais</option>
+          <option value="final">Grande Final</option>
+        </select>
+      </div>
+    </div>
+    <div id="my-palpites-list"></div>
+  </div>
+</div>
+
+<div id="tab-ranking" class="section">
+  <div class="sec-title">🏆 Ranking Geral</div>
+  <div class="card">
+    <div class="search-box"><input id="rank-search" type="text" placeholder="Buscar participante..." oninput="renderRanking()"></div>
+    <div class="ranking-wrap">
+      <table id="ranking-table">
+        <thead><tr>
+          <th>#</th><th>Participante</th><th>Pts</th><th>10pts</th><th>5pts</th><th>3pts</th>
+        </tr></thead>
+        <tbody id="ranking-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-regras" class="section">
+  <div class="sec-title">📜 Regulamento do Bolão</div>
+  
+  <div class="card">
+    <div class="card-title">⚽ Regras de Pontuação Configuradas</div>
+    <div class="ranking-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Critério</th>
+            <th>Pontuação</th>
+            <th>Exemplo Prático</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Acerto em Cheio</strong> (Placar Exato)</td>
+            <td><span class="badge badge-10">10 pontos</span></td>
+            <td>Você apostou 2x1 e o jogo terminou 2x1.</td>
+          </tr>
+          <tr>
+            <td><strong>Acerto de Tendência</strong> (Vencedor/Empate e Saldo de Gols)</td>
+            <td><span class="badge badge-5">5 pontos</span></td>
+            <td>Você apostou 3x1, o jogo foi 2x0 (Acertou o vencedor e o saldo de +2 gols, mas errou o placar exato) ou apostou 1x1, o jogo foi 2x2 (Acertou o empate, mas errou o placar exato).</td>
+          </tr>
+          <tr>
+            <td><strong>Acerto de Vencedor</strong></td>
+            <td><span class="badge badge-3">3 pontos</span></td>
+            <td>Você apostou 2x0, o jogo foi 1x0 (Acertou o vencedor, errou o saldo e placar).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="margin-top: 15px; padding: 12px; background: #fffde7; border-left: 4px solid var(--pts3); border-radius: 4px; font-size: 0.88rem;">
+      ⚠️ <strong>Critério de Desempate no Ranking:</strong> Se dois ou mais participantes terminarem com o mesmo número de pontos totais, as posições serão decididas sequencialmente por:
+      <br><strong>1º Lugar:</strong> Quem tiver mais acertos de <strong>10 pontos</strong> (Placares Exatos).
+      <br><strong>2º Lugar:</strong> Quem tiver mais acertos de <strong>5 pontos</strong> (Tendência com Saldo).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📱 Passo a Passo para Operar o Site</div>
+    <ul class="regras-list">
+      <li><strong>1. Identificação ou Cadastro:</strong> Vá para a aba <strong>🎯 Palpites</strong>. Se for sua primeira vez, digite seu nome e crie uma senha (mínimo de 4 dígitos) e clique em <em>Cadastrar</em>. Se já tiver conta criada, use os mesmos dados e clique em <em>Entrar</em>.</li>
+      <li><strong>2. Lançar os Palpites:</strong> Após o login, os campos de gols dos jogos ativos estarão liberados. Digite o placar que você acredita para cada partida da lista. Você pode mudar a etapa no dropbox para ver jogos de mata-mata.</li>
+      <li><strong>3. Bloqueio de Horário:</strong> Você só pode salvar ou alterar os palpites de um jogo até o horário oficial do início da partida. Após o horário, os campos são automaticamente bloqueados.</li>
+      <li><strong>4. Conferência Individual:</strong> Na aba <strong>📋 Meus Palpites</strong>, selecione seu nome na lista suspensa para ver um relatório limpo e completo de todas as suas apostas feitas, os resultados oficiais já calculados e seus acertos.</li>
+      <li><strong>5. Monitorar a Classificação:</strong> Acompanhe a sua evolução na aba <strong>🏆 Ranking</strong>. Ela atualiza de forma automatizada no momento em que a equipe organizadora insere os placares oficiais da rodada!</li>
+    </ul>
+  </div>
+</div>
+
+<div id="tab-admin" class="section">
+  <div class="sec-title">⚙️ Painel Admin</div>
+
+  <div class="card" id="admin-login-card" style="margin-bottom:14px;">
+    <div class="card-title">🔐 Senha de Acesso</div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <input type="password" id="admin-pw" placeholder="Senha admin...">
+      <button class="btn-update" onclick="checkAdmin()">Entrar</button>
+    </div>
+    <div id="admin-msg" style="margin-top:8px;font-size:.85rem;color:var(--red-pts);"></div>
+  </div>
+
+  <div id="admin-panel" style="display:none;">
+    
+    <!-- Sub-abas do Admin -->
+    <div class="admin-subtabs">
+      <button class="admin-subtab active" onclick="switchAdminTab('resultados')">⚽ Resultados</button>
+      <button class="admin-subtab" onclick="switchAdminTab('confrontos')">🗓️ Editar Confrontos Mata-Mata</button>
+      <button class="admin-subtab" onclick="switchAdminTab('resets')">🔑 Pedidos de Reset</button>
+      <button class="admin-subtab" onclick="switchAdminTab('logs')">📋 Logs de Erros</button>
+    </div>
+
+    <!-- SUB-ABA: RESULTADOS -->
+    <div id="admin-tab-resultados">
+      <div class="card">
+        <div class="card-title">⚽ Inserir Resultados Reais</div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+          <div class="user-select-wrap" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+            <label>📅 Etapa:</label>
+            <select id="sel-etapa-admin" onchange="toggleAdminRound(); renderAdminMatches()">
+              <option value="grupos">Fase de Grupos</option>
+              <option value="oitavas">Oitavas de Final</option>
+              <option value="quartas">Quartas de Final</option>
+              <option value="semi">Semifinais</option>
+              <option value="final">Grande Final</option>
+            </select>
+          </div>
+          <div class="user-select-wrap" id="wrap-rodada-admin" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+            <label>Rodada:</label>
+            <select id="sel-rodada-admin" onchange="renderAdminMatches()">
+              <option value="1">Rodada 1</option>
+              <option value="2">Rodada 2</option>
+              <option value="3">Rodada 3</option>
+            </select>
+          </div>
+        </div>
+
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px;">Insira o placar real dos jogos. A pontuação de todos os participantes será calculada automaticamente.</p>
+        <div id="admin-matches"></div>
+      </div>
+    </div>
+
+    <!-- SUB-ABA: CONFRONTOS MATA-MATA -->
+    <div id="admin-tab-confrontos" style="display:none;">
+      <div class="card">
+        <div class="card-title">🗓️ Editar Confrontos do Mata-Mata</div>
+        <p style="font-size:.85rem; color:var(--muted); margin-bottom:16px; line-height:1.5;">
+          Defina os times, datas e horários dos confrontos conforme forem saindo. Os dados serão salvos na planilha e aparecerão automaticamente para todos os participantes na aba de Palpites.
+        </p>
+        
+        <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:flex-end;">
+          <div class="user-select-wrap" style="min-width:150px; flex:1; margin-bottom:0;">
+            <label>📅 Fase:</label>
+            <select id="sel-fase-ko" onchange="renderKOEditor()">
+              <option value="oitavas">Oitavas de Final</option>
+              <option value="quartas">Quartas de Final</option>
+              <option value="semi">Semifinais</option>
+              <option value="final">Grande Final</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="ko-editor-container"></div>
+      </div>
+    </div>
+
+    <!-- SUB-ABA: PEDIDOS DE RESET DE SENHA -->
+    <div id="admin-tab-resets" style="display:none;">
+      <div class="card">
+        <div class="card-title">🔑 Pedidos de Redefinição de Senha</div>
+        <p style="font-size:.85rem; color:var(--muted); margin-bottom:16px; line-height:1.5;">
+          Usuários sem e-mail cadastrado que solicitaram redefinição de senha aparecem aqui. Ao aprovar, o usuário poderá alterar a senha na próxima tentativa de login.
+        </p>
+        <button class="btn-update" onclick="loadResetRequests()" style="margin-bottom:14px;">🔄 Atualizar Lista</button>
+        <div id="admin-reset-requests"><p style="color:var(--muted);text-align:center;padding:10px;">Clique em Atualizar para carregar.</p></div>
+      </div>
+    </div>
+
+    <!-- SUB-ABA: LOGS DE ERRO -->
+    <div id="admin-tab-logs" style="display:none;">
+      <div class="card">
+        <div class="card-title">📋 Logs de Erros</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+          <button class="btn-update" onclick="loadErrorLogs()">🔄 Atualizar Logs</button>
+          <button class="btn-update" style="background:#0369a1;" onclick="downloadLogs()">⬇️ Baixar .txt</button>
+          <button class="btn-update" style="background:#dc2626;" onclick="clearLogs()">🗑️ Limpar Logs</button>
+        </div>
+        <div id="admin-logs-container"><p style="color:var(--muted);text-align:center;padding:10px;">Clique em Atualizar para carregar.</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast">✅ Palpites salvos!</div>
+
+<!-- Modal de Perfil -->
+<div class="modal-overlay" id="modal-profile">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-profile')">✕</button>
+    <div class="modal-title">👤 Meu Perfil</div>
+
+    <!-- Alterar Nome/Usuário -->
+    <div class="modal-section-title" style="margin-bottom:10px;">✏️ Alterar Nome / Usuário</div>
+    <div class="user-select-wrap">
+      <label>Novo nome / usuário</label>
+      <input type="text" id="profile-new-name" placeholder="Novo nome ou usuário">
+    </div>
+    <div class="user-select-wrap">
+      <label>Confirme sua senha atual</label>
+      <input type="password" id="profile-name-pass" placeholder="Senha atual">
+    </div>
+    <button class="btn-profile green" onclick="updateProfileName()">💾 Salvar Nome</button>
+    <div id="profile-name-msg" class="profile-msg"></div>
+
+    <!-- Alterar E-mail -->
+    <div class="modal-section">
+      <div class="modal-section-title">📧 Alterar E-mail</div>
+      <div class="user-select-wrap">
+        <label>Novo e-mail</label>
+        <input type="email" id="profile-new-email" placeholder="novo@email.com">
+      </div>
+      <div class="user-select-wrap">
+        <label>Confirme sua senha atual</label>
+        <input type="password" id="profile-email-pass" placeholder="Senha atual">
+      </div>
+      <button class="btn-profile blue" onclick="updateProfileEmail()">💾 Salvar E-mail</button>
+      <div id="profile-email-msg" class="profile-msg"></div>
+    </div>
+
+    <!-- Alterar Senha -->
+    <div class="modal-section">
+      <div class="modal-section-title">🔑 Alterar Senha</div>
+      <div class="user-select-wrap">
+        <label>Senha atual</label>
+        <input type="password" id="profile-old-pass" placeholder="Senha atual">
+      </div>
+      <div class="user-select-wrap">
+        <label>Nova senha</label>
+        <input type="password" id="profile-new-pass" placeholder="Mínimo 4 dígitos">
+      </div>
+      <div class="user-select-wrap">
+        <label>Confirmar nova senha</label>
+        <input type="password" id="profile-confirm-pass" placeholder="Repita a nova senha">
+      </div>
+      <button class="btn-profile red" onclick="updateProfilePassword()">🔒 Alterar Senha</button>
+      <div id="profile-pass-msg" class="profile-msg"></div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /center-content -->
+
+  <aside class="live-sidebar" id="live-sidebar-right">
+    <div class="live-sidebar-title">📅 Hoje &amp; Amanhã</div>
+    <div id="live-right-content"><div class="live-empty">Carregando...</div></div>
+  </aside>
+
+</div><!-- /page-wrapper -->
+
+<script>
+// ════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ════════════════════════════════════════
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxISvsJXRMRIgiH1YNiP-ajDoqASwZ7fPWSajPW149QrTrAJ5oUralszmGtRvRYuWbY/exec"; 
+const ADMIN_PASSWORD = "aperam2026"; 
+
+// ════════════════════════════════════════
+//  PARTIDAS — FASE DE GRUPOS (fixas no código)
+//  Mata-mata: carregado da planilha via CACHE_DATA.koMatches
+// ════════════════════════════════════════
+
+const GROUP_MATCHES = [
+  // ── RODADA 1 ──
+  { id:1,  phase:"grupos", round:1, date:"11/06/2026", time:"16:00", group:"A", home:"México",         away:"África do Sul" },
+  { id:2,  phase:"grupos", round:1, date:"11/06/2026", time:"23:00", group:"A", home:"Coreia do Sul",  away:"Rep. Tcheca" },
+  { id:3,  phase:"grupos", round:1, date:"12/06/2026", time:"16:00", group:"B", home:"Canadá",         away:"Bósnia e Herzegovina" },
+  { id:4,  phase:"grupos", round:1, date:"12/06/2026", time:"22:00", group:"D", home:"Estados Unidos", away:"Paraguai" },
+  { id:5,  phase:"grupos", round:1, date:"13/06/2026", time:"16:00", group:"B", home:"Catar",          away:"Suíça" },
+  { id:6,  phase:"grupos", round:1, date:"13/06/2026", time:"19:00", group:"C", home:"🇧🇷 Brasil",      away:"Marrocos" },
+  { id:7,  phase:"grupos", round:1, date:"13/06/2026", time:"22:00", group:"C", home:"Haiti",          away:"Escócia" },
+  { id:8,  phase:"grupos", round:1, date:"14/06/2026", time:"01:00", group:"D", home:"Austrália",      away:"Turquia" },
+  { id:9,  phase:"grupos", round:1, date:"14/06/2026", time:"14:00", group:"E", home:"Alemanha",       away:"Curaçau" },
+  { id:10, phase:"grupos", round:1, date:"14/06/2026", time:"20:00", group:"E", home:"Costa do Marfim",away:"Equador" },
+  { id:11, phase:"grupos", round:1, date:"14/06/2026", time:"17:00", group:"F", home:"Holanda",        away:"Japão" },
+  { id:12, phase:"grupos", round:1, date:"14/06/2026", time:"23:00", group:"F", home:"Suécia",         away:"Tunísia" },
+  { id:13, phase:"grupos", round:1, date:"15/06/2026", time:"13:00", group:"H", home:"Espanha",        away:"Cabo Verde" },
+  { id:14, phase:"grupos", round:1, date:"15/06/2026", time:"19:00", group:"H", home:"Arábia Saudita", away:"Uruguai" },
+  { id:15, phase:"grupos", round:1, date:"15/06/2026", time:"16:00", group:"G", home:"Bélgica",        away:"Egito" },
+  { id:16, phase:"grupos", round:1, date:"15/06/2026", time:"22:00", group:"G", home:"Irã",            away:"Nova Zelândia" },
+  { id:17, phase:"grupos", round:1, date:"16/06/2026", time:"16:00", group:"I", home:"França",         away:"Senegal" },
+  { id:18, phase:"grupos", round:1, date:"16/06/2026", time:"19:00", group:"I", home:"Iraque",         away:"Noruega" },
+  { id:19, phase:"grupos", round:1, date:"16/06/2026", time:"22:00", group:"J", home:"Argentina",      away:"Argélia" },
+  { id:20, phase:"grupos", round:1, date:"17/06/2026", time:"01:00", group:"J", home:"Áustria",        away:"Jordânia" },
+  { id:21, phase:"grupos", round:1, date:"17/06/2026", time:"14:00", group:"K", home:"Portugal",       away:"RD do Congo" },
+  { id:22, phase:"grupos", round:1, date:"17/06/2026", time:"17:00", group:"L", home:"Inglaterra",     away:"Croácia" },
+  { id:23, phase:"grupos", round:1, date:"17/06/2026", time:"20:00", group:"L", home:"Gana",           away:"Panamá" },
+  { id:24, phase:"grupos", round:1, date:"17/06/2026", time:"23:00", group:"K", home:"Uzbequistão",    away:"Colômbia" },
+
+  // ── RODADA 2 ──
+  { id:40, phase:"grupos", round:2, date:"18/06/2026", time:"13:00", group:"A", home:"Rep. Tcheca",    away:"África do Sul" },
+  { id:41, phase:"grupos", round:2, date:"18/06/2026", time:"16:00", group:"B", home:"Suíça",          away:"Bósnia e Herzegovina" },
+  { id:42, phase:"grupos", round:2, date:"18/06/2026", time:"19:00", group:"B", home:"Canadá",         away:"Catar" },
+  { id:43, phase:"grupos", round:2, date:"18/06/2026", time:"22:00", group:"A", home:"México",         away:"Coreia do Sul" },
+  { id:44, phase:"grupos", round:2, date:"19/06/2026", time:"16:00", group:"D", home:"Estados Unidos", away:"Austrália" },
+  { id:45, phase:"grupos", round:2, date:"19/06/2026", time:"19:00", group:"C", home:"Escócia",        away:"Marrocos" },
+  { id:46, phase:"grupos", round:2, date:"19/06/2026", time:"21:30", group:"C", home:"🇧🇷 Brasil",      away:"Haiti" },
+  { id:47, phase:"grupos", round:2, date:"20/06/2026", time:"00:00", group:"D", home:"Turquia",        away:"Paraguai" },
+  { id:48, phase:"grupos", round:2, date:"20/06/2026", time:"14:00", group:"F", home:"Holanda",        away:"Suécia" },
+  { id:49, phase:"grupos", round:2, date:"20/06/2026", time:"17:00", group:"E", home:"Alemanha",       away:"Costa do Marfim" },
+  { id:50, phase:"grupos", round:2, date:"20/06/2026", time:"21:00", group:"E", home:"Equador",        away:"Curaçao" },
+  { id:51, phase:"grupos", round:2, date:"21/06/2026", time:"01:00", group:"F", home:"Tunísia",        away:"Japão" },
+  { id:52, phase:"grupos", round:2, date:"21/06/2026", time:"13:00", group:"H", home:"Espanha",        away:"Arábia Saudita" },
+  { id:53, phase:"grupos", round:2, date:"21/06/2026", time:"16:00", group:"G", home:"Bélgica",        away:"Irã" },
+  { id:54, phase:"grupos", round:2, date:"21/06/2026", time:"19:00", group:"H", home:"Uruguai",        away:"Cabo Verde" },
+  { id:55, phase:"grupos", round:2, date:"21/06/2026", time:"22:00", group:"G", home:"Nova Zelândia",  away:"Egito" },
+  { id:56, phase:"grupos", round:2, date:"22/06/2026", time:"15:00", group:"I", home:"França",         away:"Iraque" },
+  { id:57, phase:"grupos", round:2, date:"22/06/2026", time:"18:00", group:"I", home:"Senegal",        away:"Noruega" },
+  { id:58, phase:"grupos", round:2, date:"22/06/2026", time:"21:00", group:"J", home:"Argentina",      away:"Áustria" },
+  { id:59, phase:"grupos", round:2, date:"23/06/2026", time:"00:00", group:"J", home:"Argélia",        away:"Jordânia" },
+  { id:60, phase:"grupos", round:2, date:"23/06/2026", time:"14:00", group:"K", home:"Portugal",       away:"Uzbequistão" },
+  { id:61, phase:"grupos", round:2, date:"23/06/2026", time:"17:00", group:"L", home:"Inglaterra",     away:"Gana" },
+  { id:62, phase:"grupos", round:2, date:"23/06/2026", time:"20:00", group:"L", home:"Panamá",         away:"Croácia" },
+  { id:63, phase:"grupos", round:2, date:"23/06/2026", time:"23:00", group:"K", home:"Colômbia",       away:"RD Congo" },
+
+  // ── RODADA 3 ──
+  { id:64, phase:"grupos", round:3, date:"24/06/2026", time:"16:00", group:"B", home:"Suíça",          away:"Canadá" },
+  { id:65, phase:"grupos", round:3, date:"24/06/2026", time:"16:00", group:"B", home:"Bósnia e Herzegovina", away:"Catar" },
+  { id:66, phase:"grupos", round:3, date:"24/06/2026", time:"19:00", group:"C", home:"Marrocos",       away:"Haiti" },
+  { id:67, phase:"grupos", round:3, date:"24/06/2026", time:"19:00", group:"C", home:"Escócia",        away:"🇧🇷 Brasil" },
+  { id:68, phase:"grupos", round:3, date:"24/06/2026", time:"22:00", group:"A", home:"África do Sul",  away:"Coreia do Sul" },
+  { id:69, phase:"grupos", round:3, date:"24/06/2026", time:"22:00", group:"A", home:"Rep. Tcheca",    away:"México" },
+  { id:70, phase:"grupos", round:3, date:"25/06/2026", time:"17:00", group:"E", home:"Equador",        away:"Alemanha" },
+  { id:71, phase:"grupos", round:3, date:"25/06/2026", time:"17:00", group:"E", home:"Curaçao",        away:"Costa do Marfim" },
+  { id:72, phase:"grupos", round:3, date:"25/06/2026", time:"20:00", group:"F", home:"Tunísia",        away:"Holanda" },
+  { id:73, phase:"grupos", round:3, date:"25/06/2026", time:"20:00", group:"F", home:"Japão",          away:"Suécia" },
+  { id:74, phase:"grupos", round:3, date:"25/06/2026", time:"23:00", group:"D", home:"Turquia",        away:"Estados Unidos" },
+  { id:75, phase:"grupos", round:3, date:"25/06/2026", time:"23:00", group:"D", home:"Paraguai",       away:"Austrália" },
+  { id:76, phase:"grupos", round:3, date:"26/06/2026", time:"16:00", group:"I", home:"Senegal",        away:"Iraque" },
+  { id:77, phase:"grupos", round:3, date:"26/06/2026", time:"16:00", group:"I", home:"Noruega",        away:"França" },
+  { id:78, phase:"grupos", round:3, date:"26/06/2026", time:"21:00", group:"H", home:"Uruguai",        away:"Espanha" },
+  { id:79, phase:"grupos", round:3, date:"26/06/2026", time:"21:00", group:"H", home:"Cabo Verde",     away:"Arábia Saudita" },
+  { id:80, phase:"grupos", round:3, date:"27/06/2026", time:"00:00", group:"G", home:"Egito",          away:"Irã" },
+  { id:81, phase:"grupos", round:3, date:"27/06/2026", time:"00:00", group:"G", home:"Nova Zelândia",  away:"Bélgica" },
+  { id:82, phase:"grupos", round:3, date:"27/06/2026", time:"18:00", group:"L", home:"Panamá",         away:"Inglaterra" },
+  { id:83, phase:"grupos", round:3, date:"27/06/2026", time:"18:00", group:"L", home:"Croácia",        away:"Gana" },
+  { id:84, phase:"grupos", round:3, date:"27/06/2026", time:"20:30", group:"K", home:"Colômbia",       away:"Portugal" },
+  { id:85, phase:"grupos", round:3, date:"27/06/2026", time:"20:30", group:"K", home:"RD Congo",       away:"Uzbequistão" },
+  { id:86, phase:"grupos", round:3, date:"27/06/2026", time:"23:00", group:"J", home:"Argélia",        away:"Áustria" },
+  { id:87, phase:"grupos", round:3, date:"27/06/2026", time:"23:00", group:"J", home:"Jordânia",       away:"Argentina" }
+];
+
+// Template dos confrontos de mata-mata (IDs fixos, dados dinâmicos da planilha)
+const KO_TEMPLATES = [
+  { id:25, phase:"oitavas", slot:1, label:"Jogo 1" },
+  { id:26, phase:"oitavas", slot:2, label:"Jogo 2" },
+  { id:27, phase:"oitavas", slot:3, label:"Jogo 3" },
+  { id:28, phase:"oitavas", slot:4, label:"Jogo 4" },
+  { id:29, phase:"oitavas", slot:5, label:"Jogo 5" },
+  { id:30, phase:"oitavas", slot:6, label:"Jogo 6" },
+  { id:31, phase:"oitavas", slot:7, label:"Jogo 7" },
+  { id:32, phase:"oitavas", slot:8, label:"Jogo 8" },
+  { id:33, phase:"quartas", slot:1, label:"Jogo 1" },
+  { id:34, phase:"quartas", slot:2, label:"Jogo 2" },
+  { id:35, phase:"quartas", slot:3, label:"Jogo 3" },
+  { id:36, phase:"quartas", slot:4, label:"Jogo 4" },
+  { id:37, phase:"semi",    slot:1, label:"Semifinal 1" },
+  { id:38, phase:"semi",    slot:2, label:"Semifinal 2" },
+  { id:39, phase:"final",   slot:1, label:"Grande Final" },
+];
+
+// Mescla grupos + mata-mata em MATCHES (mata-mata é preenchido depois com dados da planilha)
+let MATCHES = [...GROUP_MATCHES];
+
+let CACHE_DATA = { users: {}, palpites: {}, results: {}, koMatches: {} };
+
+function getData()    { return CACHE_DATA.palpites; }
+function getResults() { return CACHE_DATA.results; }
+function getUsers()   { return CACHE_DATA.users; }
+function getKO()      { return CACHE_DATA.koMatches || {}; }
+
+// Reconstrói o array MATCHES com os dados dinâmicos do mata-mata
+function rebuildMatches() {
+  const ko = getKO();
+  const koArray = KO_TEMPLATES.map(tpl => {
+    const saved = ko[tpl.id] || {};
+    return {
+      id:    tpl.id,
+      phase: tpl.phase,
+      slot:  tpl.slot,
+      date:  saved.date  || "A definir",
+      time:  saved.time  || "A definir",
+      group: saved.label || tpl.label,
+      home:  saved.home  || "A definir",
+      away:  saved.away  || "A definir",
+    };
+  });
+  MATCHES = [...GROUP_MATCHES, ...koArray];
+}
+
+let memoryLoggedUser = null;
+function getLoggedUser() { 
+  try { return localStorage.getItem('bolao_logged_in') || memoryLoggedUser; } catch(e) { return memoryLoggedUser; }
+}
+function setLoggedUser(name) { 
+  memoryLoggedUser = name;
+  if(name) { try { localStorage.setItem('bolao_logged_in', name); } catch(e) {} } 
+  else { try { localStorage.removeItem('bolao_logged_in'); } catch(e) {} }
+}
+
+function showLoading(show) { document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none'; }
+
+async function refreshData() {
+  try {
+    let res = await fetch(API_URL);
+    CACHE_DATA = await res.json();
+    rebuildMatches();
+  } catch(e) {
+    console.error("Erro ao sincronizar:", e); showToast("❌ Erro de conexão com o banco de dados.");
+  }
+}
+
+// ════════════════════════════════════════
+//  LÓGICA DE RODADA PADRÃO AUTOMÁTICA
+//  Rodada 1 → após 17/06/2026 23:59 → Rodada 2
+//  Rodada 2 → após 23/06/2026 23:59 → Rodada 3
+// ════════════════════════════════════════
+
+function getDefaultRound() {
+  const now = new Date();
+  // Último jogo da Rodada 1: 17/06/2026 23:00 → bloqueia ~110min depois
+  const endRound1 = new Date(2026, 5, 18, 1, 30); // 18/jun 01:30 (110min após 23:00)
+  // Último jogo da Rodada 2: 23/06/2026 23:00
+  const endRound2 = new Date(2026, 6, 24, 1, 30); // 24/jun 01:30
+  if (now >= endRound2) return 3;
+  if (now >= endRound1) return 2;
+  return 1;
+}
+
+// ════════════════════════════════════════
+//  SISTEMA DE LOGS DE ERRO
+// ════════════════════════════════════════
+
+const ERROR_LOG = [];
+
+function logError(msg, user, level = 'error') {
+  const entry = {
+    ts: new Date().toISOString(),
+    level,
+    user: user || getLoggedUser() || 'anônimo',
+    msg
+  };
+  ERROR_LOG.push(entry);
+  // Envia ao servidor de forma não-bloqueante
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'logError', level, user: entry.user, msg, ts: entry.ts })
+  }).catch(() => {});
+}
+
+// ════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════
+
+let loginAttempts = 0;
+let loginBlockedUser = null;
+
+function resolveUserByIdentifier(identifier) {
+  const users = getUsers();
+  // Tenta pelo nome exato
+  if (users[identifier] !== undefined) return identifier;
+  // Tenta pelo e-mail
+  const usersData = CACHE_DATA.usersData || {};
+  for (const name of Object.keys(usersData)) {
+    if (usersData[name] && usersData[name].email && 
+        usersData[name].email.toLowerCase() === identifier.toLowerCase()) {
+      return name;
+    }
+  }
+  return null;
+}
+
+function handleLogin() {
+  const identifier = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const msg = document.getElementById('auth-error-msg');
+  if (!identifier || !pass) { msg.textContent = "⚠️ Insira o usuário/e-mail e a senha."; return; }
+
+  const resolvedUser = resolveUserByIdentifier(identifier);
+  if (!resolvedUser) {
+    loginAttempts++;
+    msg.textContent = "❌ Usuário não encontrado.";
+    logError(`Login falhou: usuário não encontrado (${identifier})`, identifier, 'warn');
+    checkLoginAttempts(identifier);
+    return;
+  }
+
+  const users = getUsers();
+  if (String(users[resolvedUser]) !== String(pass)) {
+    loginAttempts++;
+    msg.textContent = `❌ Senha inválida. Tentativa ${loginAttempts}/3.`;
+    logError(`Login falhou: senha incorreta para ${resolvedUser}`, resolvedUser, 'warn');
+    checkLoginAttempts(resolvedUser);
+    return;
+  }
+
+  loginAttempts = 0;
+  loginBlockedUser = null;
+  document.getElementById('reset-section').style.display = 'none';
+  setLoggedUser(resolvedUser);
+  msg.textContent = "";
+  checkAuth();
+  showToast(`👋 Bem-vindo, ${resolvedUser}!`);
+}
+
+function checkLoginAttempts(user) {
+  if (loginAttempts >= 3) {
+    loginBlockedUser = user;
+    document.getElementById('reset-section').style.display = 'block';
+    document.getElementById('reset-flow-step1').style.display = 'block';
+    document.getElementById('reset-flow-step2').style.display = 'none';
+    document.getElementById('reset-flow-step3').style.display = 'none';
+    document.getElementById('reset-flow-pending').style.display = 'none';
+    document.getElementById('reset-msg').textContent = '';
+  }
+}
+
+async function requestPasswordReset() {
+  const user = loginBlockedUser || document.getElementById('login-user').value.trim();
+  if (!user) { document.getElementById('reset-msg').textContent = "⚠️ Informe o usuário no campo acima."; return; }
+  
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'requestPasswordReset', user }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      if (json.hasEmail) {
+        document.getElementById('reset-flow-step1').style.display = 'none';
+        document.getElementById('reset-flow-step2').style.display = 'block';
+        document.getElementById('reset-msg').textContent = '';
+      } else {
+        document.getElementById('reset-flow-step1').style.display = 'none';
+        document.getElementById('reset-flow-pending').style.display = 'block';
+        document.getElementById('reset-msg').textContent = '';
+      }
+    } else {
+      document.getElementById('reset-msg').textContent = '❌ Erro: ' + (json.msg || 'Tente novamente.');
+      logError(`Falha ao solicitar reset para ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    document.getElementById('reset-msg').textContent = '❌ Erro de conexão.';
+    logError(`Erro de rede ao solicitar reset para ${user}: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+async function confirmPasswordReset() {
+  const user = loginBlockedUser;
+  const code = document.getElementById('reset-code-input').value.trim();
+  const newPass = document.getElementById('reset-new-pass').value;
+  const confirmPass = document.getElementById('reset-confirm-pass').value;
+  const resetMsg = document.getElementById('reset-msg');
+
+  if (!code || code.length !== 6) { resetMsg.textContent = '⚠️ Digite o código de 6 dígitos.'; return; }
+  if (!newPass || newPass.length < 4) { resetMsg.textContent = '⚠️ Nova senha deve ter ao menos 4 dígitos.'; return; }
+  if (newPass !== confirmPass) { resetMsg.textContent = '⚠️ As senhas não coincidem.'; return; }
+
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'confirmPasswordReset', user, code, newPass }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      await refreshData();
+      loginAttempts = 0;
+      loginBlockedUser = null;
+      document.getElementById('reset-flow-step2').style.display = 'none';
+      document.getElementById('reset-flow-step3').style.display = 'block';
+      resetMsg.textContent = '';
+      setTimeout(() => { document.getElementById('reset-section').style.display = 'none'; }, 3000);
+    } else {
+      resetMsg.textContent = '❌ ' + (json.msg || 'Código inválido ou expirado.');
+      logError(`Falha na confirmação de reset para ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    resetMsg.textContent = '❌ Erro de conexão.';
+    logError(`Erro de rede na confirmação de reset: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+function openRegisterModal() {
+  document.getElementById('reg-name').value = '';
+  document.getElementById('reg-email').value = '';
+  document.getElementById('reg-pass').value = '';
+  document.getElementById('reg-confirm-pass').value = '';
+  document.getElementById('reg-msg').textContent = '';
+  document.getElementById('reg-msg').className = 'profile-msg';
+  document.getElementById('modal-register').classList.add('open');
+}
+
+async function handleRegister() {
+  const user = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const confirm = document.getElementById('reg-confirm-pass').value;
+  const msg = document.getElementById('reg-msg');
+  
+  if (!user || !pass) { msg.textContent = "⚠️ Preencha nome e senha."; msg.className = 'profile-msg err'; return; }
+  if (user.length < 3) { msg.textContent = "⚠️ O nome deve conter ao menos 3 caracteres."; msg.className = 'profile-msg err'; return; }
+  if (pass.length < 4) { msg.textContent = "⚠️ A senha deve conter ao menos 4 dígitos."; msg.className = 'profile-msg err'; return; }
+  if (pass !== confirm) { msg.textContent = "⚠️ As senhas não coincidem."; msg.className = 'profile-msg err'; return; }
+  if (getUsers()[user]) { msg.textContent = "❌ Esse nome já está em uso."; msg.className = 'profile-msg err'; return; }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = "⚠️ E-mail inválido."; msg.className = 'profile-msg err'; return; }
+  
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'register', name: user, pass, email }) });
+    let json = await res.json();
+    if(json.status === 'success') {
+      await refreshData();
+      setLoggedUser(user);
+      closeModal('modal-register');
+      checkAuth();
+      showToast(`✅ Perfil cadastrado com sucesso!`);
+    } else {
+      msg.textContent = "❌ " + (json.msg || "Erro ao salvar cadastro.");
+      msg.className = 'profile-msg err';
+      logError(`Falha no cadastro de ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    msg.textContent = "❌ Erro de rede ao cadastrar.";
+    msg.className = 'profile-msg err';
+    logError(`Erro de rede no cadastro de ${user}: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+function handleLogout() {
+  if (confirm("Sair da sua conta?")) { setLoggedUser(null); checkAuth(); showTab('tab-palpites'); }
+}
+
+function checkAuth() {
+  const currentUser = getLoggedUser();
+  document.getElementById('auth-container').style.display = currentUser ? 'none' : 'block';
+  document.getElementById('palpites-workspace').style.display = currentUser ? 'block' : 'none';
+  if (currentUser) {
+    document.getElementById('display-logged-user').textContent = currentUser;
+    renderMatches(); loadUserPalpites();
+  } else {
+    document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
+    document.getElementById('reset-section').style.display = 'none';
+    loginAttempts = 0;
+  }
+  updateUsersDropdown();
+}
+
+// ════════════════════════════════════════
+//  PERFIL DE USUÁRIO
+// ════════════════════════════════════════
+
+function openProfileModal() {
+  const user = getLoggedUser(); if (!user) return;
+  document.getElementById('profile-new-name').value = '';
+  document.getElementById('profile-name-pass').value = '';
+  document.getElementById('profile-new-email').value = '';
+  document.getElementById('profile-email-pass').value = '';
+  document.getElementById('profile-old-pass').value = '';
+  document.getElementById('profile-new-pass').value = '';
+  document.getElementById('profile-confirm-pass').value = '';
+  ['profile-name-msg','profile-email-msg','profile-pass-msg'].forEach(id => {
+    document.getElementById(id).textContent = '';
+    document.getElementById(id).className = 'profile-msg';
+  });
+  document.getElementById('modal-profile').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+async function updateProfileName() {
+  const user = getLoggedUser();
+  const newName = document.getElementById('profile-new-name').value.trim();
+  const pass = document.getElementById('profile-name-pass').value;
+  const msgEl = document.getElementById('profile-name-msg');
+
+  if (!newName) { msgEl.textContent = '⚠️ Digite o novo nome.'; msgEl.className = 'profile-msg err'; return; }
+  if (newName.length < 3) { msgEl.textContent = '⚠️ Nome muito curto (mín. 3 caracteres).'; msgEl.className = 'profile-msg err'; return; }
+  if (!pass) { msgEl.textContent = '⚠️ Confirme sua senha.'; msgEl.className = 'profile-msg err'; return; }
+  if (String(getUsers()[user]) !== String(pass)) { msgEl.textContent = '❌ Senha incorreta.'; msgEl.className = 'profile-msg err'; return; }
+  if (newName !== user && getUsers()[newName]) { msgEl.textContent = '❌ Esse nome já está em uso.'; msgEl.className = 'profile-msg err'; return; }
+
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'name', value: newName, pass }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      await refreshData();
+      setLoggedUser(newName);
+      document.getElementById('display-logged-user').textContent = newName;
+      msgEl.textContent = '✅ Nome atualizado com sucesso!'; msgEl.className = 'profile-msg ok';
+      document.getElementById('profile-new-name').value = '';
+      document.getElementById('profile-name-pass').value = '';
+    } else {
+      msgEl.textContent = '❌ ' + (json.msg || 'Erro ao atualizar.'); msgEl.className = 'profile-msg err';
+      logError(`Falha ao atualizar nome de ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    msgEl.textContent = '❌ Erro de conexão.'; msgEl.className = 'profile-msg err';
+    logError(`Erro de rede ao atualizar nome de ${user}: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+async function updateProfileEmail() {
+  const user = getLoggedUser();
+  const newEmail = document.getElementById('profile-new-email').value.trim();
+  const pass = document.getElementById('profile-email-pass').value;
+  const msgEl = document.getElementById('profile-email-msg');
+
+  if (!newEmail) { msgEl.textContent = '⚠️ Digite o novo e-mail.'; msgEl.className = 'profile-msg err'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) { msgEl.textContent = '⚠️ E-mail inválido.'; msgEl.className = 'profile-msg err'; return; }
+  if (!pass) { msgEl.textContent = '⚠️ Confirme sua senha.'; msgEl.className = 'profile-msg err'; return; }
+  if (String(getUsers()[user]) !== String(pass)) { msgEl.textContent = '❌ Senha incorreta.'; msgEl.className = 'profile-msg err'; return; }
+
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'email', value: newEmail, pass }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      await refreshData();
+      msgEl.textContent = '✅ E-mail atualizado!'; msgEl.className = 'profile-msg ok';
+      document.getElementById('profile-new-email').value = '';
+      document.getElementById('profile-email-pass').value = '';
+    } else {
+      msgEl.textContent = '❌ ' + (json.msg || 'Erro ao atualizar.'); msgEl.className = 'profile-msg err';
+      logError(`Falha ao atualizar email de ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    msgEl.textContent = '❌ Erro de conexão.'; msgEl.className = 'profile-msg err';
+    logError(`Erro de rede ao atualizar email de ${user}: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+async function updateProfilePassword() {
+  const user = getLoggedUser();
+  const oldPass = document.getElementById('profile-old-pass').value;
+  const newPass = document.getElementById('profile-new-pass').value;
+  const confirmPass = document.getElementById('profile-confirm-pass').value;
+  const msgEl = document.getElementById('profile-pass-msg');
+
+  if (!oldPass) { msgEl.textContent = '⚠️ Digite sua senha atual.'; msgEl.className = 'profile-msg err'; return; }
+  if (String(getUsers()[user]) !== String(oldPass)) { msgEl.textContent = '❌ Senha atual incorreta.'; msgEl.className = 'profile-msg err'; return; }
+  if (!newPass || newPass.length < 4) { msgEl.textContent = '⚠️ Nova senha deve ter ao menos 4 dígitos.'; msgEl.className = 'profile-msg err'; return; }
+  if (newPass !== confirmPass) { msgEl.textContent = '⚠️ As senhas não coincidem.'; msgEl.className = 'profile-msg err'; return; }
+
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', user, field: 'pass', value: newPass, pass: oldPass }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      await refreshData();
+      msgEl.textContent = '✅ Senha alterada com sucesso!'; msgEl.className = 'profile-msg ok';
+      document.getElementById('profile-old-pass').value = '';
+      document.getElementById('profile-new-pass').value = '';
+      document.getElementById('profile-confirm-pass').value = '';
+    } else {
+      msgEl.textContent = '❌ ' + (json.msg || 'Erro ao alterar senha.'); msgEl.className = 'profile-msg err';
+      logError(`Falha ao alterar senha de ${user}: ${json.msg}`, user);
+    }
+  } catch(e) {
+    msgEl.textContent = '❌ Erro de conexão.'; msgEl.className = 'profile-msg err';
+    logError(`Erro de rede ao alterar senha de ${user}: ${e.message}`, user);
+  }
+  showLoading(false);
+}
+
+function updateUsersDropdown() {
+  const sel = document.getElementById('sel-view-user'); if(!sel) return;
+  const users = Object.keys(getUsers()).sort((a,b) => a.localeCompare(b, 'pt'));
+  sel.innerHTML = '<option value="">— escolha seu nome —</option>';
+  users.forEach(u => sel.add(new Option(u, u)));
+}
+
+// ════════════════════════════════════════
+//  FUNÇÕES DE APOIO
+// ════════════════════════════════════════
+
+function isMatchLocked(dateStr, timeStr) {
+  if (!dateStr || !timeStr || dateStr === "A definir" || timeStr === "A definir") return false;
+  const dateParts = dateStr.split('/'); const timeParts = timeStr.split(':');
+  if (dateParts.length === 3 && timeParts.length === 2) {
+    const d = new Date(dateParts[2], dateParts[1]-1, dateParts[0], timeParts[0], timeParts[1]);
+    return new Date() >= d;
+  }
+  return false;
+}
+
+function calcPts(ph, pa, rh, ra) {
+  if (rh === null || rh === undefined || ra === null || ra === undefined) return null;
+  if (ph === null || ph === undefined || pa === null || pa === undefined) return 0;
+  ph = parseInt(ph); pa = parseInt(pa); rh = parseInt(rh); ra = parseInt(ra);
+  if (isNaN(ph)||isNaN(pa)||isNaN(rh)||isNaN(ra)) return 0;
+  if (ph === rh && pa === ra) return 10;                
+  const pWin = ph > pa ? 1 : ph < pa ? -1 : 0;
+  const rWin = rh > ra ? 1 : rh < ra ? -1 : 0;
+  if (pWin === rWin && (ph-pa) === (rh-ra)) return 5;  
+  if ((ph-pa) === (rh-ra)) return 5;                   
+  if (pWin === rWin) return 3;                         
+  return 0;
+}
+
+function calcUserTotal(user) {
+  const data = getData(), results = getResults();
+  let total = 0, c10 = 0, c5 = 0, c3 = 0;
+  MATCHES.forEach(m => {
+    const p = data[`${user}__${m.id}`], r = results[m.id];
+    if (!p || !r) return;
+    const pts = calcPts(p.h, p.a, r.h, r.a);
+    if (pts === 10) { total += 10; c10++; } else if (pts === 5) { total += 5; c5++; } else if (pts === 3) { total += 3; c3++; }
+  });
+  return { total, c10, c5, c3 };
+}
+
+// ════════════════════════════════════════
+//  RENDERIZAÇÃO DE JOGOS
+// ════════════════════════════════════════
+
+function generateMatchHTML(m, results) {
+  const r = results[m.id] || {};
+  const adminDone = r.h !== null && r.h !== undefined; 
+  const timeLocked = isMatchLocked(m.date, m.time); 
+  const isDefinir = m.home === "A definir" || m.away === "A definir";
+  const disabled = adminDone || timeLocked || isDefinir;
+  
+  const st = (!adminDone && !isDefinir) ? getMatchStatus(m) : null;
+  const isLive  = st && st.status === 'live';
+  const isSoon  = st && st.status === 'soon' && st.hoursLeft === 0;
+  const isToday = st && st.status === 'soon' && st.hoursLeft >= 1;
+
+  let urgencyClass = '';
+  if (isLive)  urgencyClass = 'match-urgency';
+  else if (isSoon) urgencyClass = 'match-urgency';
+  else if (isToday && st.hoursLeft < 3) urgencyClass = 'match-soon-warn';
+
+  let chip;
+  if (adminDone)  chip = `<span class="chip chip-done">Encerrado</span>`;
+  else if (isLive) chip = `<span class="chip chip-live">⚡ Ao Vivo</span>`;
+  else if (timeLocked) chip = `<span class="chip chip-locked">Fechado/Em Jogo</span>`;
+  else if (isDefinir) chip = `<span class="chip chip-locked">Aguardando</span>`;
+  else chip = `<span class="chip chip-soon">Aberto</span>`;
+
+  let countdownHTML = '';
+  if (urgencyClass && !adminDone) {
+    if (isLive) {
+      const pct = Math.min(100, Math.round((st.minute / 90) * 100));
+      countdownHTML = `
+        <div class="countdown-bar"><div class="countdown-bar-fill" style="width:${pct}%"></div></div>
+        <div class="match-countdown">
+          <span class="cd-label">⚡ Em andamento</span>
+          <span class="cd-timer" id="cd-${m.id}">${st.minute}'</span>
+        </div>`;
+    } else {
+      const parts = m.date.split('/'), tp = m.time.split(':');
+      const kickoff = new Date(parts[2], parts[1]-1, parts[0], parseInt(tp[0]), parseInt(tp[1]));
+      const secsLeft = Math.max(0, Math.floor((kickoff - new Date()) / 1000));
+      const totalSecs = (isSoon ? 3600 : st.hoursLeft * 3600);
+      const pct = Math.max(0, Math.round((1 - secsLeft / totalSecs) * 100));
+      const h = Math.floor(secsLeft / 3600), mn = Math.floor((secsLeft % 3600) / 60), sc = secsLeft % 60;
+      const cdStr = h > 0
+        ? `${h}h ${mn.toString().padStart(2,'0')}m`
+        : `${mn.toString().padStart(2,'0')}:${sc.toString().padStart(2,'0')}`;
+      countdownHTML = `
+        <div class="countdown-bar"><div class="countdown-bar-fill" style="width:${pct}%"></div></div>
+        <div class="match-countdown">
+          <span class="cd-label">⏰ Começa em</span>
+          <span class="cd-timer" id="cd-${m.id}" data-kickoff="${kickoff.getTime()}">${cdStr}</span>
+        </div>`;
+    }
+  }
+    
+  return `
+  <div class="match-card ${urgencyClass}" id="mc-${m.id}">
+    <div class="match-header"><span>${m.date} · ${m.time}</span>${chip}</div>
+    <div class="match-body">
+      <div class="team-name">${m.home}</div>
+      <div class="score-inputs">
+        <input type="number" min="0" max="20" id="ph-${m.id}" placeholder="–" oninput="updatePtsDisplay(${m.id})" ${disabled ? 'disabled' : ''}>
+        <span class="score-vs">✕</span>
+        <input type="number" min="0" max="20" id="pa-${m.id}" placeholder="–" oninput="updatePtsDisplay(${m.id})" ${disabled ? 'disabled' : ''}>
+      </div>
+      <div class="team-name">${m.away}</div>
+      <div class="pts-display" id="pts-${m.id}">${adminDone ? `Real:<br><b>${r.h}–${r.a}</b>` : ''}</div>
+    </div>
+    ${countdownHTML}
+  </div>`;
+}
+
+function renderMatches() {
+  const container = document.getElementById('matches-container');
+  const results = getResults();
+  const selectedPhase = document.getElementById('sel-etapa')?.value || 'grupos';
+  const filteredMatches = MATCHES.filter(m => m.phase === selectedPhase);
+  const uniqueGroups = [...new Set(filteredMatches.map(m => m.group))].sort();
+  
+  let html = '';
+  uniqueGroups.forEach(grp => {
+    const bannerText = selectedPhase === 'grupos' ? `Grupo ${grp}` : grp;
+    html += `<div class="group-container">`;
+    
+    if (selectedPhase === 'grupos') {
+      // ── Calcula a rodada padrão ──
+      const defaultRound = getDefaultRound();
+      
+      html += `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <div class="group-title-banner" style="margin-bottom:0;">${bannerText}</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          ${defaultRound > 1 ? `<span class="round-auto-badge">🔄 Auto R${defaultRound}</span>` : ''}
+          <select style="padding:5px 10px; border-radius:6px; border:1.5px solid var(--border); font-family:'Barlow Condensed', sans-serif; font-size:.95rem; font-weight:700; color:var(--green); outline:none; background:#fff; cursor:pointer;" 
+            id="sel-rnd-${grp.replace(/\s/g,'_')}"
+            onchange="showGroupRound('${grp}', this.value)">
+            <option value="1" ${defaultRound === 1 ? 'selected' : ''}>Rodada 1</option>
+            <option value="2" ${defaultRound === 2 ? 'selected' : ''}>Rodada 2</option>
+            <option value="3" ${defaultRound === 3 ? 'selected' : ''}>Rodada 3</option>
+          </select>
+        </div>
+      </div>`;
+      
+      [1, 2, 3].forEach(rnd => {
+        const groupMatches = filteredMatches.filter(m => m.group === grp && m.round === rnd);
+        html += `<div id="grp-${grp}-rnd-${rnd}" style="display: ${rnd === defaultRound ? 'block' : 'none'};">`;
+        if (groupMatches.length > 0) {
+          groupMatches.forEach(m => html += generateMatchHTML(m, results));
+        } else {
+          html += `<p style="text-align:center; color:var(--muted); font-size:.85rem; padding:10px;">Jogos da rodada ${rnd} ainda não definidos.</p>`;
+        }
+        html += `</div>`;
+      });
+    } else {
+      html += `<div class="group-title-banner" style="margin-bottom:14px;">${bannerText}</div>`;
+      filteredMatches.filter(m => m.group === grp).forEach(m => html += generateMatchHTML(m, results));
+    }
+    html += `</div>`;
+  });
+  container.innerHTML = html || '<p style="text-align:center; color:var(--muted); padding:20px;">Nenhum jogo nesta etapa.</p>';
+}
+
+window.showGroupRound = function(grp, round) {
+  [1, 2, 3].forEach(rnd => {
+    const el = document.getElementById(`grp-${grp}-rnd-${rnd}`);
+    if (el) el.style.display = (rnd == round) ? 'block' : 'none';
+  });
+}
+
+function updatePtsDisplay(id) {
+  const phEl = document.getElementById(`ph-${id}`), paEl = document.getElementById(`pa-${id}`), el = document.getElementById(`pts-${id}`);
+  if (!phEl || !paEl || !el) return;
+  const r = getResults()[id], ph = phEl.value, pa = paEl.value;
+  if (!r || r.h === null || r.h === undefined) {
+    el.textContent = (ph !== '' && pa !== '') ? `${ph}–${pa}` : ''; el.className = 'pts-display'; return;
+  }
+  const pts = calcPts(ph, pa, r.h, r.a);
+  el.className = 'pts-display' + (pts===10?' pts10':pts===5?' pts5':pts===3?' pts3':'');
+  el.innerHTML = pts === null ? `Real:<br><b>${r.h}–${r.a}</b>` : `<b>${pts} pts</b><br><small>${r.h}–${r.a}</small>`;
+}
+
+function loadUserPalpites() {
+  const user = getLoggedUser(); if(!user) return;
+  const data = getData();
+  MATCHES.forEach(m => {
+    const phEl = document.getElementById(`ph-${m.id}`), paEl = document.getElementById(`pa-${m.id}`);
+    if (phEl && paEl) {
+      const p = data[`${user}__${m.id}`];
+      phEl.value = (p && p.h !== undefined && p.h !== null) ? p.h : '';
+      paEl.value = (p && p.a !== undefined && p.a !== null) ? p.a : '';
+      updatePtsDisplay(m.id);
+    }
+  });
+}
+
+async function savePalpites() {
+  const user = getLoggedUser(); if (!user) { showToast('⚠️ Identifique-se primeiro!'); return; }
+  const results = getResults(); let guessesToSend = [];
+  
+  MATCHES.forEach(m => {
+    const r = results[m.id];
+    if (r && r.h !== null && r.h !== undefined) return; 
+    if (isMatchLocked(m.date, m.time)) return;
+    const phEl = document.getElementById(`ph-${m.id}`), paEl = document.getElementById(`pa-${m.id}`);
+    if (!phEl || !paEl) return; 
+    if (phEl.value !== '' && paEl.value !== '') guessesToSend.push({ id: m.id, h: parseInt(phEl.value), a: parseInt(paEl.value) });
+  });
+
+  if(guessesToSend.length === 0) { showToast('⚠️ Nenhum palpite preenchido (ou jogos fechados).'); return; }
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'savePalpites', user: user, guesses: guessesToSend }) });
+    let json = await res.json();
+    if(json.status === 'success') { await refreshData(); renderRanking(); showToast('✅ Palpites salvos!'); }
+    else { showToast('❌ Erro ao salvar palpites.'); }
+  } catch(e) { showToast('❌ Erro de conexão.'); }
+  showLoading(false);
+}
+
+// ════════════════════════════════════════
+//  MEUS PALPITES / RANKING
+// ════════════════════════════════════════
+
+function renderMyPalpites() {
+  const user = document.getElementById('sel-view-user').value;
+  const phase = document.getElementById('sel-etapa-meus').value;
+  const container = document.getElementById('my-palpites-list');
+  if (!user) { container.innerHTML = ''; return; }
+  
+  const data = getData(), results = getResults();
+  let html = '', total = 0;
+  
+  MATCHES.filter(m => m.phase === phase).forEach(m => {
+    const p = data[`${user}__${m.id}`], r = results[m.id];
+    const hasP = p && p.h !== undefined && p.h !== null, hasR = r && r.h !== null && r.h !== undefined;
+    const pts = hasP && hasR ? calcPts(p.h, p.a, r.h, r.a) : null;
+    if (pts !== null) total += pts;
+    
+    if (hasP || hasR) {
+      const ptsColor = pts===10?'var(--pts10)':pts===5?'var(--pts5)':pts===3?'var(--pts3)':'var(--muted)';
+      html += `<div class="my-result">
+        <div class="match-info">
+          <div style="font-weight:600;font-size:.9rem;">${m.home} × ${m.away}</div>
+          <div style="font-size:.75rem;color:var(--muted);">${m.date} · ${m.group} ${m.round ? '(R'+m.round+')' : ''}</div>
+        </div>
+        <div class="my-guess">${hasP ? `${p.h}–${p.a}` : '—'}</div>
+        ${hasR ? `<div class="real-score" style="color:var(--muted);font-size:.85rem;">Real: ${r.h}–${r.a}</div>` : ''}
+        ${pts !== null ? `<span class="pts-badge" style="background:${pts>0?ptsColor+'22':''};color:${ptsColor}">${pts>0?'+'+pts+'pts':'0 pts'}</span>` : ''}
+      </div>`;
+    }
+  });
+  
+  if (html === '') {
+    html = `<p style="text-align:center; color:var(--muted); padding:10px;">Nenhum palpite registrado para esta etapa.</p>`;
+  } else {
+    html = `<div style="background:var(--pitch);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;padding:10px 14px;border-radius:8px;margin-bottom:14px;text-align:center;">TOTAL (Nesta Etapa): ${total} pontos</div>` + html;
+  }
+  container.innerHTML = html;
+}
+
+function renderRanking() {
+  const filter = (document.getElementById('rank-search')?.value || '').toLowerCase();
+  const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name) })).sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5);
+  let html = '', rank = 0, prevPts = -1;
+  rows.filter(r => r.name.toLowerCase().includes(filter)).forEach((r, i) => {
+    if (r.total !== prevPts) { rank = i+1; prevPts = r.total; }
+    const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
+    html += `<tr>
+      <td><span class="rank-pos ${rank<=3?'top'+rank:''}">${medal||rank}</span></td>
+      <td>${r.name}</td><td><span class="rank-pts">${r.total}</span></td>
+      <td style="color:var(--pts10);font-weight:700;">${r.c10||'–'}</td>
+      <td style="color:var(--pts5);font-weight:700;">${r.c5||'–'}</td>
+      <td style="color:var(--pts3);font-weight:700;">${r.c3||'–'}</td>
+    </tr>`;
+  });
+  document.getElementById('ranking-body').innerHTML = html || '<tr><td colspan="6" style="text-align:center;padding:20px;">Nenhum participante encontrado.</td></tr>';
+}
+
+// ════════════════════════════════════════
+//  ADMIN
+// ════════════════════════════════════════
+
+function checkAdmin() {
+  if (document.getElementById('admin-pw').value === ADMIN_PASSWORD) {
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-login-card').style.display = 'none';
+    renderAdminMatches();
+    renderKOEditor();
+  } else { document.getElementById('admin-msg').textContent = '❌ Senha incorreta.'; }
+}
+
+function switchAdminTab(tab) {
+  document.getElementById('admin-tab-resultados').style.display  = tab === 'resultados'  ? 'block' : 'none';
+  document.getElementById('admin-tab-confrontos').style.display  = tab === 'confrontos' ? 'block' : 'none';
+  document.querySelectorAll('.admin-subtab').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && tab === 'resultados') || (i === 1 && tab === 'confrontos'));
+  });
+}
+
+function toggleAdminRound() {
+  const phase = document.getElementById('sel-etapa-admin').value;
+  document.getElementById('wrap-rodada-admin').style.display = phase === 'grupos' ? 'block' : 'none';
+}
+
+function renderAdminMatches() {
+  const NavResults = getResults(), container = document.getElementById('admin-matches');
+  const selectedPhase = document.getElementById('sel-etapa-admin')?.value || 'grupos';
+  let filteredMatches = MATCHES.filter(m => m.phase === selectedPhase);
+  
+  if (selectedPhase === 'grupos') {
+    const r = parseInt(document.getElementById('sel-rodada-admin').value);
+    filteredMatches = filteredMatches.filter(m => m.round === r);
+  }
+  
+  container.innerHTML = filteredMatches.map(m => {
+    const r = NavResults[m.id] || {}, confirmed = (r.h !== undefined && r.h !== null);
+    const roundLabel = m.round ? ` (R${m.round})` : '';
+    const isDefinir = m.home === 'A definir' || m.away === 'A definir';
+    return `<div class="admin-match">
+      <div class="team-label">${m.date} | ${m.group}${roundLabel}</div>
+      <div style="flex:2;font-weight:600;font-size:.9rem;">${m.home} × ${m.away}</div>
+      ${isDefinir 
+        ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Confronto não definido — use "Editar Confrontos"</span>`
+        : `<input type="number" min="0" max="20" id="adm-h-${m.id}" value="${confirmed?r.h:''}" placeholder="–">
+           <span style="font-weight:800;color:var(--muted);">–</span>
+           <input type="number" min="0" max="20" id="adm-a-${m.id}" value="${confirmed?r.a:''}" placeholder="–">
+           <button class="btn-update" onclick="saveResult(${m.id})">Salvar</button>
+           ${confirmed ? `<span class="result-confirmed">✔ ${r.h}–${r.a}</span>` : ''}`
+      }
+    </div>`;
+  }).join('') || '<p style="text-align:center; color:var(--muted); padding:10px;">Nenhum jogo nesta etapa.</p>';
+}
+
+async function saveResult(id) {
+  const h = document.getElementById(`adm-h-${id}`).value, a = document.getElementById(`adm-a-${id}`).value;
+  if (h === '' || a === '') { showToast('⚠️ Preencha ambos os placares.'); return; }
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveResult', id: id, h: parseInt(h), a: parseInt(a) }) });
+    let json = await res.json();
+    if(json.status === 'success') {
+      await refreshData(); renderAdminMatches(); renderRanking();
+      if(getLoggedUser()) { renderMatches(); loadUserPalpites(); }
+      if (document.getElementById('sel-view-user').value) renderMyPalpites();
+      showToast(`✅ Resultado salvo!`);
+    } else { showToast('❌ Erro ao salvar.'); }
+  } catch(e) { showToast('❌ Erro de rede.'); }
+  showLoading(false);
+}
+
+// ════════════════════════════════════════
+//  EDITOR DE CONFRONTOS MATA-MATA
+// ════════════════════════════════════════
+
+function renderKOEditor() {
+  const phase = document.getElementById('sel-fase-ko')?.value || 'oitavas';
+  const ko = getKO();
+  const templates = KO_TEMPLATES.filter(t => t.phase === phase);
+  const container = document.getElementById('ko-editor-container');
+  
+  const phaseNames = { oitavas:'Oitavas de Final', quartas:'Quartas de Final', semi:'Semifinais', final:'Grande Final' };
+  
+  let html = '';
+  templates.forEach(tpl => {
+    const saved = ko[tpl.id] || {};
+    const confirmed = saved.home && saved.home !== 'A definir';
+    const resData = getResults()[tpl.id];
+    const hasResult = resData && resData.h !== null && resData.h !== undefined;
+    
+    html += `<div class="admin-ko-card">
+      <div class="ko-match-title">
+        ${phaseNames[phase]} — ${tpl.label}
+        ${confirmed ? `<span class="ko-confirmed-badge" style="margin-left:8px;">✔ Definido</span>` : ''}
+      </div>
+      <div class="admin-ko-grid">
+        <div>
+          <label>🏠 Time da Casa</label>
+          <input type="text" id="ko-home-${tpl.id}" value="${saved.home || ''}" placeholder="Ex: Brasil">
+        </div>
+        <div>
+          <label>✈️ Time Visitante</label>
+          <input type="text" id="ko-away-${tpl.id}" value="${saved.away || ''}" placeholder="Ex: Argentina">
+        </div>
+        <div>
+          <label>📅 Data (DD/MM/AAAA)</label>
+          <input type="text" id="ko-date-${tpl.id}" value="${saved.date || ''}" placeholder="Ex: 02/07/2026">
+        </div>
+        <div>
+          <label>🕐 Horário (HH:MM)</label>
+          <input type="text" id="ko-time-${tpl.id}" value="${saved.time || ''}" placeholder="Ex: 16:00">
+        </div>
+      </div>
+      <div class="ko-score-row">
+        <button class="btn-ko-save" onclick="saveKOMatch(${tpl.id})">💾 Salvar Confronto</button>
+        ${hasResult 
+          ? `<span style="font-size:.8rem;color:var(--muted);">Resultado já inserido: <b>${resData.h}–${resData.a}</b></span>`
+          : confirmed 
+            ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Resultado ainda não definido</span>` 
+            : ''
+        }
+      </div>
+    </div>`;
+  });
+  
+  container.innerHTML = html || '<p style="color:var(--muted);">Nenhum confronto nesta fase.</p>';
+}
+
+async function saveKOMatch(id) {
+  const home = document.getElementById(`ko-home-${id}`).value.trim();
+  const away = document.getElementById(`ko-away-${id}`).value.trim();
+  const date = document.getElementById(`ko-date-${id}`).value.trim();
+  const time = document.getElementById(`ko-time-${id}`).value.trim();
+  
+  if (!home || !away) { showToast('⚠️ Preencha pelo menos os nomes dos times.'); return; }
+  
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ 
+      action: 'saveKOMatch', 
+      id: id, home: home, away: away, date: date || 'A definir', time: time || 'A definir'
+    })});
+    let json = await res.json();
+    if(json.status === 'success') {
+      await refreshData();
+      renderKOEditor();
+      renderAdminMatches();
+      if(getLoggedUser()) { renderMatches(); loadUserPalpites(); }
+      showToast(`✅ Confronto salvo! (ID ${id})`);
+    } else { showToast('❌ Erro ao salvar confronto.'); }
+  } catch(e) { showToast('❌ Erro de rede.'); }
+  showLoading(false);
+}
+
+// ════════════════════════════════════════
+//  NAVEGAÇÃO
+// ════════════════════════════════════════
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['tab-palpites','tab-meus','tab-ranking','tab-regras','tab-admin'].indexOf(id);
+  if (idx !== -1) document.querySelectorAll('nav button')[idx].classList.add('active');
+  if (id === 'tab-ranking') renderRanking();
+  if (id === 'tab-meus') { updateUsersDropdown(); renderMyPalpites(); }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+async function init() {
+  if (API_URL === "SUA_URL_DO_WEB_APP_AQUI") { document.getElementById('loading-overlay').innerHTML = "⚠️ <b>Erro de Configuração.</b>"; return; }
+  showLoading(true); await refreshData(); showLoading(false);
+  checkAuth(); renderRanking(); renderAdminMatches();
+}
+
+init();
+
+// ════════════════════════════════════════
+//  DARK MODE
+// ════════════════════════════════════════
+
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('bolao_dark', isDark ? '1' : '0');
+  const lbl = document.getElementById('dark-btn-label');
+  if (lbl) lbl.textContent = isDark ? '☀️ Claro' : '🌙 Escuro';
+}
+
+(function initDark() {
+  const saved = localStorage.getItem('bolao_dark');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const active = saved !== null ? saved === '1' : prefersDark;
+  if (active) {
+    document.body.classList.add('dark');
+    const lbl = document.getElementById('dark-btn-label');
+    if (lbl) lbl.textContent = '☀️ Claro';
+  }
+})();
+
+// ════════════════════════════════════════
+//  SIDEBARS AO VIVO / PRÓXIMOS JOGOS
+// ════════════════════════════════════════
+
+const LIVE_REFRESH_INTERVAL = 60000;
+
+function getMatchStatus(match) {
+  if (!match.date || !match.time || match.date === 'A definir') return null;
+  const parts = match.date.split('/');
+  const timeParts = match.time.split(':');
+  if (parts.length !== 3 || timeParts.length !== 2) return null;
+  const start = new Date(parts[2], parts[1]-1, parts[0], parseInt(timeParts[0]), parseInt(timeParts[1]));
+  const end   = new Date(start.getTime() + 110 * 60000);
+  const now   = new Date();
+  if (now >= start && now <= end) {
+    const elapsed = Math.floor((now - start) / 60000);
+    const minute  = Math.min(elapsed, 90);
+    return { status: 'live', start, minute };
+  }
+  if (now < start) {
+    const diff = start - now;
+    const hours = Math.floor(diff / 3600000);
+    if (hours < 24) return { status: 'soon', start, hoursLeft: hours, minutesLeft: Math.floor((diff % 3600000) / 60000) };
+    if (hours < 48) return { status: 'tomorrow', start };
+  }
+  return { status: 'ended', start };
+}
+
+function buildLivePanels() {
+  const results = getResults();
+  const liveMatches = [], soonMatches = [], todayMatches = [];
+
+  MATCHES.forEach(m => {
+    if (m.home === 'A definir') return;
+    const st = getMatchStatus(m);
+    if (!st) return;
+    if (st.status === 'live')     liveMatches.push({ m, st });
+    if (st.status === 'soon')     soonMatches.push({ m, st });
+    if (st.status === 'tomorrow') todayMatches.push({ m, st });
+  });
+
+  const leftEl = document.getElementById('live-left-content');
+  if (liveMatches.length === 0) {
+    leftEl.innerHTML = `<div class="live-empty">Nenhum jogo<br>ao vivo agora 🤷</div>`;
+  } else {
+    leftEl.innerHTML = liveMatches.map(({ m, st }) => {
+      const r = results[m.id];
+      const scoreH = (r && r.h !== null && r.h !== undefined) ? r.h : '–';
+      const scoreA = (r && r.a !== null && r.a !== undefined) ? r.a : '–';
+      const homeClean = m.home.replace('🇧🇷 ', '');
+      const awayClean = m.away.replace('🇧🇷 ', '');
+      return `<div class="live-card is-live">
+        <div class="lc-teams">
+          <div class="lc-team home">${homeClean}</div>
+          <div class="lc-score">${scoreH} – ${scoreA}</div>
+          <div class="lc-team away">${awayClean}</div>
+        </div>
+        <div class="lc-meta">
+          <span>${m.group}</span>
+          <span class="lc-minute">⏱ ${st.minute}'</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const timeEl = document.getElementById('live-update-time');
+  if (timeEl) {
+    const now = new Date();
+    timeEl.textContent = `Atualizado às ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  }
+
+  const rightEl = document.getElementById('live-right-content');
+  const upcoming = [...soonMatches, ...todayMatches];
+
+  if (upcoming.length === 0) {
+    rightEl.innerHTML = `<div class="live-empty">Sem jogos<br>nas próximas 48h 📅</div>`;
+  } else {
+    rightEl.innerHTML = upcoming.slice(0, 6).map(({ m, st }) => {
+      const homeClean = m.home.replace('🇧🇷 ', '');
+      const awayClean = m.away.replace('🇧🇷 ', '');
+      let timeLabel;
+      if (st.status === 'soon') {
+        if (st.hoursLeft === 0) timeLabel = `em ${st.minutesLeft}min`;
+        else timeLabel = `em ${st.hoursLeft}h${st.minutesLeft > 0 ? st.minutesLeft+'min' : ''}`;
+      } else {
+        timeLabel = `Amanhã ${m.time}`;
+      }
+      return `<div class="live-card is-soon">
+        <div class="lc-teams">
+          <div class="lc-team home">${homeClean}</div>
+          <div class="lc-score" style="font-size:.85rem;background:#e0f2fe;color:#0369a1;">${m.time}</div>
+          <div class="lc-team away">${awayClean}</div>
+        </div>
+        <div class="lc-meta">
+          <span>${m.group}</span>
+          <span style="color:#0369a1;font-weight:700;font-size:.72rem;">${timeLabel}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function startLiveUpdates() {
+  buildLivePanels();
+  setInterval(buildLivePanels, LIVE_REFRESH_INTERVAL);
+
+  setInterval(() => {
+    document.querySelectorAll('[id^="cd-"][data-kickoff]').forEach(el => {
+      const kickoff = parseInt(el.dataset.kickoff);
+      const secsLeft = Math.max(0, Math.floor((kickoff - Date.now()) / 1000));
+      const h  = Math.floor(secsLeft / 3600);
+      const mn = Math.floor((secsLeft % 3600) / 60);
+      const sc = secsLeft % 60;
+      if (secsLeft <= 0) {
+        el.textContent = '00:00';
+      } else if (h > 0) {
+        el.textContent = `${h}h ${mn.toString().padStart(2,'0')}m`;
+      } else {
+        el.textContent = `${mn.toString().padStart(2,'0')}:${sc.toString().padStart(2,'0')}`;
+      }
+      const card = el.closest('.match-card');
+      if (card) {
+        const bar = card.querySelector('.countdown-bar-fill');
+        if (bar) {
+          const totalWindow = card.classList.contains('match-urgency') && h === 0 ? 3600 : 3 * 3600;
+          const pct = Math.max(0, Math.round((1 - secsLeft / totalWindow) * 100));
+          bar.style.width = pct + '%';
+        }
+      }
+    });
+
+    document.querySelectorAll('[id^="cd-"]:not([data-kickoff])').forEach(el => {
+      const matchId = parseInt(el.id.replace('cd-', ''));
+      const match = MATCHES.find(m => m.id === matchId);
+      if (!match) return;
+      const st = getMatchStatus(match);
+      if (st && st.status === 'live') {
+        el.textContent = `${st.minute}'`;
+        const card = el.closest('.match-card');
+        if (card) {
+          const bar = card.querySelector('.countdown-bar-fill');
+          if (bar) bar.style.width = Math.min(100, Math.round((st.minute / 90) * 100)) + '%';
+        }
+      }
+    });
+  }, 1000);
+}
+
+// ════════════════════════════════════════
+//  FUNÇÕES DO PAINEL ADMIN FALTANTES
+// ════════════════════════════════════════
+
+async function loadResetRequests() {
+  const container = document.getElementById('admin-reset-requests');
+  container.innerHTML = '<p style="text-align:center;color:var(--muted);">Carregando...</p>';
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getResetRequests' }) });
+    let json = await res.json();
+    if (json.data && json.data.length > 0) {
+      container.innerHTML = json.data.map(r => `
+        <div class="reset-req-card">
+          <div class="reset-req-info">
+            <div class="reset-req-name">${r.user}</div>
+            <div class="reset-req-date">${new Date(r.date).toLocaleString()}</div>
+          </div>
+          <button class="btn-approve" onclick="approveReset('${r.user}')">Aprovar (Senha: 1234)</button>
+          <button class="btn-deny" onclick="denyReset('${r.user}')">Rejeitar</button>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = '<p style="text-align:center;color:var(--muted);">Nenhum pedido pendente.</p>';
+    }
+  } catch(e) {
+    container.innerHTML = '<p style="text-align:center;color:var(--red-pts);">Erro ao carregar os pedidos.</p>';
+  }
+}
+
+async function approveReset(user) {
+  if(!confirm(`Isso redefinirá a senha de ${user} para "1234". Continuar?`)) return;
+  showLoading(true);
+  try {
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'approveReset', user: user }) });
+    showToast('✅ Senha redefinida para 1234!');
+    loadResetRequests();
+  } catch(e) { showToast('❌ Erro de conexão.'); }
+  showLoading(false);
+}
+
+async function denyReset(user) {
+  if(!confirm(`Rejeitar pedido de ${user}?`)) return;
+  showLoading(true);
+  try {
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'denyReset', user: user }) });
+    showToast('✅ Pedido rejeitado.');
+    loadResetRequests();
+  } catch(e) { showToast('❌ Erro de conexão.'); }
+  showLoading(false);
+}
+
+async function loadErrorLogs() {
+  const container = document.getElementById('admin-logs-container');
+  container.innerHTML = '<p style="text-align:center;color:var(--muted);">Carregando logs...</p>';
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAdminLogs' }) });
+    let json = await res.json();
+    if (json.data && json.data.length > 0) {
+      container.innerHTML = json.data.map(l => `
+        <div class="log-entry log-${l.level || 'info'}">
+          <span class="log-time">[${new Date(l.date).toLocaleString()}]</span> 
+          <span class="log-user">${l.user}</span>
+          <div class="log-msg">${l.msg}</div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = '<p style="text-align:center;color:var(--muted);">Nenhum log registrado.</p>';
+    }
+  } catch(e) {
+    container.innerHTML = '<p style="text-align:center;color:var(--red-pts);">Erro ao carregar logs.</p>';
+  }
+}
+
+async function clearLogs() {
+  if(!confirm("Tem certeza que deseja limpar todos os logs?")) return;
+  showLoading(true);
+  try {
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'clearAdminLogs' }) });
+    showToast('✅ Logs limpos com sucesso.');
+    loadErrorLogs();
+  } catch(e) { showToast('❌ Erro de conexão.'); }
+  showLoading(false);
+}
+
+function downloadLogs() {
+  const entries = document.querySelectorAll('.log-entry');
+  if(entries.length === 0) { showToast('⚠️ Sem logs para baixar.'); return; }
+  let txt = "--- LOGS BOLÃO TI APERAM ---\n\n";
+  entries.forEach(e => { txt += e.innerText + "\n\n"; });
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `logs_bolao_${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(startLiveUpdates, 1800);
+});
+</script>
+</body>
+</html>
