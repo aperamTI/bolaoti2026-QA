@@ -82,6 +82,27 @@
     background: #233626;
     color: #ffffff;
   }
+
+  /* --- ESTATÍSTICAS DA GALERA --- */
+  .stats-wrapper {
+    padding: 8px 16px 14px;
+    background: rgba(0,0,0,0.02);
+    border-top: 1px solid var(--border);
+  }
+  body.dark .stats-wrapper { background: rgba(255,255,255,0.02); }
+  
+  .stats-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .stats-bar {
+    display: flex; height: 6px; width: 100%;
+    background: var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .stats-h { background: var(--pts10); transition: width 0.5s; }
+  .stats-d { background: #94a3b8; transition: width 0.5s; }
+  .stats-a { background: var(--pts5); transition: width 0.5s; }
   /* --------------------------------------------------- */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1435,12 +1456,15 @@
   </div>
 </div>
 
+<!-- BIBLIOTECA DE CONFETES -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
 // ════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwP6zSn_cZ7XlO-zc9gqYOFefCn6Gh_GnB83eiyCbu-ab8jWg7Ql8V0CyBxqFrnnO4M/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyv4bsh0cuVlRYT8_xB6L0rXElOEQA1zjCET8nc3AFZ9jA3PfCZAeQRpzTvQdW58gDl/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA: escape de HTML (anti-XSS) + tokens de sessão
@@ -1977,7 +2001,7 @@ function updateUsersDropdown() {
 }
 
 // ════════════════════════════════════════
-//  FUNÇÕES DE APOIO
+//  FUNÇÕES DE APOIO E ESTATÍSTICAS
 // ════════════════════════════════════════
 
 function isMatchLocked(dateStr, timeStr) {
@@ -2014,6 +2038,45 @@ function calcUserTotal(user) {
     if (pts === 10) { total += 10; c10++; } else if (pts === 5) { total += 5; c5++; } else if (pts === 3) { total += 3; c3++; }
   });
   return { total, c10, c5, c3 };
+}
+
+// Calcula porcentagens de vitórias da casa, empate e vitórias fora para a partida
+function getMatchStatsHTML(m) {
+  const data = getData();
+  let total = 0, hWin = 0, draw = 0, aWin = 0;
+
+  Object.keys(data).forEach(key => {
+    if (key.endsWith(`__${m.id}`)) {
+      const p = data[key];
+      if (p.h !== null && p.h !== undefined && p.a !== null && p.a !== undefined) {
+        total++;
+        if (p.h > p.a) hWin++;
+        else if (p.h < p.a) aWin++;
+        else draw++;
+      }
+    }
+  });
+
+  if (total === 0) return `<div class="stats-wrapper"><div class="stats-labels" style="justify-content:center;color:var(--muted);text-transform:none;">Nenhum palpite registrado</div></div>`;
+
+  const pH = Math.round((hWin / total) * 100) || 0;
+  const pD = Math.round((draw / total) * 100) || 0;
+  const pA = Math.round((aWin / total) * 100) || 0;
+
+  return `
+    <div class="stats-wrapper">
+      <div class="stats-labels">
+        <span style="color:var(--pts10)">${pH}% Casa</span>
+        <span style="color:#64748b">${pD}% Empate</span>
+        <span style="color:var(--pts5)">${pA}% Fora</span>
+      </div>
+      <div class="stats-bar">
+        <div class="stats-h" style="width: ${pH}%"></div>
+        <div class="stats-d" style="width: ${pD}%"></div>
+        <div class="stats-a" style="width: ${pA}%"></div>
+      </div>
+    </div>
+  `;
 }
 
 // ════════════════════════════════════════
@@ -2073,6 +2136,12 @@ function generateMatchHTML(m, results) {
     }
   }
 
+  // Mostra as estatísticas sempre que houver times definidos
+  let statsHTML = '';
+  if (!isDefinir) {
+    statsHTML = getMatchStatsHTML(m);
+  }
+
   return `
   <div class="match-card ${urgencyClass}" id="mc-${m.id}">
     <div class="match-header"><span>${m.date} · ${m.time}</span>${chip}</div>
@@ -2087,6 +2156,7 @@ function generateMatchHTML(m, results) {
       <div class="pts-display" id="pts-${m.id}">${adminDone ? `Real:<br><b>${r.h}–${r.a}</b>` : ''}</div>
     </div>
     ${countdownHTML}
+    ${statsHTML}
   </div>`;
 }
 
@@ -2197,23 +2267,48 @@ async function savePalpites() {
 }
 
 // ════════════════════════════════════════
-//  MEUS PALPITES / RANKING
+//  MEUS PALPITES E CONFETES
 // ════════════════════════════════════════
 
 function renderMyPalpites() {
   const user = document.getElementById('sel-view-user').value;
+  const loggedUser = getLoggedUser(); // Pega o usuário que está logado
   const phase = document.getElementById('sel-etapa-meus').value;
   const container = document.getElementById('my-palpites-list');
   if (!user) { container.innerHTML = ''; return; }
 
+  // Verifica se o usuário que está sendo visto é o dono da conta
+  const isOwnProfile = (user === loggedUser);
+
   const data = getData(), results = getResults();
   let html = '', total = 0;
+  let hasNew10Points = false;
+  const now = new Date();
 
   MATCHES.filter(m => m.phase === phase).forEach(m => {
     const p = data[`${user}__${m.id}`], r = results[m.id];
     const hasP = p && p.h !== undefined && p.h !== null, hasR = r && r.h !== null && r.h !== undefined;
     const pts = hasP && hasR ? calcPts(p.h, p.a, r.h, r.a) : null;
-    if (pts !== null) total += pts;
+    
+    if (pts !== null) {
+      total += pts;
+      // Confere se acertou na mosca E se é o próprio perfil
+      if (pts === 10 && isOwnProfile) {
+        if (m.date !== 'A definir' && m.time !== 'A definir') {
+          const dParts = m.date.split('/');
+          const tParts = m.time.split(':');
+          const kickoff = new Date(dParts[2], dParts[1]-1, dParts[0], parseInt(tParts[0]), parseInt(tParts[1]));
+          
+          // Calcula a diferença em horas do início do jogo até agora
+          const diffHours = (now - kickoff) / (1000 * 60 * 60);
+          
+          // Se o jogo começou há menos de 14 horas (2h de jogo + 12h de carência), solta confete!
+          if (diffHours >= 0 && diffHours <= 14) {
+            hasNew10Points = true;
+          }
+        }
+      }
+    }
 
     if (hasP || hasR) {
       const ptsColor = pts===10?'var(--pts10)':pts===5?'var(--pts5)':pts===3?'var(--pts3)':'var(--muted)';
@@ -2235,6 +2330,11 @@ function renderMyPalpites() {
     html = `<div style="background:var(--pitch);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;padding:10px 14px;border-radius:8px;margin-bottom:14px;text-align:center;">TOTAL (Nesta Etapa): ${total} pontos</div>` + html;
   }
   container.innerHTML = html;
+  
+  // Dispara o confete apenas se passou nas travas de tempo e usuário
+  if (hasNew10Points) {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, zIndex: 9999 });
+  }
 }
 
 function renderRanking() {
