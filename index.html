@@ -73,6 +73,7 @@
   body.dark .admin-ko-card { background: #1a2a1d; border-color: var(--border); }
   body.dark .admin-ko-card input[type=text] { background: #111e13; }
 
+  /* --- CORREÇÃO DO FUNDO DOS INPUTS NO MODO ESCURO --- */
   body.dark .score-inputs input[type=number] {
     background: #1a2a1d;
     color: #4ade80;
@@ -82,6 +83,7 @@
     color: #ffffff;
   }
 
+  /* --- ESTATÍSTICAS DA GALERA --- */
   .stats-wrapper {
     padding: 8px 16px 14px;
     background: rgba(0,0,0,0.02);
@@ -101,6 +103,22 @@
   .stats-h { background: var(--pts10); transition: width 0.5s; }
   .stats-d { background: #94a3b8; transition: width 0.5s; }
   .stats-a { background: var(--pts5); transition: width 0.5s; }
+
+  /* --- ALERTA DAS REGRAS --- */
+  .rules-alert {
+    margin-top: 15px; padding: 12px; 
+    background: #fffde7; border-left: 4px solid var(--pts3); 
+    border-radius: 4px; font-size: 0.88rem; color: #111;
+  }
+  body.dark .rules-alert {
+    background: rgba(251, 191, 36, 0.1); color: #e8f0e9;
+  }
+
+  /* --- ESPAÇAMENTO HOJE E AMANHÃ --- */
+  #live-left-content, #live-right-content {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  /* --------------------------------------------------- */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1256,7 +1274,7 @@
       </table>
     </div>
 
-    <div style="margin-top: 15px; padding: 12px; background: #fffde7; border-left: 4px solid var(--pts3); border-radius: 4px; font-size: 0.88rem;">
+    <div class="rules-alert">
       ⚠️ <strong>Critério de Desempate no Ranking:</strong> Se dois ou mais participantes terminarem com o mesmo número de pontos totais, as posições serão decididas sequencialmente por:
       <br><strong>1º Lugar:</strong> Quem tiver mais acertos de <strong>10 pontos</strong> (Placares Exatos).
       <br><strong>2º Lugar:</strong> Quem tiver mais acertos de <strong>5 pontos</strong> (Tendência com Saldo).
@@ -1470,13 +1488,10 @@ function escapeHtml(s) {
   });
 }
 
-// FORMATADOR ROBUSTO PARA IMPEDIR QUE DATAS VIRAM UTC E MUDEM O DIA OU HORA (BUG DO GOOGLE SHEETS)
 function formatWeirdDate(val) {
   if (!val || val === 'A definir') return val;
   val = String(val);
-  // Se já tiver no formato DD/MM/YYYY
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
-  // Se vier no formato sopa de letras do Google com 'T'
   if (val.includes('T')) {
     const parts = val.split('T')[0].split('-');
     if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`; 
@@ -1487,12 +1502,10 @@ function formatWeirdDate(val) {
 function formatWeirdTime(val) {
   if (!val || val === 'A definir') return val;
   val = String(val);
-  // Se já tiver no formato HH:MM
   if (/^\d{2}:\d{2}$/.test(val)) return val;
   try {
     let d = new Date(val);
     if (isNaN(d.getTime())) return val;
-    // Pega o horário da timezone local que converte o shift do Google
     let h = d.getHours().toString().padStart(2,'0');
     let m = d.getMinutes().toString().padStart(2,'0');
     return `${h}:${m}`;
@@ -1510,7 +1523,6 @@ function setToken(t) {
   try { t ? localStorage.setItem('bolao_token', t) : localStorage.removeItem('bolao_token'); } catch (e) {}
 }
 
-// Quando o servidor avisar que a sessão acabou
 function handleSessionExpired() {
   setToken(null);
   setLoggedUser(null);
@@ -1719,7 +1731,7 @@ async function handleLogin() {
       showToast(`👋 Bem-vindo, ${json.userName}!`);
     } else {
       loginAttempts++;
-      msg.textContent = `❌ ${json.msg || 'Erro ao fazer login'}. (Letras maiúsculas ou espaços?) Tentativa ${loginAttempts}/3.`;
+      msg.textContent = `❌ ${json.msg || 'Erro ao fazer login'}. Tentativa ${loginAttempts}/3.`;
       logError(`Login falhou para [${identifier}]. Msg: ${json.msg}`, identifier, 'warn');
       checkLoginAttempts(identifier);
     }
