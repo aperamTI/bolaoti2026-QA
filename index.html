@@ -1447,10 +1447,10 @@
     
     <div class="card">
       <div class="card-title">📦 Pacotes e Probabilidades</div>
-      <p style="font-size:0.9rem; margin-bottom:10px;">Acertar palpites no Bolão rende pacotes! Veja abaixo a quantidade de cartas garantidas por pacote e as chances de tirar as cobiçadas Raras ou o Coringa (as porcentagens de raridade são calculadas <b>para cada carta tirada</b>):</p>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Acertar palpites no Bolão rende pacotes! Veja abaixo a quantidade de figurinhas garantidas por pacote e as chances de tirar as cobiçadas Raras ou o Coringa (as porcentagens de raridade são calculadas <b>para cada figurinha tirada</b>):</p>
       <div class="ranking-wrap">
         <table>
-          <thead><tr><th>Seu Acerto</th><th>O que você ganha</th><th>Probabilidades (Por Carta)</th></tr></thead>
+          <thead><tr><th>Seu Acerto</th><th>O que você ganha</th><th>Probabilidades (Por Figurinha)</th></tr></thead>
           <tbody>
             <tr>
               <td><strong>3 pontos</strong></td>
@@ -1488,7 +1488,7 @@
 
     <div class="card">
       <div class="card-title">🧬 Máquina de Síntese</div>
-      <p style="font-size:0.9rem; margin-bottom:10px;">Destrua 3 figurinhas repetidas para criar uma nova. A raridade das Figurinhas usadas como sacrifício define as chances de sucesso!</p>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Destrua 3 figurinhas repetidas para criar uma nova. A raridade das figurinhas usadas como sacrifício define as chances de sucesso!</p>
       <div class="ranking-wrap">
         <table>
           <thead><tr><th>Sacrifício (3 figurinhas)</th><th>Nova Figurinha</th><th>Efeito Colateral</th></tr></thead>
@@ -1499,6 +1499,11 @@
             <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>15% de chance de vir +1 Figurinha Extra (3% Rara)</td></tr>
           </tbody>
         </table>
+      </div>
+      
+      <div style="margin-top: 15px; padding: 12px; background: rgba(6, 182, 212, 0.1); border-left: 4px solid #06b6d4; border-radius: 4px; font-size: 0.88rem;">
+        🧪 <strong>Catalisador (Opcional):</strong> Você pode adicionar <strong>1 Figurinha Comum</strong> extra no slot isolado da máquina para potencializar a fusão! O catalisador aumenta as chances de obter uma figurinha Rara em todas as combinações base.<br><br>
+        🔥 <strong>Síntese Suprema:</strong> Se você sacrificar <strong>3 Raras</strong> e adicionar o <strong>Catalisador</strong>, a chance do efeito colateral (vir uma figurinha extra) sobe para <strong>30%</strong>, e a chance dessa figurinha extra ser Rara sobe para <strong>8%</strong>!
       </div>
     </div>
     
@@ -3540,7 +3545,8 @@ function updateSinteseStats() {
      if (raras === 0) chanceRara += 3;
      else if (raras === 1) chanceRara += 5;
      else if (raras === 2) chanceRara += 7;
-     else if (raras === 3) { extraChance = 30; extraRaraChance = 7; }
+     // ATUALIZADO: Agora mostra os 8% corretos da Síntese Suprema com Catalisador
+     else if (raras === 3) { extraChance = 30; extraRaraChance = 8; } 
   }
 
   // Passiva da Itália (Visual)
@@ -3556,9 +3562,17 @@ function updateSinteseStats() {
      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${chanceRara}%</b></div>`;
      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>Chance de Comum:</span> <b style="color:rgba(255,255,255,0.7);">${100 - chanceRara}%</b></div>`;
   } else {
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Carta Garantida:</span> <b style="color:var(--gold);">100% RARA</b></div>`;
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Figurinha Garantida:</span> <b style="color:var(--gold);">100% RARA</b></div>`;
      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de +1 Bônus:</span> <b>${extraChance}%</b></div>`;
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>Bônus ser Rara:</span> <b>${extraRaraChance}%</b></div>`;
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${extraRaraChance}%</b></div>`;
+     
+     // NOVIDADE: Mostra a chance do Drop Secreto (Muda de forma inteligente)
+     let nomeSecreta = hasItalia ? "Coringa 🃏" : "Tradição 🇮🇹";
+     let corSecreta = hasItalia ? "#c084fc" : "#e5e7eb";
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(255,255,255,0.2);">
+                <span style="color:${corSecreta};">Drop Místico (${nomeSecreta}):</span> 
+                <b style="color:${corSecreta}; text-shadow:0 0 5px ${corSecreta};">1%</b>
+              </div>`;
   }
 
   if (hasExtra) html += `<div style="background:rgba(74, 222, 128, 0.2); border:1px solid #4ade80; color:#4ade80; font-size:0.8rem; padding:6px; border-radius:4px; margin-top:8px; font-weight:bold; text-align:center;">✨ Buff do Catalisador Ativo!</div>`;
