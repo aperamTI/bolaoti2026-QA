@@ -73,7 +73,6 @@
   body.dark .admin-ko-card { background: #1a2a1d; border-color: var(--border); }
   body.dark .admin-ko-card input[type=text] { background: #111e13; }
 
-  /* --- CORREÇÃO DO FUNDO DOS INPUTS NO MODO ESCURO --- */
   body.dark .score-inputs input[type=number] {
     background: #1a2a1d;
     color: #4ade80;
@@ -1055,7 +1054,94 @@
   body.dark #chat-widget { border-color: var(--border); }
   body.dark .chat-input-area input { background: #1a2a1d; color: var(--text); }
   body.dark .chat-msg .user { color: var(--pts10); }
+/* ── ESTILOS DO ÁLBUM E PACOTES EPICOS ── */
+  .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-top: 10px; }
+  .sticker-card { position: relative; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; aspect-ratio: 3/4; background: #fff; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  body.dark .sticker-card { background: #111; }
+  .sticker-card:hover { transform: translateY(-3px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+  .sticker-card.rara { border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+  body.dark .sticker-card.rara { box-shadow: 0 0 12px rgba(255,215,0,0.3); }
+  .sticker-card.zero { opacity: 0.5; filter: grayscale(100%); cursor: not-allowed; }
+  .sticker-card.zero:hover { transform: none; box-shadow: none; }
+  .sticker-img { width: 100%; flex: 1; object-fit: cover; border-bottom: 1px solid var(--border); }
+  .sticker-card.rara .sticker-img { border-bottom-color: var(--gold); }
+  .sticker-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; text-align: center; padding: 4px 2px; background: var(--surface); color: var(--text); min-height: 26px; display: flex; align-items: center; justify-content: center; }
+  .sticker-card.rara .sticker-name { background: #fffbea; color: #92400e; }
+  body.dark .sticker-card.rara .sticker-name { background: #3d3106; color: #fcd34d; }
+  .sticker-qtd { position: absolute; top: 4px; right: 4px; background: var(--green); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; }
+  .sticker-card.rara .sticker-qtd { background: #ca8a04; }
+  
+  .pack-container { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; justify-content: center; }
+  .pack-item { flex: none; width: 130px; height: 190px; border-radius: 6px; padding: 0; text-align: center; cursor: pointer; position: relative; overflow: hidden; color: white; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; box-shadow: 0 8px 16px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s; }
+  .pack-item:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
+  .pack-item::before, .pack-item::after { content: ''; position: absolute; left: 0; right: 0; height: 12px; background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.15) 4px, rgba(0,0,0,0.15) 8px); z-index: 2; }
+  .pack-item::before { top: 0; border-bottom: 2px solid rgba(0,0,0,0.2); }
+  .pack-item::after { bottom: 0; border-top: 2px solid rgba(0,0,0,0.2); }
+  
+  .pack-shine { position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%); transform: skewX(-20deg); animation: shine 3s infinite; z-index: 1; }
+  @keyframes shine { 0% { left: -150%; } 20% { left: 200%; } 100% { left: 200%; } }
+  
+  /* COMUM: Cinza Fosco e sem brilho */
+  .pack-3pts { background: linear-gradient(135deg, #9ca3af, #4b5563); border: 2px solid #d4d4d8; }
+  .pack-3pts .pack-shine { display: none; } 
+  
+  /* DOURADO */
+  .pack-5pts { background: linear-gradient(135deg, #fde047, #ca8a04, #713f12); border: 2px solid #fef08a; }
+  
+  /* BRILHANTE (Épico): Holográfico animado que pulsa */
+  .pack-10pts { background: linear-gradient(135deg, #0ea5e9, #8b5cf6, #d946ef, #0ea5e9); background-size: 300% 300%; border: 2px solid #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255,255,255,0.4); animation: epic-bg 3s ease infinite, epic-pulse 1.5s infinite; }
+  @keyframes epic-bg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes epic-pulse { 0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255,255,255,0.4); transform: scale(1); } 50% { box-shadow: 0 0 35px rgba(217, 70, 239, 1), inset 0 0 30px rgba(255,255,255,0.6); transform: scale(1.03); } }
+  .pack-10pts .pack-title { color: #fff; text-shadow: 0 0 10px #e879f9, 0 0 20px #c026d3; }
 
+  .pack-content { z-index: 3; display: flex; flex-direction: column; align-items: center; pointer-events: none; width: 100%;}
+  .pack-title { font-weight: 900; font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); margin-bottom: 8px; line-height: 1; }
+  .pack-badge { background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+
+  .sintese-box { background: var(--pitch); border-radius: 12px; padding: 20px; text-align: center; color: white; margin-bottom: 24px; position: relative; overflow: hidden;}
+  body.dark .sintese-box { background: #0a170e; border: 1px solid var(--border); }
+  .sintese-slots { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
+  .sintese-slot { width: 60px; height: 80px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.2); cursor: pointer; transition: all 0.2s; overflow: hidden; }
+  .sintese-slot.filled { border-style: solid; border-color: #9ca3af; background: #fff; padding: 0; }
+  .sintese-slot.filled img { width: 100%; height: 100%; object-fit: cover; }
+  .sintese-btn { background: var(--gold); color: #111; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: transform 0.2s, background 0.2s; opacity: 0.5; pointer-events: none; }
+  .sintese-btn.ready { opacity: 1; pointer-events: auto; }
+  .sintese-btn.ready:hover { background: #fde047; transform: scale(1.05); }
+
+  #pack-opening-modal .modal-box { background: transparent; box-shadow: none; border: none; text-align: center; }
+  .pack-shaking { font-size: 6rem; animation: shake 0.4s infinite; display: inline-block; }
+  @keyframes shake { 0% { transform: translate(2px, 2px) rotate(0deg); } 25% { transform: translate(-2px, -2px) rotate(-10deg); } 50% { transform: translate(-4px, 2px) rotate(10deg); } 75% { transform: translate(2px, -2px) rotate(-10deg); } 100% { transform: translate(2px, 2px) rotate(0deg); } }
+  .cards-revealed { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px;}
+  .revealed-card { width: 100px; height: 140px; background: white; border-radius: 8px; padding: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: scale(0.5); }
+  @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+  .revealed-card img { width: 100%; flex: 1; object-fit: cover; border-radius: 4px; }
+  .revealed-card .name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; color: #111; margin-top: 4px; text-transform: uppercase; }
+  .revealed-card.rara { border: 3px solid var(--gold); background: #fffbeb; box-shadow: 0 0 20px rgba(255,215,0,0.8); }
+.coringa-card { background: linear-gradient(135deg, #111, #4c1d95, #111) !important; border: 2px solid #a855f7 !important; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5) !important; }
+  .coringa-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.8) !important; }
+  .pack-br { background: linear-gradient(135deg, #009c3b, #ffdf00, #002776); border: 2px solid #009c3b; box-shadow: 0 0 15px rgba(255, 223, 0, 0.5); }
+  .pack-br .pack-shine { animation: shine 2.5s infinite; }
+  .italia-card { background: #111 !important; border: 2px solid #555 !important; filter: grayscale(100%); }
+  .italia-name { background: #000 !important; color: #fff !important; font-style: italic; }
+  /* TEMA DO BOLÃO PARA O MERCADO DE TROCAS */
+  .steam-container { display: flex; gap: 10px; margin-top: 10px; background: var(--surface); padding: 10px; border-radius: 8px; }
+  .steam-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .steam-box { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 8px; min-height: 150px; }
+  .steam-header { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--green); font-weight: bold; font-size: 0.95rem; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif;}
+  .steam-grid { display: flex; flex-wrap: wrap; gap: 5px; max-height: 200px; overflow-y: auto; }
+  .steam-item { width: 50px; height: 70px; border: 1px solid var(--border); cursor: pointer; position: relative; transition: border 0.2s; background: var(--surface); }
+  .steam-item:hover { border-color: var(--green); }
+  .steam-item img { width: 100%; height: 100%; object-fit: cover; }
+  .steam-zone { min-height: 80px; background: var(--surface); border: 1px dashed var(--green-mid); padding: 5px; display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; }
+  .steam-trade-btn { background: var(--green); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 10px; font-family: 'Barlow Condensed', sans-serif; font-size:1.1rem; transition: background .2s; }
+  .steam-trade-btn:hover { background: var(--green-mid); }
+  .trade-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text); background: var(--card); margin-bottom: 5px; border-radius: 6px; }
+.sintese-layout { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; margin-bottom: 20px; width: 100%; }
+  .cat-container { display: flex; justify-content: flex-start; padding-left: 80px; }
+  @media (max-width: 500px) {
+    .sintese-layout { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .cat-container { padding-left: 0; justify-content: center; }
+  }
 </style>
 </head>
 <body>
@@ -1078,6 +1164,7 @@
   <button class="active" onclick="showTab('tab-palpites')">🎯 Palpites</button>
   <button onclick="showTab('tab-meus')">📋 Meus Palpites</button>
   <button onclick="showTab('tab-ranking')">🏆 Ranking</button>
+  <button onclick="showTab('tab-album')">🃏 Álbum</button> <!-- ADICIONE ESTA LINHA -->
   <button onclick="showTab('tab-regras')">📜 Regras</button>
   <button onclick="showTab('tab-admin')">⚙️ Admin</button>
 </nav>
@@ -1240,22 +1327,86 @@
   </div>
 </div>
 
-<div id="tab-regras" class="section">
-  <div class="sec-title">📜 Regulamento do Bolão</div>
+<!-- ── ABA ÁLBUM DE FIGURINHAS ── -->
+<div id="tab-album" class="section">
+  <div class="sec-title">🃏 Álbum de Figurinhas</div>
+  
+  <div class="card" id="album-login-warning">
+    <p style="text-align:center; color:var(--muted);">Faça login na aba Palpites para acessar seu Álbum.</p>
+  </div>
 
-  <div class="card">
-    <div class="card-title">⚽ Regras de Pontuação Configuradas</div>
-    <div class="ranking-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Critério</th>
-            <th>Pontuação</th>
-            <th>Exemplo Prático</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
+  <div id="album-workspace" style="display: none;">
+    <div class="card-title" style="margin-top: 10px;">📦 Seus Pacotes Disponíveis</div>
+    <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Ganhe pacotes acertando palpites no Bolão!</p>
+    <div id="packs-container" class="pack-container">
+      <p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Procurando pacotes...</p>
+    </div>
+
+    <div class="sintese-box">
+      <h3 style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 5px;">🧬 Máquina de Síntese</h3>
+      <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom:20px;">Destrua 3 figurinhas repetidas para criar uma nova. Opcional: Adicione 1 Comum extra (Catalisador) para buffar suas chances!</p>
+      
+      <div class="sintese-layout">
+        <div></div> <!-- Espaçador Invisível (Garante o centro perfeito) -->
+        
+        <!-- Cartas Base (Centro Absoluto) -->
+        <div style="display:flex; flex-direction:column; align-items:center;">
+          <div style="font-size:0.8rem; color:var(--border); font-weight:bold; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px;">Cartas Base</div>
+          <div class="sintese-slots" id="sintese-slots-container" style="margin:0;">
+            <div class="sintese-slot" onclick="removerDaSintese(0)">+</div>
+            <div class="sintese-slot" onclick="removerDaSintese(1)">+</div>
+            <div class="sintese-slot" onclick="removerDaSintese(2)">+</div>
+          </div>
+        </div>
+
+        <!-- Catalisador (Flutuando à Direita) -->
+        <div class="cat-container">
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <div style="font-size:0.8rem; color:#06b6d4; font-weight:bold; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px; text-shadow: 0 0 5px rgba(6,182,212,0.4);">Catalisador</div>
+            <div class="sintese-slots" id="sintese-extra-container" style="margin:0;">
+              <!-- O Slot será renderizado pelo JavaScript aqui dentro -->
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <!-- Quadro de Estatísticas Embaixo -->
+      <div id="sintese-stats" style="width:100%; max-width:400px; margin: 0 auto; text-align:center; background:rgba(0,0,0,0.25); padding:15px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+        <p style="color:var(--muted); font-size:0.9rem;">Insira as 3 cartas base para visualizar as probabilidades...</p>
+      </div>
+
+      <button class="sintese-btn" id="btn-fundir" style="margin-top:20px;" onclick="fundirFigurinhas()">Fundir Figurinhas</button>
+    </div>
+
+    <button class="btn-save" style="background:#0369a1; margin-bottom: 20px; position:relative;" onclick="openTrocaModal()">
+      🤝 Abrir Mercado de Trocas 
+      <span id="trade-badge" style="display:none; background:#e11d48; color:white; padding:2px 8px; border-radius:12px; font-size:0.85rem; position:absolute; top:-8px; right:-8px; box-shadow:0 2px 4px rgba(0,0,0,0.3);">!</span>
+    </button>
+
+    <div class="card">
+      <div class="card-title">📖 Sua Coleção (<span id="collection-count">0/48</span>)</div>
+      <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;">Clique nas figurinhas repetidas para enviar para a Máquina de Síntese.</p>
+      <div class="album-grid" id="album-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-regras" class="section">
+  <div class="sec-title">📜 Regulamentos</div>
+  <div class="admin-subtabs">
+    <button class="admin-subtab active" id="btn-regras-bolao" onclick="switchRegrasTab('bolao')">🎯 Regras do Bolão</button>
+    <button class="admin-subtab" id="btn-regras-album" onclick="switchRegrasTab('album')">🃏 Como Funciona o Álbum</button>
+  </div>
+
+  <!-- REGRAS DO BOLÃO -->
+  <div id="regras-bolao-content">
+    <div class="card">
+      <div class="card-title">⚽ Regras de Pontuação</div>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Critério</th><th>Pontuação</th><th>Exemplo Prático</th></tr></thead>
+          <tbody>
+            <tr>
             <td><strong>Acerto em Cheio</strong> (Placar Exato)</td>
             <td><span class="badge badge-10">10 pontos</span></td>
             <td>Você apostou 2x1 e o jogo terminou 2x1.</td>
@@ -1270,18 +1421,16 @@
             <td><span class="badge badge-3">3 pontos</span></td>
             <td>Você apostou 2x0, o jogo foi 1x0 (Acertou o vencedor, errou o saldo e placar).</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="rules-alert">
+          </tbody>
+        </table>
+      </div>
+      <div class="rules-alert">
       ⚠️ <strong>Critério de Desempate no Ranking:</strong> Se dois ou mais participantes terminarem com o mesmo número de pontos totais, as posições serão decididas sequencialmente por:
       <br><strong>1º Lugar:</strong> Quem tiver mais acertos de <strong>10 pontos</strong> (Placares Exatos).
       <br><strong>2º Lugar:</strong> Quem tiver mais acertos de <strong>5 pontos</strong> (Tendência com Saldo).
+      </div>
     </div>
-  </div>
-
-  <div class="card">
+<div class="card">
     <div class="card-title">📱 Passo a Passo para Operar o Site</div>
     <ul class="regras-list">
       <li><strong>1. Identificação ou Cadastro:</strong> Vá para a aba <strong>🎯 Palpites</strong>. Se for sua primeira vez, digite seu nome e crie uma senha (mínimo de 4 dígitos) e clique em <em>Cadastrar</em>. Se já tiver conta criada, use os mesmos dados e clique em <em>Entrar</em>.</li>
@@ -1290,6 +1439,72 @@
       <li><strong>4. Conferência Individual:</strong> Na aba <strong>📋 Meus Palpites</strong>, selecione seu nome na lista suspensa para ver um relatório limpo e completo de todas as suas apostas feitas, os resultados oficiais já calculados e seus acertos.</li>
       <li><strong>5. Monitorar a Classificação:</strong> Acompanhe a sua evolução na aba <strong>🏆 Ranking</strong>. Ela atualiza de forma automatizada no momento em que a equipe organizadora insere os placares oficiais da rodada!</li>
     </ul>
+  </div>
+  </div>
+
+  <!-- REGRAS DO ÁLBUM -->
+  <div id="regras-album-content" style="display:none;">
+    
+    <div class="card">
+      <div class="card-title">📦 Pacotes e Probabilidades</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Acertar palpites no Bolão rende pacotes! Veja abaixo a quantidade de cartas garantidas por pacote e as chances de tirar as cobiçadas Raras ou o Coringa (as porcentagens de raridade são calculadas <b>para cada carta tirada</b>):</p>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Seu Acerto</th><th>O que você ganha</th><th>Probabilidades (Por Carta)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>3 pontos</strong></td>
+              <td><b>2x Pacotes Comuns</b><br><small>(1 figurinha garantida em cada)</small></td>
+              <td><b>4%</b> Rara | <b>0.4%</b> Coringa</td>
+            </tr>
+            <tr>
+              <td><strong>5 pontos</strong></td>
+              <td><b>1x Pacote Dourado</b> (1 figurinha garantida)<br><small>+ 1x Pacote Comum Bônus</small></td>
+              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>50% de chance</b> de vir uma 2ª figurinha extra no Dourado)</small></td>
+            </tr>
+            <tr>
+              <td><strong>10 pontos</strong></td>
+              <td><b>1x Pacote Brilhante</b> (2 figurinhas garantidas)<br><small>+ 1x Pacote Comum Bônus</small></td>
+              <td><b>9%</b> Rara | <b>0.9%</b> Coringa<br><small>(<b>15% de chance</b> de vir uma 3ª figurinha extra no Brilhante)</small></td>
+            </tr>
+            <tr>
+              <td><strong>Jogo do Brasil 🇧🇷</strong></td>
+              <td><b>1x Pacote Especial</b> (2 figurinhas garantidas)<br><small>(Liberado no momento em que o jogo começa)</small></td>
+              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>30% de chance</b> do pacote vir com 3 figurinhas e <b>15% de chance</b> de vir com 4 figurinhas!)</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🤝 Mercado de Trocas</div>
+      <ul class="regras-list">
+        <li><strong>Como funciona:</strong> Envie propostas oferecendo até 3 figurinhas repetidas suas em troca de até 3 figurinhas que você deseja do inventário de um colega.</li>
+        <li><strong>Limitações:</strong> As figurinhas especiais <b>Coringa</b> e <b>Tradição</b> não podem ser transferidas ou solicitadas no mercado.</li>
+        <li><strong>Bônus de Parceria:</strong> A primeira vez que você concluir uma troca com um novo amigo, existe uma chance rara de 0,8% de ambos serem recompensados com um prêmio secreto misterioso enviado diretamente pelo servidor!</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧬 Máquina de Síntese</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Destrua 3 figurinhas repetidas para criar uma nova. A raridade das Figurinhas usadas como sacrifício define as chances de sucesso!</p>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Sacrifício (3 figurinhas)</th><th>Nova Figurinha</th><th>Efeito Colateral</th></tr></thead>
+          <tbody>
+            <tr><td>3 Comuns</td><td>1 Figurinha (5% Rara)</td><td>-</td></tr>
+            <tr><td>2 Comuns + 1 Rara</td><td>1 Figurinha (30% Rara)</td><td>-</td></tr>
+            <tr><td>1 Comum + 2 Raras</td><td>1 Figurinha (60% Rara)</td><td>-</td></tr>
+            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>15% de chance de vir +1 Figurinha Extra (3% Rara)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="rules-alert">
+      ⭐ <strong>Figurinhas Especiais:</strong> O <b>Coringa 🃏</b> pode ser clicado no seu inventário para se transformar em qualquer figurinha comum ou rara da sua escolha. E dizem as lendas que a equipe da <b>Itália 🇮🇹 (Tradição: Fora da Copa)</b> pode aparecer para os mais sortudos em raríssimos eventos de 1%...
+    </div>
   </div>
 </div>
 
@@ -1447,6 +1662,92 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-coringa">
+  <div class="modal-box" style="max-width: 650px;">
+    <button class="modal-close" onclick="closeModal('modal-coringa')">✕</button>
+    <div class="modal-title" style="color:#a855f7;">🃏 Usar Coringa</div>
+    <p style="font-size:.9rem; color:var(--muted); margin-bottom:15px;">Escolha qualquer figurinha para trocar pelo seu Coringa.</p>
+    
+    <!-- Grade Visual para Seleção -->
+    <div id="coringa-grid" class="album-grid" style="max-height: 350px; overflow-y: auto; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface);">
+      <!-- Preenchido pelo JavaScript -->
+    </div>
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 20px;">
+      <div style="font-size:0.95rem; font-weight:600;">Carta Selecionada: <b id="coringa-selecionada-text" style="color:#a855f7; text-transform:uppercase;">Nenhuma</b></div>
+      <button class="btn-save" style="background:#8b5cf6; width:auto; padding:10px 24px; margin-top:0;" onclick="confirmarCoringa()">Efetuar Troca</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ANIMAÇÃO DE PACOTE ── -->
+<div class="modal-overlay" id="modal-pack" style="z-index: 2500; background: rgba(0,0,0,0.85);">
+  <div class="modal-box" id="pack-opening-modal">
+    <div id="pack-animation-view" style="text-align: center;">
+      <div class="pack-shaking" id="pack-shaking-emoji">📦</div>
+      <h2 style="color:white; font-family:'Barlow Condensed'; font-size:1.5rem; margin-top:20px; letter-spacing:0.05em;" id="pack-status-text">Abrindo...</h2>
+    </div>
+    <div id="pack-results-view" style="display:none; text-align: center;">
+      <h2 id="pack-results-title" style="color:var(--gold); font-family:'Barlow Condensed'; font-size:2rem; margin-bottom:10px; letter-spacing:0.05em; text-transform: uppercase;">Novas Figurinhas!</h2>
+      <div class="cards-revealed" id="revealed-cards-container"></div>
+      <button class="btn-save" style="margin-top: 30px; background:var(--gold); color:#111; max-width:200px;" onclick="closeModal('modal-pack')">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL DO MERCADO DE TROCAS ── -->
+<div class="modal-overlay" id="modal-troca">
+  <div class="modal-box" style="max-width: 700px;">
+    <button class="modal-close" onclick="closeModal('modal-troca')">✕</button>
+    <div class="modal-title">🤝 Proposta de Troca</div>
+    
+    <div class="admin-subtabs" style="margin-bottom: 10px;">
+      <button class="admin-subtab active" id="btn-t-nova" onclick="switchTradeTab('nova')">Nova Proposta</button>
+      <button class="admin-subtab" id="btn-t-lista" onclick="switchTradeTab('lista'); loadTrocas();">Minhas Propostas</button>
+    </div>
+
+    <div id="trade-nova-content">
+      <div class="user-select-wrap" style="margin-bottom: 5px;">
+        <select id="sel-trade-user" onchange="carregarInventarioAlvo()"></select>
+      </div>
+
+      <div class="steam-container">
+        <div class="steam-col">
+          <div class="steam-box">
+            <div class="steam-header">Seu inventário</div>
+            <div class="steam-grid" id="trade-my-inv"><p style="font-size:0.75rem;">Carregando...</p></div>
+          </div>
+          <div class="steam-box" style="min-height: 120px;">
+            <div class="steam-header">Seus itens (Oferecidos):</div>
+            <p style="font-size:0.7rem; margin-top:-5px; margin-bottom:5px; color:var(--muted);">Estes são os itens que você perderá na troca.</p>
+            <div class="steam-zone" id="trade-my-offer"></div>
+          </div>
+        </div>
+
+        <span style="display:flex; align-items:center; color:var(--green); font-size:1.5rem;">⇄</span>
+
+        <div class="steam-col">
+          <div class="steam-box">
+            <div class="steam-header">Inventário dele(a)</div>
+            <div class="steam-grid" id="trade-target-inv"><p style="font-size:0.75rem;">Selecione um usuário.</p></div>
+          </div>
+          <div class="steam-box" style="min-height: 120px;">
+            <div class="steam-header">Itens do Colega:</div>
+            <p style="font-size:0.7rem; margin-top:-5px; margin-bottom:5px; color:var(--muted);">Estes são os itens que você receberá.</p>
+            <div class="steam-zone" id="trade-target-request"></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-top:10px;">Clique nos itens para movê-los (Máx. 3 de cada lado). Coringa e Itália não são trocáveis.</p>
+      <button class="steam-trade-btn" onclick="enviarPropostaTroca()">Realizar proposta</button>
+    </div>
+
+    <div id="trade-lista-content" style="display:none; padding:10px; border-radius:4px; margin-top:10px;">
+      <div id="trade-list-container" style="max-height:300px; overflow-y:auto;"><p style="text-align:center; color:var(--muted);">Carregando...</p></div>
+    </div>
+  </div>
+</div>
+
   </div><aside class="live-sidebar" id="live-sidebar-right">
     <div class="live-sidebar-title">📅 Hoje &amp; Amanhã</div>
     <div id="live-right-content"><div class="live-empty">Carregando...</div></div>
@@ -1476,7 +1777,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxb2YqxTJ7WCyO6NdiFUJjB_PYOBk214heeqrpKK7NJS1V6OaYqZ5Ss6phzVAiypcR4/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzrAkWfcPaqNzz7mJbPNS6p-2Vy6Vk5TPPiRwGLi5LsyS2hdoC4d1TEN02IVOlrWPoJ/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -1869,11 +2170,20 @@ function checkAuth() {
   const currentUser = getLoggedUser();
   document.getElementById('auth-container').style.display = currentUser ? 'none' : 'block';
   document.getElementById('palpites-workspace').style.display = currentUser ? 'block' : 'none';
+  
+  let albumWs = document.getElementById('album-workspace');
+  let albumWarn = document.getElementById('album-login-warning');
+  if(albumWs) albumWs.style.display = currentUser ? 'block' : 'none';
+  if(albumWarn) albumWarn.style.display = currentUser ? 'none' : 'block';
+  
   if (currentUser) {
     document.getElementById('display-logged-user').textContent = currentUser;
-    renderMatches(); loadUserPalpites();
+    renderMatches(); 
+    loadUserPalpites();
+    if(typeof loadAlbumData === 'function') loadAlbumData(); // Chama o álbum!
   } else {
-    document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
+    document.getElementById('login-user').value = ''; 
+    document.getElementById('login-pass').value = '';
     document.getElementById('reset-section').style.display = 'none';
     loginAttempts = 0;
   }
@@ -2595,7 +2905,7 @@ function showTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idx = ['tab-palpites','tab-meus','tab-ranking','tab-regras','tab-admin'].indexOf(id);
+  const idx = ['tab-palpites','tab-meus','tab-ranking','tab-album','tab-regras','tab-admin'].indexOf(id);
   if (idx !== -1) document.querySelectorAll('nav button')[idx].classList.add('active');
   if (id === 'tab-ranking') renderRanking();
   if (id === 'tab-meus') { updateUsersDropdown(); renderMyPalpites(); }
@@ -2895,6 +3205,27 @@ function downloadLogs() {
 
 window.addEventListener('load', () => {
   setTimeout(startLiveUpdates, 1800);
+  
+  // Radar de Notificações: Checa novas trocas a cada 30 segundos de forma invisível
+  setInterval(async () => {
+    let usr = getLoggedUser();
+    if (!usr) return;
+    try {
+      let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAlbumData', token: getToken(), user: usr }) });
+      let json = await res.json();
+      if (json.status === 'success' && json.pending !== undefined) {
+        let badge = document.getElementById('trade-badge');
+        if (badge) {
+           if (json.pending > 0) { 
+               badge.style.display = 'inline-block'; 
+               badge.innerText = json.pending; 
+           } else { 
+               badge.style.display = 'none'; 
+           }
+        }
+      }
+    } catch(e) {}
+  }, 30000);
 });
 
 // ════════════════════════════════════════
@@ -3002,6 +3333,493 @@ async function sendChatMessage() {
     showToast('❌ Erro ao enviar mensagem.');
     logError('Erro de rede ao enviar no chat: ' + e.message, user, 'warn');
   }
+}
+
+// ════════════════════════════════════════
+//  ÁLBUM DE FIGURINHAS (LÓGICA FRONTAL)
+// ════════════════════════════════════════
+
+let albumData = { inventario: [], resgatados: [] };
+let sinteseSlots = [];
+
+const FLAG_MAP = {
+  "México":"mx", "África do Sul":"za", "Coreia do Sul":"kr", "Rep. Tcheca":"cz", "Canadá":"ca", 
+  "Bósnia e Herzegovina":"ba", "Catar":"qa", "Suíça":"ch", "Marrocos":"ma", "Haiti":"ht", 
+  "Escócia":"gb-sct", "Estados Unidos":"us", "Paraguai":"py", "Austrália":"au", "Turquia":"tr", 
+  "Curaçau":"cw", "Costa do Marfim":"ci", "Equador":"ec", "Japão":"jp", "Suécia":"se", 
+  "Tunísia":"tn", "Cabo Verde":"cv", "Arábia Saudita":"sa", "Egito":"eg", "Irã":"ir", 
+  "Nova Zelândia":"nz", "Senegal":"sn", "Iraque":"iq", "Noruega":"no", "Argélia":"dz", 
+  "Áustria":"at", "Jordânia":"jo", "RD do Congo":"cd", "Croácia":"hr", "Gana":"gh", 
+  "Panamá":"pa", "Uzbequistão":"uz", "Colômbia":"co", "🇧🇷 Brasil":"br", "Argentina":"ar", 
+  "França":"fr", "Inglaterra":"gb-eng", "Espanha":"es", "Alemanha":"de", "Portugal":"pt", 
+  "Holanda":"nl", "Bélgica":"be", "Uruguai":"uy"
+};
+
+const TODAS_SELECOES = Object.keys(FLAG_MAP).sort((a,b) => a.localeCompare(b, 'pt'));
+
+function getFlagUrl(teamName) {
+  if (teamName === "Coringa") return "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Joker.png";
+  if (teamName === "Itália") return "https://flagcdn.com/w160/it.png";
+  
+  let clean = teamName.replace('🇧🇷 ', '').trim();
+  let code = FLAG_MAP[teamName] || FLAG_MAP[clean];
+  if(!code) return 'https://placehold.co/160x100/1a2a1d/ffffff?text=?';
+  return `https://flagcdn.com/w160/${code}.png`;
+}
+
+async function loadAlbumData() {
+  const user = getLoggedUser();
+  if (!user) return;
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAlbumData', token: getToken(), user: user }) });
+    if (!res.ok) throw new Error("Erro de Servidor");
+    let json = await res.json();
+    if(json.status === 'success') {
+      albumData.inventario = json.inventario || [];
+      albumData.resgatados = json.resgatados || [];
+      
+      let badge = document.getElementById('trade-badge');
+      if (badge) {
+         if (json.pending > 0) { badge.style.display = 'inline-block'; badge.innerText = json.pending; } 
+         else { badge.style.display = 'none'; }
+      }
+      renderAlbum();
+    }
+  } catch(e) { console.error("Erro Album:", e); }
+}
+
+function renderAlbum() {
+  renderPacks(); renderCollection(); renderSinteseSlots();
+}
+
+function renderPacks() {
+  let html = ''; const user = getLoggedUser(); const data = getData(), results = getResults();
+  
+  MATCHES.forEach(m => {
+    const isBR = m.home.includes('Brasil') || m.away.includes('Brasil');
+    if (isBR && isMatchLocked(m.date, m.time) && !albumData.resgatados.includes(m.id + "_BR")) {
+       html += `<div class="pack-item pack-br" onclick="abrirPacote('${m.id}_BR', 'BR')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title" style="color:#ffdf00; text-shadow:1px 1px 3px #009c3b;">Brasil</div><div class="pack-badge">Especial Jogo</div></div></div>`;
+    }
+
+    const p = data[`${user}__${m.id}`], r = results[m.id];
+    if (p && r && r.h !== null && r.h !== undefined && r.h !== "") {
+      let pts = calcPts(p.h, p.a, r.h, r.a);
+      
+      // TRAVA DE LEGADO: Verifica se você já tinha resgatado o pacote principal no formato antigo
+      const claimedLegacy = albumData.resgatados.includes(m.id) || albumData.resgatados.includes(String(m.id));
+
+      if (pts === 3) {
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_c1")) 
+          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_c1', 'c1')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+        if (!albumData.resgatados.includes(m.id + "_c2")) 
+          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_c2', 'c2')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+      } else if (pts === 5) {
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_dourado")) 
+          html += `<div class="pack-item pack-5pts" onclick="abrirPacote('${m.id}_dourado', 'dourado')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Dourado</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+        if (!albumData.resgatados.includes(m.id + "_cb")) 
+          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+      } else if (pts === 10) {
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_brilhante")) 
+          html += `<div class="pack-item pack-10pts" onclick="abrirPacote('${m.id}_brilhante', 'brilhante')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Brilhante</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+        if (!albumData.resgatados.includes(m.id + "_cb")) 
+          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+      }
+    }
+  });
+  document.getElementById('packs-container').innerHTML = html || '<p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Sem pacotes no momento. Acompanhe os jogos!</p>';
+}
+
+function renderCollection() {
+  let html = ''; let uniqueCount = 0;
+  
+  // Coringa agora SÓ APARECE se a quantidade for maior que 0!
+  let coringaItem = albumData.inventario.find(i => i.time === "Coringa");
+  if (coringaItem && coringaItem.qtd > 0) {
+    html += `
+      <div class="sticker-card coringa-card" onclick="openCoringaModal(${coringaItem.qtd})">
+        <div class="sticker-qtd" style="background:#a855f7;">${coringaItem.qtd}</div>
+        <div style="font-size:2.5rem; display:flex; align-items:center; justify-content:center; flex:1; background:#2e1065; color:white;">🃏</div>
+        <div class="sticker-name" style="background:#4c1d95; color:white;">Coringa</div>
+      </div>
+    `;
+  }
+
+  TODAS_SELECOES.forEach(time => {
+    let invItem = albumData.inventario.find(i => i.time === time);
+    let qtd = invItem ? invItem.qtd : 0;
+    let rara = invItem ? invItem.rara : false;
+    let inSlotCount = sinteseSlots.filter(s => s.time === time).length;
+    let displayQtd = qtd - inSlotCount;
+    let flagUrl = getFlagUrl(time);
+    let cardClass = displayQtd > 0 ? (rara ? 'rara' : '') : 'zero';
+    if (qtd > 0 && time !== "Coringa" && time !== "Itália") uniqueCount++;
+
+    html += `
+      <div class="sticker-card ${cardClass}" onclick="addToSintese('${time}', ${rara}, ${qtd}, ${displayQtd})">
+        <div class="sticker-qtd ${displayQtd>0?'':'zero'}">${displayQtd}</div>
+        <img src="${flagUrl}" class="sticker-img" alt="${time}">
+        <div class="sticker-name">${time}</div>
+      </div>
+    `;
+  });
+
+  // Itália Tradição SÓ APARECE se a quantidade for maior que 0!
+  let it = albumData.inventario.find(i => i.time === "Itália");
+  if (it && it.qtd > 0) {
+    html += `<div class="sticker-card italia-card" onclick="showToast('TRADIÇÃO: 🇮🇹 Fora da Copa!')"><div class="sticker-qtd" style="background:#333;">${it.qtd}</div><img src="https://flagcdn.com/w160/it.png" class="sticker-img"><div class="sticker-name italia-name">Tradição</div></div>`;
+  }
+  document.getElementById('album-grid').innerHTML = html;
+  document.getElementById('collection-count').innerText = `${uniqueCount}/48`;
+}
+
+// ──────────────── MÁQUINA DE SÍNTESE + CATALISADOR ────────────────
+let sinteseExtraSlot = null; // max 1 extra
+
+function addToSintese(time, rara, totalQtd, displayQtd) {
+  if (displayQtd <= 0) return; 
+  if (time === "Coringa" || time === "Itália") { showToast('⚠️ Esta figurinha não pode ser sintetizada.'); return; }
+  
+  if (sinteseSlots.length < 3) {
+    sinteseSlots.push({ time: time, rara: rara }); renderAlbum();
+  } else if (!sinteseExtraSlot) {
+    if (rara) { showToast('⚠️ O Catalisador aceita APENAS cartas Comuns.'); return; }
+    sinteseExtraSlot = { time: time, rara: rara }; renderAlbum();
+  } else { 
+    showToast('⚠️ A máquina já está cheia!'); 
+  }
+}
+
+function removerDaSintese(index) {
+  if (index === 'extra') { sinteseExtraSlot = null; } 
+  else { sinteseSlots.splice(index, 1); }
+  renderAlbum();
+}
+
+function renderSinteseSlots() {
+  const container = document.getElementById('sintese-slots-container');
+  const extraContainer = document.getElementById('sintese-extra-container');
+  
+  let html = '';
+  for (let i = 0; i < 3; i++) {
+    if (sinteseSlots[i]) {
+      let flagUrl = getFlagUrl(sinteseSlots[i].time);
+      let borderStyle = sinteseSlots[i].rara ? 'border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.5);' : 'border-color: #9ca3af;';
+      html += `<div class="sintese-slot filled" style="${borderStyle}" onclick="removerDaSintese(${i})"><img src="${flagUrl}"></div>`;
+    } else {
+      html += `<div class="sintese-slot" onclick="removerDaSintese(${i})">+</div>`;
+    }
+  }
+  container.innerHTML = html;
+
+  let catColor = '#06b6d4';
+  if (sinteseExtraSlot) {
+      let flagUrl = getFlagUrl(sinteseExtraSlot.time);
+      extraContainer.innerHTML = `<div class="sintese-slot filled" style="border-color:${catColor}; box-shadow: 0 0 12px rgba(6,182,212,0.6);" onclick="removerDaSintese('extra')"><img src="${flagUrl}"></div>`;
+  } else {
+      extraContainer.innerHTML = `<div class="sintese-slot" style="border-color:${catColor}; color:${catColor}; border-style:dashed;" onclick="removerDaSintese('extra')">+</div>`;
+  }
+
+  const btn = document.getElementById('btn-fundir');
+  if (sinteseSlots.length === 3) btn.classList.add('ready'); else btn.classList.remove('ready');
+  updateSinteseStats();
+}
+
+function updateSinteseStats() {
+  const pnl = document.getElementById('sintese-stats');
+  if (sinteseSlots.length < 3) {
+     pnl.innerHTML = '<p style="color:rgba(255,255,255,0.6); font-size:0.9rem; text-align:center;">Insira as 3 cartas base para visualizar as probabilidades...</p>';
+     return;
+  }
+  let raras = sinteseSlots.filter(s => s.rara).length;
+  let hasExtra = sinteseExtraSlot !== null;
+
+  let chanceRara = raras === 0 ? 5 : raras === 1 ? 30 : raras === 2 ? 60 : 100;
+  let extraChance = 15; let extraRaraChance = 3;
+
+  if (hasExtra) {
+     if (raras === 0) chanceRara += 3;
+     else if (raras === 1) chanceRara += 5;
+     else if (raras === 2) chanceRara += 7;
+     else if (raras === 3) { extraChance = 30; extraRaraChance = 7; }
+  }
+
+  // Passiva da Itália (Visual)
+  let hasItalia = albumData.inventario.some(i => i.time === "Itália" && i.qtd > 0);
+  if (hasItalia) {
+      if (chanceRara < 100) chanceRara += 1;
+      extraRaraChance += 1;
+  }
+
+  let html = `<h4 style="color:var(--gold); margin-bottom:8px; font-family:'Barlow Condensed'; font-size:1.2rem; text-transform:uppercase; text-align:center;">📊 Previsão da Síntese</h4>`;
+  
+  if (raras < 3) {
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${chanceRara}%</b></div>`;
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>Chance de Comum:</span> <b style="color:rgba(255,255,255,0.7);">${100 - chanceRara}%</b></div>`;
+  } else {
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Carta Garantida:</span> <b style="color:var(--gold);">100% RARA</b></div>`;
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de +1 Bônus:</span> <b>${extraChance}%</b></div>`;
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>Bônus ser Rara:</span> <b>${extraRaraChance}%</b></div>`;
+  }
+
+  if (hasExtra) html += `<div style="background:rgba(74, 222, 128, 0.2); border:1px solid #4ade80; color:#4ade80; font-size:0.8rem; padding:6px; border-radius:4px; margin-top:8px; font-weight:bold; text-align:center;">✨ Buff do Catalisador Ativo!</div>`;
+  if (hasItalia) html += `<div style="background:rgba(168, 85, 247, 0.2); border:1px solid #a855f7; color:#c084fc; font-size:0.8rem; padding:4px; border-radius:4px; margin-top:5px; font-weight:bold; text-align:center;">🔮 Passiva da Tradição: +1% Drop Raro</div>`;
+  
+  pnl.innerHTML = html;
+}
+
+async function fundirFigurinhas() {
+  if (sinteseSlots.length < 3) return;
+  showLoading(true);
+  try {
+    let payload = { action: 'sintetizarFigurinhas', token: getToken(), user: getLoggedUser(), fig1: sinteseSlots[0].time, fig2: sinteseSlots[1].time, fig3: sinteseSlots[2].time };
+    if (sinteseExtraSlot) payload.figExtra = sinteseExtraSlot.time;
+
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+    let json = await res.json(); showLoading(false);
+    if (json.status === 'success') {
+      sinteseSlots = []; sinteseExtraSlot = null; await loadAlbumData(); 
+      showPackAnimation(json.figurinhas, "Síntese Concluída!");
+    } else { showToast('❌ ' + (json.msg || 'Erro ao fundir.')); }
+  } catch(e) { showLoading(false); showToast('❌ Erro de conexão.'); }
+}
+
+// ──────────────── LÓGICA DO MERCADO DE TROCAS ────────────────
+let tradeMyInv = [], tradeTargetInv = [], tradeMyOffer = [], tradeTargetReq = [];
+
+function openTrocaModal() {
+  let selU = document.getElementById('sel-trade-user'); selU.innerHTML = '<option value="">-- Escolha um usuário --</option>';
+  Object.keys(getUsers()).forEach(u => { if (u !== getLoggedUser()) selU.add(new Option(u, u)); });
+  
+  tradeMyInv = []; albumData.inventario.forEach(i => {
+    if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
+  });
+  tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = [];
+  
+  renderTradeUI();
+  document.getElementById('modal-troca').classList.add('open');
+  switchTradeTab('nova');
+}
+
+async function carregarInventarioAlvo() {
+  let alvo = document.getElementById('sel-trade-user').value;
+  tradeTargetInv = []; tradeTargetReq = [];
+  if (!alvo) { renderTradeUI(); return; }
+  
+  document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem;">Buscando...</p>';
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getInventarioAlvo', token: getToken(), user: getLoggedUser(), alvo: alvo }) });
+    let json = await res.json();
+    if(json.status === 'success') {
+      json.inventario.forEach(i => {
+        if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeTargetInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
+      });
+      renderTradeUI();
+    }
+  } catch(e) { document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:red;">Erro ao buscar.</p>'; }
+}
+
+function moveItem(item, fromArrStr, toArrStr, max) {
+  let fromArr = fromArrStr === 'tradeMyInv' ? tradeMyInv : fromArrStr === 'tradeMyOffer' ? tradeMyOffer : fromArrStr === 'tradeTargetInv' ? tradeTargetInv : tradeTargetReq;
+  let toArr = toArrStr === 'tradeMyInv' ? tradeMyInv : toArrStr === 'tradeMyOffer' ? tradeMyOffer : toArrStr === 'tradeTargetInv' ? tradeTargetInv : tradeTargetReq;
+  
+  if (toArr.length >= max && toArrStr.includes('Offer')) { showToast("⚠️ Limite de 3 cartas!"); return; }
+  if (toArr.length >= max && toArrStr.includes('Req')) { showToast("⚠️ Limite de 3 cartas!"); return; }
+  
+  let idx = fromArr.findIndex(x => x.id === item.id);
+  if (idx > -1) { toArr.push(fromArr.splice(idx, 1)[0]); renderTradeUI(); }
+}
+
+function renderTradeUI() {
+  function draw(arr, fromStr, toStr, max) {
+    return arr.map(i => `<div class="steam-item" style="${i.rara?'border-color:var(--gold);':''}" onclick="moveItem({id:'${i.id}', time:'${i.time}', rara:${i.rara}}, '${fromStr}', '${toStr}', ${max})"><img src="${getFlagUrl(i.time)}"></div>`).join('');
+  }
+  document.getElementById('trade-my-inv').innerHTML = draw(tradeMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem;">Sem itens.</p>';
+  document.getElementById('trade-my-offer').innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
+  document.getElementById('trade-target-inv').innerHTML = draw(tradeTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem;">Sem itens.</p>';
+  document.getElementById('trade-target-request').innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
+}
+
+async function enviarPropostaTroca() {
+  let para = document.getElementById('sel-trade-user').value;
+  if (!para) return showToast('⚠️ Escolha um usuário.');
+  if (tradeMyOffer.length === 0 || tradeTargetReq.length === 0) return showToast('⚠️ Coloque pelo menos 1 carta de cada lado.');
+
+  let offArr = tradeMyOffer.map(i => i.time);
+  let qerArr = tradeTargetReq.map(i => i.time);
+
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'enviarTroca', token: getToken(), user: getLoggedUser(), paraUser: para, oferece: offArr, quer: qerArr }) });
+    let j = await res.json(); showLoading(false);
+    if(j.status==='success') { showToast('✅ Proposta Enviada!'); switchTradeTab('lista'); loadTrocas(); } else showToast('❌ Erro.');
+  } catch(e) { showLoading(false); showToast('❌ Erro.'); }
+}
+
+function switchTradeTab(tab) {
+  document.getElementById('trade-nova-content').style.display = tab === 'nova' ? 'block' : 'none';
+  document.getElementById('trade-lista-content').style.display = tab === 'lista' ? 'block' : 'none';
+  document.getElementById('btn-t-nova').classList.toggle('active', tab === 'nova');
+  document.getElementById('btn-t-lista').classList.toggle('active', tab === 'lista');
+}
+
+async function loadTrocas() {
+  let ct = document.getElementById('trade-list-container'); ct.innerHTML = 'Carregando...';
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getTrocas', token: getToken(), user: getLoggedUser() }) });
+    let j = await res.json();
+    if (j.status === 'success' && j.trocas) {
+      let html = '';
+      j.trocas.forEach(t => {
+        let isRecebida = t.para === getLoggedUser();
+        html += `<div class="trade-row">
+          <div style="flex:1;">
+            <b>${isRecebida ? `De: ${t.de}` : `Para: ${t.para}`}</b><br>
+            <span style="color:var(--green); font-size:0.75rem; font-weight:600;">Você dá: ${isRecebida ? t.quer.map(x=>x.replace('🇧🇷 ','')).join(', ') : t.oferece.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span><br>
+            <span style="color:var(--red-pts); font-size:0.75rem; font-weight:600;">Você recebe: ${isRecebida ? t.oferece.map(x=>x.replace('🇧🇷 ','')).join(', ') : t.quer.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span>
+          </div>
+          <div style="display:flex; gap:5px;">
+            ${isRecebida ? `<button class="btn-update" style="background:var(--green);" onclick="responderTroca('${t.id}', 'aceitar')">✔</button>` : ''}
+            <button class="btn-update" style="background:#dc2626;" onclick="responderTroca('${t.id}', 'cancelar')">✖</button>
+          </div>
+        </div>`;
+      });
+      ct.innerHTML = html || '<p style="text-align:center; color:var(--muted);">Sem propostas no momento.</p>';
+    }
+  } catch(e) {}
+}
+
+async function responderTroca(id, resp) {
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'responderTroca', token: getToken(), user: getLoggedUser(), idTroca: id, resp: resp }) });
+    let j = await res.json(); showLoading(false);
+    if (j.status === 'success') {
+      showToast(resp === 'aceitar' ? '✅ Troca Concluída!' : '🚫 Cancelada.');
+      loadTrocas(); loadAlbumData();
+      
+      // ANIMAÇÃO NA TELA EM VEZ DE MENSAGEM DO SISTEMA
+      if (j.extra && j.extra.length > 0) {
+          setTimeout(() => { showPackAnimation(j.extra, "🎁 Bônus de Parceria!"); }, 500);
+      }
+    } else showToast('❌ ' + (j.msg || 'Erro.'));
+  } catch(e) { showLoading(false); showToast('❌ Erro.'); }
+}
+
+let coringaTargetSelecionado = "";
+let coringaSelectedElement = null;
+
+function openCoringaModal(qtd) {
+  if (qtd <= 0) { showToast('⚠️ Você não tem figurinhas Coringa.'); return; }
+  
+  // Limpa as seleções anteriores
+  coringaTargetSelecionado = "";
+  coringaSelectedElement = null;
+  document.getElementById('coringa-selecionada-text').innerText = "Nenhuma";
+  
+  let grid = document.getElementById('coringa-grid');
+  let html = '';
+  
+  const RARAS_LIST = ["🇧🇷 Brasil", "Argentina", "França", "Inglaterra", "Espanha", "Alemanha", "Portugal", "Holanda", "Bélgica", "Uruguai"];
+  
+  // Desenha as cartas na tela
+  TODAS_SELECOES.forEach(time => {
+    let flagUrl = getFlagUrl(time);
+    let rara = RARAS_LIST.includes(time);
+    let cardClass = rara ? 'rara' : '';
+    
+    html += `
+      <div class="sticker-card ${cardClass}" onclick="selecionarAlvoCoringa('${time}', this)">
+        <img src="${flagUrl}" class="sticker-img" alt="${time.replace('🇧🇷 ', '')}">
+        <div class="sticker-name">${time.replace('🇧🇷 ', '')}</div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html;
+  document.getElementById('modal-coringa').classList.add('open');
+}
+
+function selecionarAlvoCoringa(time, element) {
+  // Remove o destaque da figurinha selecionada anteriormente
+  if (coringaSelectedElement) {
+     coringaSelectedElement.style.borderColor = '';
+     coringaSelectedElement.style.boxShadow = '';
+     coringaSelectedElement.style.transform = '';
+  }
+  
+  // Salva e destaca a nova figurinha
+  coringaTargetSelecionado = time;
+  coringaSelectedElement = element;
+  document.getElementById('coringa-selecionada-text').innerText = time.replace('🇧🇷 ', '');
+  
+  element.style.borderColor = '#a855f7';
+  element.style.boxShadow = '0 0 15px rgba(168, 85, 247, 0.8)';
+  element.style.transform = 'translateY(-3px)';
+}
+
+async function confirmarCoringa() {
+  let target = coringaTargetSelecionado;
+  if (!target) { showToast('⚠️ Selecione uma figurinha na lista!'); return; }
+  
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { 
+      method: 'POST', 
+      body: JSON.stringify({ action: 'trocarCoringa', token: getToken(), user: getLoggedUser(), target: target }) 
+    });
+    let json = await res.json();
+    showLoading(false);
+    if (json.status === 'success') {
+      closeModal('modal-coringa'); await loadAlbumData(); 
+      showPackAnimation([json.figurinha], "Coringa Trocado!");
+    } else { showToast('❌ ' + (json.msg || 'Erro na troca.')); }
+  } catch(e) { showLoading(false); showToast('❌ Erro de conexão.'); }
+}
+
+function switchRegrasTab(tab) {
+  document.getElementById('regras-bolao-content').style.display = tab === 'bolao' ? 'block' : 'none';
+  document.getElementById('regras-album-content').style.display = tab === 'album' ? 'block' : 'none';
+  document.getElementById('btn-regras-bolao').classList.toggle('active', tab === 'bolao');
+  document.getElementById('btn-regras-album').classList.toggle('active', tab === 'album');
+}
+
+async function abrirPacote(packId, packType) {
+  const user = getLoggedUser(); showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'abrirPacote', token: getToken(), user: user, packId: packId, packType: packType }) });
+    if (!res.ok) throw new Error("Erro de servidor");
+    let json = await res.json(); showLoading(false);
+    if (json.status === 'success') { await loadAlbumData(); showPackAnimation(json.figurinhas, "Pacote Aberto!"); } 
+    else { showToast('❌ ' + (json.msg || 'Erro ao abrir pacote.')); }
+  } catch(e) { showLoading(false); showToast('❌ Erro de conexão.'); }
+}
+
+function showPackAnimation(figurinhas, titulo) {
+  const modal = document.getElementById('modal-pack');
+  const animView = document.getElementById('pack-animation-view');
+  const resView = document.getElementById('pack-results-view');
+  const container = document.getElementById('revealed-cards-container');
+  const titleEl = document.getElementById('pack-results-title');
+  
+  let hasSecret = figurinhas.some(f => f.time === 'Itália' || f.time === 'Coringa');
+  titleEl.innerText = hasSecret ? "✨ CARTA SECRETA ENCONTRADA! ✨" : (titulo || "Novas Figurinhas!");
+  titleEl.style.color = hasSecret ? "#c084fc" : "var(--gold)";
+
+  animView.style.display = 'block'; resView.style.display = 'none'; modal.classList.add('open');
+
+  setTimeout(() => {
+    animView.style.display = 'none'; resView.style.display = 'block';
+    
+    confetti({ particleCount: hasSecret ? 300 : 150, spread: hasSecret ? 130 : 90, origin: { y: 0.5 }, zIndex: 3000 });
+
+    let html = '';
+    figurinhas.forEach(fig => {
+      let flagUrl = getFlagUrl(fig.time);
+      let raraCls = fig.rara || fig.time === 'Coringa' || fig.time === 'Itália' ? 'rara' : '';
+      html += `<div class="revealed-card ${raraCls}"><img src="${flagUrl}" alt="${fig.time.replace('🇧🇷 ', '')}"><div class="name">${fig.time.replace('🇧🇷 ', '')}</div></div>`;
+    });
+    container.innerHTML = html;
+  }, 1500);
 }
 </script>
 </body>
