@@ -1494,16 +1494,16 @@
           <thead><tr><th>Sacrifício (3 figurinhas)</th><th>Nova Figurinha</th><th>Efeito Colateral</th></tr></thead>
           <tbody>
             <tr><td>3 Comuns</td><td>1 Figurinha (5% Rara)</td><td>-</td></tr>
-            <tr><td>2 Comuns + 1 Rara</td><td>1 Figurinha (34% Rara)</td><td>-</td></tr>
-            <tr><td>1 Comum + 2 Raras</td><td>1 Figurinha (67% Rara)</td><td>-</td></tr>
-            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>18% de chance de vir +1 Figurinha Extra (4% Rara)</td></tr>
+            <tr><td>2 Comuns + 1 Rara</td><td>1 Figurinha (35% Rara)</td><td>-</td></tr>
+            <tr><td>1 Comum + 2 Raras</td><td>1 Figurinha (68% Rara)</td><td>-</td></tr>
+            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>20% de chance de vir +1 Figurinha Extra (6% Rara)</td></tr>
           </tbody>
         </table>
       </div>
       
       <div style="margin-top: 15px; padding: 12px; background: rgba(6, 182, 212, 0.1); border-left: 4px solid #06b6d4; border-radius: 4px; font-size: 0.88rem;">
-        🧪 <strong>Catalisador (Opcional):</strong> Você pode adicionar <strong>1 Figurinha Comum</strong> extra no slot isolado da máquina para potencializar a fusão! O catalisador aumenta as chances de obter uma figurinha Rara em todas as combinações base.<br><br>
-        🔥 <strong>Síntese Suprema:</strong> Se você sacrificar <strong>3 Raras</strong> e adicionar o <strong>Catalisador</strong>, a chance do efeito colateral (vir uma figurinha extra) sobe para <strong>38%</strong>, e a chance dessa figurinha extra ser Rara sobe para <strong>9%</strong>!
+        🧪 <strong>Catalisador (Opcional):</strong> Você pode adicionar <strong>1 Figurinha Comum</strong> extra no slot isolado da máquina para potencializar a fusão! O catalisador calcula o bônus com base no seu sacrifício: ele concede <strong>+2% de chance para cada figurinha Comum</strong> e <strong>+5% para cada figurinha Rara</strong> utilizada na combinação base.<br><br>
+        🔥 <strong>Síntese Suprema:</strong> Se você sacrificar <strong>3 Raras</strong> e adicionar o <strong>Catalisador</strong>, a chance do efeito colateral (vir uma figurinha extra) sobe para <strong>42%</strong>, e a chance dessa figurinha extra ser Rara sobe para <strong>12%</strong>!
       </div>
     </div>
     
@@ -1782,7 +1782,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwQb3NPCx6hxrRVmWJyZ9dxfNgkGtkocgdv0l8fvY1MlkFnNIG9iWQbb2KBFw0FDGf0/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxoG3iwyIZGCZNVUTtkAWUyjbh8Rdyezo1TV20jSJwNinTikezVdRA-fcmk90GoWqrs/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -3542,10 +3542,10 @@ function updateSinteseStats() {
   let extraChance = 18; let extraRaraChance = 4;
 
   if (hasExtra) {
-     if (raras === 0) chanceRara += 3;
-     else if (raras === 1) chanceRara += 5;
-     else if (raras === 2) chanceRara += 7;
-     else if (raras === 3) { extraChance = 38; extraRaraChance = 9; } 
+     if (raras === 0) chanceRara += 6;
+     else if (raras === 1) chanceRara += 9;
+     else if (raras === 2) chanceRara += 12;
+     else if (raras === 3) { extraChance = 42; extraRaraChance = 15; } 
   }
 
   // Passiva da Itália (Visual)
