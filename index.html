@@ -1460,17 +1460,17 @@
             <tr>
               <td><strong>5 pontos</strong></td>
               <td><b>1x Pacote Dourado</b> (1 figurinha garantida)<br><small>+ 1x Pacote Comum Bônus</small></td>
-              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>50% de chance</b> de vir uma 2ª figurinha extra no Dourado)</small></td>
+              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>60% de chance</b> de vir uma 2ª figurinha extra no Dourado)</small></td>
             </tr>
             <tr>
               <td><strong>10 pontos</strong></td>
               <td><b>1x Pacote Brilhante</b> (2 figurinhas garantidas)<br><small>+ 1x Pacote Comum Bônus</small></td>
-              <td><b>9%</b> Rara | <b>0.9%</b> Coringa<br><small>(<b>15% de chance</b> de vir uma 3ª figurinha extra no Brilhante)</small></td>
+              <td><b>9%</b> Rara | <b>0.9%</b> Coringa<br><small>(<b>18% de chance</b> de vir uma 3ª figurinha extra no Brilhante)</small></td>
             </tr>
             <tr>
               <td><strong>Jogo do Brasil 🇧🇷</strong></td>
               <td><b>1x Pacote Especial</b> (2 figurinhas garantidas)<br><small>(Liberado no momento em que o jogo começa)</small></td>
-              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>30% de chance</b> do pacote vir com 3 figurinhas e <b>15% de chance</b> de vir com 4 figurinhas!)</small></td>
+              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>33% de chance</b> do pacote vir com 3 figurinhas e <b>18% de chance</b> de vir com 4 figurinhas!)</small></td>
             </tr>
           </tbody>
         </table>
@@ -1496,7 +1496,7 @@
             <tr><td>3 Comuns</td><td>1 Figurinha (5% Rara)</td><td>-</td></tr>
             <tr><td>2 Comuns + 1 Rara</td><td>1 Figurinha (30% Rara)</td><td>-</td></tr>
             <tr><td>1 Comum + 2 Raras</td><td>1 Figurinha (60% Rara)</td><td>-</td></tr>
-            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>15% de chance de vir +1 Figurinha Extra (3% Rara)</td></tr>
+            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>18% de chance de vir +1 Figurinha Extra (4% Rara)</td></tr>
           </tbody>
         </table>
       </div>
@@ -1782,7 +1782,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzrAkWfcPaqNzz7mJbPNS6p-2Vy6Vk5TPPiRwGLi5LsyS2hdoC4d1TEN02IVOlrWPoJ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwQb3NPCx6hxrRVmWJyZ9dxfNgkGtkocgdv0l8fvY1MlkFnNIG9iWQbb2KBFw0FDGf0/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -3538,15 +3538,14 @@ function updateSinteseStats() {
   let raras = sinteseSlots.filter(s => s.rara).length;
   let hasExtra = sinteseExtraSlot !== null;
 
-  let chanceRara = raras === 0 ? 5 : raras === 1 ? 30 : raras === 2 ? 60 : 100;
-  let extraChance = 15; let extraRaraChance = 3;
+  let chanceRara = raras === 0 ? 5 : raras === 1 ? 34 : raras === 2 ? 67 : 100;
+  let extraChance = 18; let extraRaraChance = 4;
 
   if (hasExtra) {
      if (raras === 0) chanceRara += 3;
      else if (raras === 1) chanceRara += 5;
      else if (raras === 2) chanceRara += 7;
-     // ATUALIZADO: Agora mostra os 8% corretos da Síntese Suprema com Catalisador
-     else if (raras === 3) { extraChance = 30; extraRaraChance = 8; } 
+     else if (raras === 3) { extraChance = 38; extraRaraChance = 9; } 
   }
 
   // Passiva da Itália (Visual)
