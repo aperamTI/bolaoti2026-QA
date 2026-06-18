@@ -1461,7 +1461,7 @@
         <p style="color:var(--muted); font-size:0.9rem;">Insira as 3 figurinhas base para visualizar as probabilidades...</p>
       </div>
 
-      <button class="sintese-btn" id="btn-fundir" style="margin-top:20px;" onclick="fundirFigurinhas()">Fundir Figurinhas</button>
+      <button class="sintese-btn" id="btn-fundir" style="margin-top:20px;" onclick="tentarFundir()">Fundir Figurinhas</button>
     </div>
 
     <button class="btn-save" style="background:#0369a1; margin-bottom: 20px; position:relative;" onclick="openTrocaModal()">
@@ -1861,6 +1861,90 @@
   </div>
 </div>
 
+<!-- MODAL AVISO DE SÍNTESE -->
+<div id="modal-sintese-aviso" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center;">
+  
+  <!-- Caixa principal do aviso -->
+  <div style="background: #22222a; padding: 25px; border-radius: 12px; max-width: 90%; width: 360px; text-align: center; border: 1px solid #ef4444; box-shadow: 0 8px 25px rgba(0,0,0,0.7); color: #fff;">
+    
+    <h2 style="color: #ef4444; margin-top: 0; margin-bottom: 15px; font-size: 1.6rem; text-transform: uppercase;">⚠️ Atenção!</h2>
+    
+    <p style="margin-bottom: 15px; font-size: 1.05rem;">
+      Ao confirmar, estas figurinhas serão <strong style="color: #ef4444;">DESTRUÍDAS</strong> e perdidas para sempre!
+    </p>
+    
+    <p style="margin-bottom: 20px; font-size: 0.9rem; color: #aaa; line-height: 1.5;">
+      A Máquina de Síntese queima suas cartas repetidas para forjar <strong style="color: #fff;">uma Figurinha Nova</strong> com chances elevadas de tirar uma Rara. Esta ação é irreversível!
+    </p>
+    
+    <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <input type="checkbox" id="chk-skip-sintese" style="width: 16px; height: 16px; cursor: pointer;">
+      <label for="chk-skip-sintese" style="font-size: 0.85rem; color: #999; cursor: pointer;">Entendi o risco. Não mostrar novamente.</label>
+    </div>
+    
+    <!-- Botões -->
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <button onclick="cancelarSintese()" style="flex: 1; padding: 12px; border-radius: 8px; border: none; background: #444; color: white; font-weight: bold; font-size: 1rem; cursor: pointer;">Cancelar</button>
+      <button onclick="confirmarSintese()" style="flex: 1; padding: 12px; border-radius: 8px; border: none; background: #ef4444; color: white; font-weight: bold; font-size: 1rem; cursor: pointer;">Destruir e Fundir</button>
+    </div>
+    
+  </div>
+</div>
+
+<div id="modal-inspecionar-italia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;" onclick="fecharInspecao()">
+
+  <div id="container-3d" style="perspective: 1000px; width: 260px; height: 360px; margin-bottom: 40px;" onclick="event.stopPropagation()">
+    
+    <div id="carta-3d" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; border-radius: 15px; box-shadow: 0 25px 50px rgba(0,0,0,0.9); border: 2px solid #555; background: linear-gradient(to bottom, #2a2a35, #111); overflow: hidden; cursor: grab;">
+      
+      <div id="reflexo-carta" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10; pointer-events: none; mix-blend-mode: overlay; transition: background 0.1s;"></div>
+      
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transform-style: preserve-3d;">
+        <img src="https://flagcdn.com/w160/it.png" style="width: 140px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); transform: translateZ(60px);">
+        <h2 style="color: white; margin-top: 30px; font-size: 2.2rem; transform: translateZ(40px); text-shadow: 0 8px 15px rgba(0,0,0,0.9); text-transform: uppercase; letter-spacing: 2px;">Tradição</h2>
+      </div>
+      
+    </div>
+  </div>
+
+  <div style="max-width: 500px; text-align: center; color: #ddd; padding: 0 25px;" onclick="event.stopPropagation()">
+    <h3 style="color: #4ade80; margin-bottom: 15px; font-size: 1.6rem; text-transform: uppercase;">🇮🇹 O Fantasma da Azzurra</h3>
+    <p style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+      Tetracampeã mundial (1934, 1938, 1982 e 2006), a Itália possui uma das camisas mais temidas da história. Conhecida pela sua defesa absoluta e tática impecável.
+    </p>
+    <p style="font-size: 1.05rem; line-height: 1.6; color: #fca5a5; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+      No entanto, o peso da camisa não entrou em campo. A seleção sofreu um colapso histórico nas eliminatórias e está fora da Copa, tornando esta carta um artefato místico de um império caído.
+    </p>
+    <p style="margin-top: 25px; font-size: 0.85rem; color: #777; text-transform: uppercase; letter-spacing: 1px;">Clique fora para fechar</p>
+  </div>
+
+</div>
+
+<div id="modal-preview-troca" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; align-items: center; justify-content: center;" onclick="fecharPreviewTroca()">
+  <div style="background: #22222a; padding: 25px; border-radius: 12px; max-width: 95%; width: 480px; border: 1px solid #444; box-shadow: 0 8px 25px rgba(0,0,0,0.7); color: #fff;" onclick="event.stopPropagation()">
+    
+    <h3 style="margin-top: 0; margin-bottom: 20px; text-align: center; color: #4ade80; text-transform: uppercase; letter-spacing: 1px;">🔍 Itens da Proposta</h3>
+    
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <div>
+        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Cartas Oferecidas:</h4>
+        <div id="preview-oferece-grid" style="display: flex; flex-wrap: wrap; gap: 10px; background: #1a1a24; padding: 10px; border-radius: 8px; min-height: 60px;"></div>
+      </div>
+      
+      <div style="text-align: center; font-size: 1.5rem; color: #4ade80; margin: -5px 0;">↕️</div>
+
+      <div>
+        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Cartas Solicitadas:</h4>
+        <div id="preview-quer-grid" style="display: flex; flex-wrap: wrap; gap: 10px; background: #1a1a24; padding: 10px; border-radius: 8px; min-height: 60px;"></div>
+      </div>
+
+    </div>
+
+    <button onclick="fecharPreviewTroca()" style="width: 100%; margin-top: 25px; padding: 12px; border-radius: 8px; border: none; background: #444; color: white; font-weight: bold; cursor: pointer; font-size: 1rem;">Fechar Visualização</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
@@ -1868,7 +1952,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbywH9QFLJPj6JCsEGJqGsO6rvlkRdxzNSxdcbGAjf4LhBkHooptjoMjXk9ZSiPXJtDj/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz4ZgOnDiStYEd2BJorF9MOkXE6QtcwAjIobuBcm0ChTM3u275iK6azbECJKnpnP-2h/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -3556,7 +3640,8 @@ function renderCollection() {
     let qtd = invItem ? invItem.qtd : 0;
     let rara = invItem ? invItem.rara : false;
     let inSlotCount = sinteseSlots.filter(s => s.time === time).length;
-    let displayQtd = qtd - inSlotCount;
+    let inExtraCount = (sinteseExtraSlot && sinteseExtraSlot.time === time) ? 1 : 0;
+    let displayQtd = qtd - inSlotCount - inExtraCount;
     let flagUrl = getFlagUrl(time);
     let cardClass = displayQtd > 0 ? (rara ? 'rara' : '') : 'zero';
     let classeBrasil = (time === "🇧🇷 Brasil" && qtd > 0) ? "carta-do-brasil" : "";
@@ -3574,7 +3659,7 @@ function renderCollection() {
   // Itália Tradição SÓ APARECE se a quantidade for maior que 0!
   let it = albumData.inventario.find(i => i.time === "Itália");
   if (it && it.qtd > 0) {
-    html += `<div class="sticker-card italia-card efeito-nevoa-italia" onclick="showToast('TRADIÇÃO: 🇮🇹 Fora da Copa!')"><div class="sticker-qtd" style="background:#333;">${it.qtd}</div><img src="https://flagcdn.com/w160/it.png" class="sticker-img"><div class="sticker-name italia-name">Tradição</div></div>`;
+    html += `<div class="sticker-card italia-card efeito-nevoa-italia" onclick="abrirInspecaoItalia()"><div class="sticker-qtd" style="background:#333;">${it.qtd}</div><img src="https://flagcdn.com/w160/it.png" class="sticker-img"><div class="sticker-name italia-name">Tradição</div></div>`;
   }
   document.getElementById('album-grid').innerHTML = html;
   document.getElementById('collection-count').innerText = `${uniqueCount}/48`;
@@ -3794,21 +3879,37 @@ function switchTradeTab(tab) {
 }
 
 async function loadTrocas() {
-  let ct = document.getElementById('trade-list-container'); ct.innerHTML = 'Carregando...';
+  let ct = document.getElementById('trade-list-container'); 
+  ct.innerHTML = 'Carregando...';
+  
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getTrocas', token: getToken(), user: getLoggedUser() }) });
     let j = await res.json();
+    
     if (j.status === 'success' && j.trocas) {
       let html = '';
       j.trocas.forEach(t => {
         let isRecebida = t.para === getLoggedUser();
+        
+        // 1. Separa exatamente o que o usuário logado DÁ e o que ele RECEBE
+        let arrayDa = isRecebida ? t.quer : t.oferece;
+        let arrayRecebe = isRecebida ? t.oferece : t.quer;
+        
+        // 2. Transforma as listas em texto JSON para o botão não quebrar no HTML
+        let jsonDa = JSON.stringify(arrayDa).replace(/'/g, "\\'");
+        let jsonRecebe = JSON.stringify(arrayRecebe).replace(/'/g, "\\'");
+
         html += `<div class="trade-row">
           <div style="flex:1;">
             <b>${isRecebida ? `De: ${t.de}` : `Para: ${t.para}`}</b><br>
-            <span style="color:var(--green); font-size:0.75rem; font-weight:600;">Você dá: ${isRecebida ? t.quer.map(x=>x.replace('🇧🇷 ','')).join(', ') : t.oferece.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span><br>
-            <span style="color:var(--red-pts); font-size:0.75rem; font-weight:600;">Você recebe: ${isRecebida ? t.oferece.map(x=>x.replace('🇧🇷 ','')).join(', ') : t.quer.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span>
+            <span style="color:var(--green); font-size:0.75rem; font-weight:600;">Você dá: ${arrayDa.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span><br>
+            <span style="color:var(--red-pts); font-size:0.75rem; font-weight:600;">Você recebe: ${arrayRecebe.map(x=>x.replace('🇧🇷 ','')).join(', ')}</span>
           </div>
+          
           <div style="display:flex; gap:5px;">
+            <!-- 🔍 NOSSO NOVO BOTÃO DE LUPA -->
+            <button class="btn-update" style="background:#3b82f6; font-size:1rem; padding: 0 8px;" onclick='mostrarPreviewTroca(${jsonDa}, ${jsonRecebe})'>🔍</button>
+            
             ${isRecebida ? `<button class="btn-update" style="background:var(--green);" onclick="responderTroca('${t.id}', 'aceitar')">✔</button>` : ''}
             <button class="btn-update" style="background:#dc2626;" onclick="responderTroca('${t.id}', 'cancelar')">✖</button>
           </div>
@@ -3823,14 +3924,14 @@ async function responderTroca(id, resp) {
   showLoading(true);
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'responderTroca', token: getToken(), user: getLoggedUser(), idTroca: id, resp: resp }) });
-    let j = await res.json(); showLoading(false);
-    if (j.status === 'success') {
+    let json = await res.json(); showLoading(false);
+    if (json.status === 'success') {
       showToast(resp === 'aceitar' ? '✅ Troca Concluída!' : '🚫 Cancelada.');
       loadTrocas(); loadAlbumData();
       
       // ANIMAÇÃO NA TELA EM VEZ DE MENSAGEM DO SISTEMA
-      if (j.extra && j.extra.length > 0) {
-          setTimeout(() => { showPackAnimation(j.extra, "🎁 Bônus de Parceria!"); }, 500);
+      if (json.extra && json.extra.length > 0) {
+          setTimeout(() => { showPackAnimation(json.extra, "🎁 Bônus de Parceria!"); }, 500);
       }
     } else { 
         showToast('❌ ' + (json.msg || 'Erro ao responder troca.')); 
@@ -3841,6 +3942,58 @@ async function responderTroca(id, resp) {
         }
     }
   } catch(e) { showLoading(false); showToast('❌ Erro.'); logError('Erro de rede ao responder troca: ' + e.message, getLoggedUser(), 'error');}
+}
+
+// Abre o modal da lupa e monta o inventário visual da troca
+function mostrarPreviewTroca(ofereceArr, querArr) {
+    const ofereceGrid = document.getElementById('preview-oferece-grid');
+    const querGrid = document.getElementById('preview-quer-grid');
+    
+    ofereceGrid.innerHTML = '';
+    querGrid.innerHTML = '';
+
+    const meuUsuarioLogado = getLoggedUser();
+
+    // Gerador de mini-cards reutilizável
+    const construirMiniCards = (listaFigurinhas, container) => {
+        if (!listaFigurinhas || listaFigurinhas.length === 0) {
+            container.innerHTML = '<span style="color:#666; font-size:0.9rem; padding:10px;">Nenhuma figurinha envolvida.</span>';
+            return;
+        }
+
+        listaFigurinhas.forEach(time => {
+            // 🔍 REGRA DE OURO: Verifica se o jogador já possui essa figurinha no inventário real
+            let invItem = albumData.inventario.find(i => i.time === time);
+            let jaPossui = invItem && invItem.qtd > 0;
+            
+            let flagUrl = getFlagUrl(time);
+            
+            // Define o texto e a cor com base na posse
+            let textoPosse = jaPossui ? "✅ Já possui" : "✨ Nova!";
+            let corPosse = jaPossui ? "#4ade80" : "#f59e0b";
+
+            // Monta o mini card adaptado para caber no modal
+            let cardHtml = `
+                <div style="background: #2a2a35; border: 1px solid #444; border-radius: 6px; padding: 6px; width: 100px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img src="${flagUrl}" style="width: 50px; height: auto; border-radius: 3px; border: 1px solid #555;" alt="${time}">
+                    <div style="font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; color: #fff;">${time}</div>
+                    <div style="font-size: 0.65rem; color: ${corPosse}; font-weight: bold;">${textoPosse}</div>
+                </div>
+            `;
+            container.innerHTML += cardHtml;
+        });
+    };
+
+    // Renderiza os dois lados da moeda
+    construirMiniCards(ofereceArr, ofereceGrid);
+    construirMiniCards(querArr, querGrid);
+
+    // Exibe o palco
+    document.getElementById('modal-preview-troca').style.display = 'flex';
+}
+
+function fecharPreviewTroca() {
+    document.getElementById('modal-preview-troca').style.display = 'none';
 }
 
 let coringaTargetSelecionado = "";
@@ -3970,6 +4123,98 @@ function showPackAnimation(figurinhas, titulo) {
     container.innerHTML = html;
   }, 1500);
 }
+
+// Intercepta o clique no botão "Fundir"
+function tentarFundir() {
+    if (sinteseSlots.length < 3) {
+        showToast("⚠️ Coloque 3 figurinhas base primeiro!");
+        return;
+    }
+    
+    // Verifica se o usuário já pediu para pular o aviso no passado
+    if (localStorage.getItem('skipSinteseWarning') === 'true') {
+        fundirFigurinhas(); // Vai direto para a função que você já tem padronizada
+    } else {
+        // Abre o pop-up de alerta
+        document.getElementById('chk-skip-sintese').checked = false;
+        document.getElementById('modal-sintese-aviso').style.display = 'flex';
+    }
+}
+
+// Executada se ele clicar no botão vermelho "Destruir e Fundir"
+function confirmarSintese() {
+    if (document.getElementById('chk-skip-sintese').checked) {
+        localStorage.setItem('skipSinteseWarning', 'true');
+    }
+    document.getElementById('modal-sintese-aviso').style.display = 'none';
+    fundirFigurinhas(); 
+}
+
+// Executada se ele clicar em "Cancelar"
+function cancelarSintese() {
+    document.getElementById('modal-sintese-aviso').style.display = 'none';
+    // Devolve as figurinhas para o inventário limpando a máquina
+    sinteseSlots = [];
+    sinteseExtraSlot = null;
+    renderAlbum(); // Atualiza a tela para as cartas voltarem
+    showToast("🚫 Síntese abortada. As figurinhas voltaram para o álbum.");
+}
+
+// ABRIR E FECHAR O MODO INSPEÇÃO
+function abrirInspecaoItalia() {
+    document.getElementById('modal-inspecionar-italia').style.display = 'flex';
+}
+
+function fecharInspecao() {
+    document.getElementById('modal-inspecionar-italia').style.display = 'none';
+}
+
+// MOTOR 3D DE REFLEXO E INCLINAÇÃO (Universal: Mouse + Celular)
+document.addEventListener('DOMContentLoaded', () => {
+    const palco = document.getElementById('container-3d');
+    const carta = document.getElementById('carta-3d');
+    const reflexo = document.getElementById('reflexo-carta');
+
+    if (palco && carta) {
+        // Função matemática que inclina a carta
+        const aplicarInclinacao = (xCli, yCli) => {
+            const rect = palco.getBoundingClientRect();
+            const x = xCli - rect.left; 
+            const y = yCli - rect.top;
+
+            const centroX = rect.width / 2;
+            const centroY = rect.height / 2;
+
+            const rotateX = ((y - centroY) / centroY) * -25; 
+            const rotateY = ((x - centroX) / centroX) * 25;
+
+            carta.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+            const luzX = (x / rect.width) * 100;
+            const luzY = (y / rect.height) * 100;
+            reflexo.style.background = `radial-gradient(circle at ${luzX}% ${luzY}%, rgba(255,255,255,0.5) 0%, transparent 60%)`;
+        };
+
+        const resetarInclinacao = () => {
+            carta.style.transition = 'transform 0.5s ease-out';
+            carta.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            reflexo.style.background = 'transparent';
+        };
+
+        // Eventos para Computador (Mouse)
+        palco.addEventListener('mousemove', (e) => aplicarInclinacao(e.clientX, e.clientY));
+        palco.addEventListener('mouseleave', resetarInclinacao);
+        palco.addEventListener('mouseenter', () => carta.style.transition = 'transform 0.1s ease-out');
+
+        // Eventos para Celular (Toque)
+        palco.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Evita que a tela role para baixo enquanto o cara brinca com a carta
+            aplicarInclinacao(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+        palco.addEventListener('touchend', resetarInclinacao);
+        palco.addEventListener('touchstart', () => carta.style.transition = 'transform 0.1s ease-out');
+    }
+});
 </script>
 </body>
 </html>
