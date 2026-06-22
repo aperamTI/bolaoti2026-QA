@@ -1110,7 +1110,7 @@
             -15px -20px 20px -4px rgba(255,255,255,0.1),
              20px  15px 25px -5px rgba(0,0,0,0.3),
              
-            /* Fumaça 3 e 4: Nascendo nos outros cantos da carta */
+            /* Fumaça 3 e 4: Nascendo nos outros cantos da figurinha */
             -4px  6px 10px 0px rgba(255,255,255,0.4),
              5px -5px 12px 0px rgba(0,0,0,0.7);
     }
@@ -1150,7 +1150,7 @@
 
 /* 💚💛 Efeito Easter Egg: Coração do Brasil */
 .efeito-coracao-brasil {
-    /* Traz a carta para frente, pinta a borda de amarelo e brilha verde */
+    /* Traz a figurinha para frente, pinta a borda de amarelo e brilha verde */
     z-index: 10 !important;
     border: 2px solid #ffdf00 !important; 
     box-shadow: 0 0 20px rgba(0, 156, 59, 0.8) !important;
@@ -1405,7 +1405,7 @@
     <div class="ranking-wrap">
       <table id="ranking-table">
         <thead><tr>
-          <th>#</th><th>Participante</th><th>Pts</th><th>10pts</th><th>5pts</th><th>3pts</th>
+          <th>#</th><th style="text-align:center; width:40px;">+/-</th><th>Participante</th><th>Pts</th><th>10pts</th><th>5pts</th><th>3pts</th>
         </tr></thead>
         <tbody id="ranking-body"></tbody>
       </table>
@@ -1874,7 +1874,7 @@
     </p>
     
     <p style="margin-bottom: 20px; font-size: 0.9rem; color: #aaa; line-height: 1.5;">
-      A Máquina de Síntese queima suas cartas repetidas para forjar <strong style="color: #fff;">uma Figurinha Nova</strong> com chances elevadas de tirar uma Rara. Esta ação é irreversível!
+      A Máquina de Síntese queima suas figurinhas repetidas para forjar <strong style="color: #fff;">uma Figurinha Nova</strong> com chances elevadas de tirar uma Rara. Esta ação é irreversível!
     </p>
     
     <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -1913,7 +1913,7 @@
       Tetracampeã mundial (1934, 1938, 1982 e 2006), a Itália possui uma das camisas mais temidas da história. Conhecida pela sua defesa absoluta e tática impecável.
     </p>
     <p style="font-size: 1.05rem; line-height: 1.6; color: #fca5a5; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
-      No entanto, o peso da camisa não entrou em campo. A seleção sofreu um colapso histórico nas eliminatórias e está fora da Copa, tornando esta carta um artefato místico de um império caído.
+      No entanto, o peso da camisa não entrou em campo. A seleção sofreu um colapso histórico nas eliminatórias e está fora da Copa, tornando esta figurinha um artefato místico de um império caído.
     </p>
     <p style="margin-top: 25px; font-size: 0.85rem; color: #777; text-transform: uppercase; letter-spacing: 1px;">Clique fora para fechar</p>
   </div>
@@ -1928,14 +1928,14 @@
     <div style="display: flex; flex-direction: column; gap: 20px;">
       
       <div>
-        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Cartas Oferecidas:</h4>
+        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Figurinhas a Dar:</h4>
         <div id="preview-oferece-grid" style="display: flex; flex-wrap: wrap; gap: 10px; background: #1a1a24; padding: 10px; border-radius: 8px; min-height: 60px;"></div>
       </div>
       
       <div style="text-align: center; font-size: 1.5rem; color: #4ade80; margin: -5px 0;">↕️</div>
 
       <div>
-        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Cartas Solicitadas:</h4>
+        <h4 style="margin: 0 0 10px 0; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">Figurinhas a Receber:</h4>
         <div id="preview-quer-grid" style="display: flex; flex-wrap: wrap; gap: 10px; background: #1a1a24; padding: 10px; border-radius: 8px; min-height: 60px;"></div>
       </div>
 
@@ -2054,9 +2054,9 @@ const GROUP_MATCHES = [
   { id:53, phase:"grupos", round:2, date:"21/06/2026", time:"16:00", group:"G", home:"Bélgica",        away:"Irã" },
   { id:54, phase:"grupos", round:2, date:"21/06/2026", time:"19:00", group:"H", home:"Uruguai",        away:"Cabo Verde" },
   { id:55, phase:"grupos", round:2, date:"21/06/2026", time:"22:00", group:"G", home:"Nova Zelândia",  away:"Egito" },
-  { id:56, phase:"grupos", round:2, date:"22/06/2026", time:"15:00", group:"I", home:"França",         away:"Iraque" },
-  { id:57, phase:"grupos", round:2, date:"22/06/2026", time:"18:00", group:"I", home:"Senegal",        away:"Noruega" },
-  { id:58, phase:"grupos", round:2, date:"22/06/2026", time:"21:00", group:"J", home:"Argentina",      away:"Áustria" },
+  { id:56, phase:"grupos", round:2, date:"22/06/2026", time:"18:00", group:"I", home:"França",         away:"Iraque" },
+  { id:57, phase:"grupos", round:2, date:"22/06/2026", time:"21:00", group:"I", home:"Senegal",        away:"Noruega" },
+  { id:58, phase:"grupos", round:2, date:"22/06/2026", time:"14:00", group:"J", home:"Argentina",      away:"Áustria" },
   { id:59, phase:"grupos", round:2, date:"23/06/2026", time:"00:00", group:"J", home:"Argélia",        away:"Jordânia" },
   { id:60, phase:"grupos", round:2, date:"23/06/2026", time:"14:00", group:"K", home:"Portugal",       away:"Uzbequistão" },
   { id:61, phase:"grupos", round:2, date:"23/06/2026", time:"17:00", group:"L", home:"Inglaterra",     away:"Gana" },
@@ -2535,16 +2535,55 @@ function calcPts(ph, pa, rh, ra) {
   return 0;
 }
 
-function calcUserTotal(user) {
+function calcUserTotal(user, excludeMatchId = null) {
   const data = getData(), results = getResults();
   let total = 0, c10 = 0, c5 = 0, c3 = 0;
   MATCHES.forEach(m => {
+    // ⏳ Se for o jogo que estamos ignorando, ele pula a contagem!
+    if (m.id === excludeMatchId) return; 
+    
     const p = data[`${user}__${m.id}`], r = results[m.id];
     if (!p || !r) return;
     const pts = calcPts(p.h, p.a, r.h, r.a);
     if (pts === 10) { total += 10; c10++; } else if (pts === 5) { total += 5; c5++; } else if (pts === 3) { total += 3; c3++; }
   });
   return { total, c10, c5, c3 };
+}
+
+// ⏱️ Descobre qual foi o último jogo que teve o placar preenchido pelo Admin
+function getLatestCompletedMatchId() {
+  const results = getResults();
+  let latestMatch = null;
+  let latestTime = 0;
+
+  MATCHES.forEach(m => {
+    const r = results[m.id];
+    if (r && r.h !== null && r.h !== undefined) {
+       if (m.date !== 'A definir' && m.time !== 'A definir' && !m.date.includes('T')) {
+         const dParts = m.date.split('/');
+         const tParts = m.time.split(':');
+         const kickoff = new Date(dParts[2], dParts[1]-1, dParts[0], parseInt(tParts[0]), parseInt(tParts[1])).getTime();
+         if (kickoff > latestTime) {
+            latestTime = kickoff;
+            latestMatch = m.id;
+         }
+       }
+    }
+  });
+  return latestMatch;
+}
+
+// ⏪ Calcula as posições de todo mundo ANTES do último jogo
+function getPreviousRankingMap() {
+   const latestMatchId = getLatestCompletedMatchId();
+   if (!latestMatchId) return {};
+
+   const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name, latestMatchId) }))
+                      .sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5 || a.name.localeCompare(b.name));
+
+   const map = {};
+   rows.forEach((r, i) => { map[r.name] = i + 1; });
+   return map;
 }
 
 function getMatchStatsHTML(m) {
@@ -2877,20 +2916,48 @@ function renderMyPalpites() {
 
 function renderRanking() {
   const filter = (document.getElementById('rank-search')?.value || '').toLowerCase();
-  const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name) })).sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5);
-  let html = '', rank = 0, prevPts = -1;
-  rows.filter(r => r.name.toLowerCase().includes(filter)).forEach((r, i) => {
-    if (r.total !== prevPts) { rank = i+1; prevPts = r.total; }
+  
+  // 1. Pegamos a "foto" do ranking antes do último jogo
+  const prevMap = getPreviousRankingMap();
+
+  // 2. Calculamos o ranking atual (com desempate alfabético para evitar pulos falsos)
+  const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name) }))
+        .sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5 || a.name.localeCompare(b.name));
+
+  let html = '';
+  
+  // 3. Atribuímos as posições reais atuais
+  rows.forEach((r, i) => { r.currentPos = i + 1; });
+
+  rows.filter(r => r.name.toLowerCase().includes(filter)).forEach((r) => {
+    const rank = r.currentPos;
     const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
+    
+    // 4. Lógica das setinhas do Brasileirão!
+    let varHtml = `<span style="color:#94a3b8; font-size: 0.8rem; font-weight: bold;">■</span>`; 
+    if (prevMap[r.name]) {
+       const prevPos = prevMap[r.name];
+       const diff = prevPos - rank; // Ex: Antes era 5º, agora é 3º -> 5 - 3 = +2
+       
+       if (diff > 0) {
+          varHtml = `<span style="color:#22c55e; font-size: 0.85rem; font-weight: 900;">▲ ${diff}</span>`;
+       } else if (diff < 0) {
+          varHtml = `<span style="color:#ef4444; font-size: 0.85rem; font-weight: 900;">▼ ${Math.abs(diff)}</span>`;
+       }
+    }
+
     html += `<tr>
       <td><span class="rank-pos ${rank<=3?'top'+rank:''}">${medal||rank}</span></td>
+      <td style="text-align: center;">${varHtml}</td>
       <td>${escapeHtml(r.name)}</td><td><span class="rank-pts">${r.total}</span></td>
       <td style="color:var(--pts10);font-weight:700;">${r.c10||'–'}</td>
       <td style="color:var(--pts5);font-weight:700;">${r.c5||'–'}</td>
       <td style="color:var(--pts3);font-weight:700;">${r.c3||'–'}</td>
     </tr>`;
   });
-  document.getElementById('ranking-body').innerHTML = html || '<tr><td colspan="6" style="text-align:center;padding:20px;">Nenhum participante encontrado.</td></tr>';
+  
+  // Note o colspan="7" agora, para abraçar a nova coluna!
+  document.getElementById('ranking-body').innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhum participante encontrado.</td></tr>';
 }
 
 // ════════════════════════════════════════
@@ -3794,17 +3861,31 @@ async function fundirFigurinhas() {
 let tradeMyInv = [], tradeTargetInv = [], tradeMyOffer = [], tradeTargetReq = [];
 
 function openTrocaModal() {
-  let selU = document.getElementById('sel-trade-user'); selU.innerHTML = '<option value="">-- Escolha um usuário --</option>';
+  let selU = document.getElementById('sel-trade-user'); 
+  selU.innerHTML = '<option value="">-- Escolha um usuário --</option>';
   Object.keys(getUsers()).forEach(u => { if (u !== getLoggedUser()) selU.add(new Option(u, u)); });
   
-  tradeMyInv = []; albumData.inventario.forEach(i => {
-    if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
+  tradeMyInv = []; 
+  albumData.inventario.forEach(i => {
+    if(i.time !== "Coringa" && i.time !== "Itália") { 
+        for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); 
+    }
   });
   tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = [];
   
   renderTradeUI();
   document.getElementById('modal-troca').classList.add('open');
-  switchTradeTab('nova');
+  
+  // ⚡ LÓGICA INTELIGENTE: Olha para a notificação
+  let badge = document.getElementById('trade-badge');
+  
+  // Se a bolinha vermelha existir e NÃO estiver escondida (display: none)
+  if (badge && badge.style.display !== 'none') {
+      switchTradeTab('lista'); 
+      loadTrocas(); // Já manda carregar a lista porque ele caiu direto lá!
+  } else {
+      switchTradeTab('nova');
+  }
 }
 
 async function carregarInventarioAlvo() {
@@ -4156,7 +4237,7 @@ function cancelarSintese() {
     // Devolve as figurinhas para o inventário limpando a máquina
     sinteseSlots = [];
     sinteseExtraSlot = null;
-    renderAlbum(); // Atualiza a tela para as cartas voltarem
+    renderAlbum(); // Atualiza a tela para as figurinhas voltarem
     showToast("🚫 Síntese abortada. As figurinhas voltaram para o álbum.");
 }
 
@@ -4176,7 +4257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reflexo = document.getElementById('reflexo-carta');
 
     if (palco && carta) {
-        // Função matemática que inclina a carta
+        // Função matemática que inclina a figurinha
         const aplicarInclinacao = (xCli, yCli) => {
             const rect = palco.getBoundingClientRect();
             const x = xCli - rect.left; 
@@ -4208,7 +4289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Eventos para Celular (Toque)
         palco.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Evita que a tela role para baixo enquanto o cara brinca com a carta
+            e.preventDefault(); // Evita que a tela role para baixo enquanto o cara brinca com a figurinha
             aplicarInclinacao(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         palco.addEventListener('touchend', resetarInclinacao);
