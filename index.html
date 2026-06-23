@@ -1788,7 +1788,7 @@
 
 <!-- ── MODAL DO MERCADO DE TROCAS ── -->
 <div class="modal-overlay" id="modal-troca">
-  <div class="modal-box" style="max-width: 700px;">
+  <div class="modal-box" style="max-width: 800px;">
     <button class="modal-close" onclick="closeModal('modal-troca')">✕</button>
     <div class="modal-title">🤝 Proposta de Troca</div>
     
@@ -1952,7 +1952,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz4ZgOnDiStYEd2BJorF9MOkXE6QtcwAjIobuBcm0ChTM3u275iK6azbECJKnpnP-2h/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzbGUihFDmp-6cBa_7z-rzrp-JqIE5ofi8ZyvvQZlFc7u3tczD2gurpeAL1KLsdTLBd/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -3652,39 +3652,63 @@ function renderAlbum() {
 
 function renderPacks() {
   let html = ''; const user = getLoggedUser(); const data = getData(), results = getResults();
-  
+  let packsCount = 0; // Inicia o contador de pacotes
+
   MATCHES.forEach(m => {
     const isBR = m.home.includes('Brasil') || m.away.includes('Brasil');
     if (isBR && isMatchLocked(m.date, m.time) && !albumData.resgatados.includes(m.id + "_BR")) {
-       html += `<div class="pack-item pack-br" onclick="abrirPacote('${m.id}_BR', 'BR')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title" style="color:#ffdf00; text-shadow:1px 1px 3px #009c3b;">Brasil</div><div class="pack-badge">Especial Jogo</div></div></div>`;
+       html += `<div class="pack-item pack-br" data-id="${m.id}_BR" data-type="BR" onclick="abrirPacote('${m.id}_BR', 'BR')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title" style="color:#ffdf00; text-shadow:1px 1px 3px #009c3b;">Brasil</div><div class="pack-badge">Especial Jogo</div></div></div>`;
+       packsCount++;
     }
 
     const p = data[`${user}__${m.id}`], r = results[m.id];
     if (p && r && r.h !== null && r.h !== undefined && r.h !== "") {
       let pts = calcPts(p.h, p.a, r.h, r.a);
-      
-      // TRAVA DE LEGADO: Verifica se você já tinha resgatado o pacote principal no formato antigo
       const claimedLegacy = albumData.resgatados.includes(m.id) || albumData.resgatados.includes(String(m.id));
 
       if (pts === 3) {
-        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_c1")) 
-          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_c1', 'c1')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
-        if (!albumData.resgatados.includes(m.id + "_c2")) 
-          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_c2', 'c2')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_c1")) {
+          html += `<div class="pack-item pack-3pts" data-id="${m.id}_c1" data-type="c1" onclick="abrirPacote('${m.id}_c1', 'c1')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+          packsCount++;
+        }
+        if (!albumData.resgatados.includes(m.id + "_c2")) {
+          html += `<div class="pack-item pack-3pts" data-id="${m.id}_c2" data-type="c2" onclick="abrirPacote('${m.id}_c2', 'c2')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+          packsCount++;
+        }
       } else if (pts === 5) {
-        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_dourado")) 
-          html += `<div class="pack-item pack-5pts" onclick="abrirPacote('${m.id}_dourado', 'dourado')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Dourado</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
-        if (!albumData.resgatados.includes(m.id + "_cb")) 
-          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_dourado")) {
+          html += `<div class="pack-item pack-5pts" data-id="${m.id}_dourado" data-type="dourado" onclick="abrirPacote('${m.id}_dourado', 'dourado')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Dourado</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+          packsCount++;
+        }
+        if (!albumData.resgatados.includes(m.id + "_cb")) {
+          html += `<div class="pack-item pack-3pts" data-id="${m.id}_cb" data-type="cb" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+          packsCount++;
+        }
       } else if (pts === 10) {
-        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_brilhante")) 
-          html += `<div class="pack-item pack-10pts" onclick="abrirPacote('${m.id}_brilhante', 'brilhante')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Brilhante</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
-        if (!albumData.resgatados.includes(m.id + "_cb")) 
-          html += `<div class="pack-item pack-3pts" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+        if (!claimedLegacy && !albumData.resgatados.includes(m.id + "_brilhante")) {
+          html += `<div class="pack-item pack-10pts" data-id="${m.id}_brilhante" data-type="brilhante" onclick="abrirPacote('${m.id}_brilhante', 'brilhante')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">Brilhante</div><div class="pack-badge">Jogo ${m.id}</div></div></div>`;
+          packsCount++;
+        }
+        if (!albumData.resgatados.includes(m.id + "_cb")) {
+          html += `<div class="pack-item pack-3pts" data-id="${m.id}_cb" data-type="cb" onclick="abrirPacote('${m.id}_cb', 'cb')"><div class="pack-content"><div class="pack-title" style="font-size:1.1rem">Comum</div><div class="pack-badge">Jogo ${m.id} (Bônus)</div></div></div>`;
+          packsCount++;
+        }
       }
     }
   });
-  document.getElementById('packs-container').innerHTML = html || '<p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Sem pacotes no momento. Acompanhe os jogos!</p>';
+
+  // Se tiver mais de 1 pacote, cria o botão de Abrir Todos
+  let btnAbrirTodos = '';
+  if (packsCount > 1) {
+      btnAbrirTodos = `
+      <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+        <button class="btn-save" style="background:#8b5cf6; max-width:320px; margin:0 auto;" onclick="abrirTodosOsPacotes()">
+          📦 Abrir Todos os Pacotes (${packsCount})
+        </button>
+      </div>`;
+  }
+
+  document.getElementById('packs-container').innerHTML = btnAbrirTodos + (html || '<p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Sem pacotes no momento. Acompanhe os jogos!</p>');
 }
 
 function renderCollection() {
@@ -3875,6 +3899,10 @@ function openTrocaModal() {
   
   renderTradeUI();
   document.getElementById('modal-troca').classList.add('open');
+
+// ⚡ CENTRALIZAÇÃO GARANTIDA: Reseta o drag para o centro toda vez que abre
+  window.trocaDragX = 0; window.trocaDragY = 0;
+  document.querySelector('#modal-troca .modal-box').style.transform = `translate(0px, 0px)`;
   
   // ⚡ LÓGICA INTELIGENTE: Olha para a notificação
   let badge = document.getElementById('trade-badge');
@@ -4033,27 +4061,39 @@ function mostrarPreviewTroca(ofereceArr, querArr) {
     ofereceGrid.innerHTML = '';
     querGrid.innerHTML = '';
 
-    const meuUsuarioLogado = getLoggedUser();
-
-    // Gerador de mini-cards reutilizável
-    const construirMiniCards = (listaFigurinhas, container) => {
+    // O parâmetro 'isRecebendo' define como a lupa vai classificar a carta
+    const construirMiniCards = (listaFigurinhas, container, isRecebendo) => {
         if (!listaFigurinhas || listaFigurinhas.length === 0) {
             container.innerHTML = '<span style="color:#666; font-size:0.9rem; padding:10px;">Nenhuma figurinha envolvida.</span>';
             return;
         }
 
         listaFigurinhas.forEach(time => {
-            // 🔍 REGRA DE OURO: Verifica se o jogador já possui essa figurinha no inventário real
             let invItem = albumData.inventario.find(i => i.time === time);
-            let jaPossui = invItem && invItem.qtd > 0;
-            
+            let qtd = invItem ? invItem.qtd : 0;
             let flagUrl = getFlagUrl(time);
             
-            // Define o texto e a cor com base na posse
-            let textoPosse = jaPossui ? "✅ Já possui" : "✨ Nova!";
-            let corPosse = jaPossui ? "#4ade80" : "#f59e0b";
+            let textoPosse = "";
+            let corPosse = "";
 
-            // Monta o mini card adaptado para caber no modal
+            if (isRecebendo) {
+                // LADO DIREITO: O que a pessoa vai ganhar
+                textoPosse = qtd > 0 ? "✅ Já possui" : "✨ Nova!";
+                corPosse = qtd > 0 ? "#4ade80" : "#f59e0b";
+            } else {
+                // LADO ESQUERDO: O que a pessoa vai perder (dar)
+                if (qtd > 1) {
+                    textoPosse = `📦 Repetida (${qtd})`;
+                    corPosse = "#4ade80"; // Verde = Tranquilo de trocar
+                } else if (qtd === 1) {
+                    textoPosse = `⚠️ Única (1)`;
+                    corPosse = "#ef4444"; // Vermelho = Cuidado, é a última!
+                } else {
+                    textoPosse = `❌ Faltando (0)`;
+                    corPosse = "#6b7280"; // Cinza = Alerta de erro
+                }
+            }
+
             let cardHtml = `
                 <div style="background: #2a2a35; border: 1px solid #444; border-radius: 6px; padding: 6px; width: 100px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                     <img src="${flagUrl}" style="width: 50px; height: auto; border-radius: 3px; border: 1px solid #555;" alt="${time}">
@@ -4065,11 +4105,10 @@ function mostrarPreviewTroca(ofereceArr, querArr) {
         });
     };
 
-    // Renderiza os dois lados da moeda
-    construirMiniCards(ofereceArr, ofereceGrid);
-    construirMiniCards(querArr, querGrid);
+    // Renderiza passando a chave lógica (false = Lado que perde, true = Lado que ganha)
+    construirMiniCards(ofereceArr, ofereceGrid, false);
+    construirMiniCards(querArr, querGrid, true);
 
-    // Exibe o palco
     document.getElementById('modal-preview-troca').style.display = 'flex';
 }
 
@@ -4175,6 +4214,53 @@ async function abrirPacote(packId, packType) {
         }
     }
   } catch(e) { showLoading(false); showToast('❌ Erro de conexão.'); logError('Erro de rede ao abrir pacote: ' + e.message, user, 'error');}
+}
+
+// NO FRONTEND (Substitua a abrirTodosOsPacotes)
+async function abrirTodosOsPacotes() {
+  const user = getLoggedUser();
+  const pacotesDOM = document.querySelectorAll('.pack-item');
+  
+  if (pacotesDOM.length === 0) return;
+  if (!confirm(`Abrir todos os ${pacotesDOM.length} pacotes de uma vez?`)) return;
+
+  showLoading(true);
+
+  // 1. Cria uma lista limpa com os pacotes a serem abertos
+  let pacotesParaEnviar = [];
+  pacotesDOM.forEach(p => {
+     pacotesParaEnviar.push({
+         id: p.getAttribute('data-id'),
+         type: p.getAttribute('data-type')
+     });
+  });
+
+  try {
+     // 2. Dispara UMA única requisição pesada para o backend
+     let res = await fetch(API_URL, {
+         method: 'POST',
+         body: JSON.stringify({
+             action: 'abrirPacotesEmLote', // <-- NOME DA NOVA ROTA
+             token: getToken(),
+             user: user,
+             listaPacotes: pacotesParaEnviar
+         })
+     });
+
+     let json = await res.json();
+     showLoading(false);
+
+     if (json.status === 'success') {
+         await loadAlbumData();
+         showPackAnimation(json.figurinhas, "Chuva de Figurinhas!");
+     } else {
+         showToast('❌ ' + (json.msg || 'Erro ao processar lote.'));
+         if (json.msg && json.msg.toLowerCase().includes('sessão')) setTimeout(handleSessionExpired, 1500);
+     }
+  } catch(e) {
+     showLoading(false);
+     showToast('❌ Erro de conexão.');
+  }
 }
 
 function showPackAnimation(figurinhas, titulo) {
@@ -4295,6 +4381,61 @@ document.addEventListener('DOMContentLoaded', () => {
         palco.addEventListener('touchend', resetarInclinacao);
         palco.addEventListener('touchstart', () => carta.style.transition = 'transform 0.1s ease-out');
     }
+});
+
+// ==========================================
+// MOTOR DE ARRASTE (DRAG & DROP) DO MERCADO
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const modalTroca = document.getElementById('modal-troca');
+    const boxTroca = modalTroca.querySelector('.modal-box');
+    const handleTroca = modalTroca.querySelector('.modal-title'); // Usa o título como "alça"
+    
+    if (!boxTroca || !handleTroca) return;
+
+    handleTroca.style.cursor = 'grab';
+    handleTroca.style.userSelect = 'none';
+
+    let isDragging = false;
+    let startX, startY;
+    
+    // Variáveis globais no window para podermos resetar depois
+    window.trocaDragX = 0; 
+    window.trocaDragY = 0;
+
+    const onPointerDown = (e) => {
+        isDragging = true;
+        handleTroca.style.cursor = 'grabbing';
+        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        startX = clientX - window.trocaDragX;
+        startY = clientY - window.trocaDragY;
+    };
+
+    const onPointerMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault(); // Impede a tela do fundo de rolar no celular
+        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        window.trocaDragX = clientX - startX;
+        window.trocaDragY = clientY - startY;
+        boxTroca.style.transform = `translate(${window.trocaDragX}px, ${window.trocaDragY}px)`;
+    };
+
+    const onPointerUp = () => {
+        isDragging = false;
+        handleTroca.style.cursor = 'grab';
+    };
+
+    // Eventos de Mouse (Computador)
+    handleTroca.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('mouseup', onPointerUp);
+
+    // Eventos de Toque (Celular)
+    handleTroca.addEventListener('touchstart', onPointerDown, {passive: false});
+    document.addEventListener('touchmove', onPointerMove, {passive: false});
+    document.addEventListener('touchend', onPointerUp);
 });
 </script>
 </body>
