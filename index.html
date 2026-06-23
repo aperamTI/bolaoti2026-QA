@@ -1288,10 +1288,14 @@
       <button class="btn-save" style="margin-top:0; flex: 1;" onclick="handleLogin()">🚪 Entrar</button>
       <button class="btn-save" style="margin-top:0; flex: 1; background: var(--muted);" onclick="openRegisterModal()">📝 Cadastrar</button>
     </div>
+    
+    <div style="text-align: center; margin-top: 15px;">
+      <a href="#" onclick="openForgotPassword(); return false;" style="font-size: 0.85rem; color: var(--green); font-weight: 600; text-decoration: none;">Esqueci minha senha</a>
+    </div>
+
     <div id="auth-error-msg" style="color: var(--red-pts); font-size: .85rem; font-weight: 600; margin-top: 12px; text-align: center;"></div>
 
-    <div id="reset-section">
-      <div class="reset-title">🔒 Muitas tentativas incorretas</div>
+    <div id="reset-section" style="display:none;"> <div class="reset-title" id="reset-title-text">🔒 Recuperação de Senha</div>
       <div id="reset-flow-step1">
         <p style="font-size:.85rem;color:#7c2d12;margin-bottom:10px;">Clique abaixo para redefinir sua senha. Se tiver e-mail cadastrado, você receberá um código. Caso contrário, um pedido será enviado ao admin.</p>
         <button class="btn-save" style="background:#c2410c;margin-top:0;" onclick="requestPasswordReset()">📧 Redefinir Senha</button>
@@ -1962,7 +1966,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxfl3gc7U7pHzDIl7a4WTJouLvbVUU3JqGMq-nlVE-PJrwduCwBhZ0Tfwd3JcwoFQMb/exec;
+const API_URL = "https://script.google.com/macros/s/AKfycbxfl3gc7U7pHzDIl7a4WTJouLvbVUU3JqGMq-nlVE-PJrwduCwBhZ0Tfwd3JcwoFQMb/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -2188,7 +2192,7 @@ function logError(msg, user, level = 'error') {
 }
 
 // ════════════════════════════════════════
-//  LOGIN SEGURO 
+//  LOGIN SEGURO & SISTEMA DE BLOQUEIO
 // ════════════════════════════════════════
 
 let loginAttempts = 0;
@@ -2200,6 +2204,33 @@ async function handleLogin() {
   const msg = document.getElementById('auth-error-msg');
 
   if (!identifier || !pass) { msg.textContent = "⚠️ Insira o usuário e a senha."; return; }
+
+  // 1. CHECAGEM DE BLOQUEIO DE 15 MINUTOS
+  let lockoutKey = 'bolao_lockout_' + identifier.toLowerCase();
+  let lockout = localStorage.getItem(lockoutKey);
+  
+  // ✨ MÁGICA: Se a senha digitada for '1234' (padrão do admin), ignora o tempo de bloqueio para testar!
+  if (lockout && pass !== '1234') {
+      let elapsed = Date.now() - parseInt(lockout);
+      if (elapsed < 15 * 60 * 1000) { 
+          let minutesLeft = Math.ceil((15 * 60 * 1000 - elapsed) / 60000);
+          msg.textContent = `❌ Conta bloqueada. Tente novamente em ${minutesLeft} min ou redefina sua senha.`;
+          return;
+      } else {
+          localStorage.removeItem(lockoutKey);
+          loginAttempts = 0;
+      }
+  }
+
+  // 2. FILTRO INTELIGENTE: Verifica se a conta existe ANTES de gastar tentativa
+  const usersList = Object.keys(getUsers());
+  const userExists = usersList.find(u => u.toLowerCase() === identifier.toLowerCase());
+  
+  if (!userExists) {
+      msg.textContent = "❌ Usuário não encontrado. Se não tem conta, clique em Cadastrar.";
+      return; 
+  }
+
   showLoading(true);
 
   try {
@@ -2209,6 +2240,7 @@ async function handleLogin() {
     if (json.status === 'success') {
       loginAttempts = 0;
       loginBlockedUser = null;
+      localStorage.removeItem(lockoutKey); // ✨ Remove o bloqueio definitivamente ao logar
       document.getElementById('reset-section').style.display = 'none';
       setToken(json.token);
       setLoggedUser(json.userName);
@@ -2217,9 +2249,16 @@ async function handleLogin() {
       showToast(`👋 Bem-vindo, ${json.userName}!`);
     } else {
       loginAttempts++;
-      msg.textContent = `❌ ${json.msg || 'Erro ao fazer login'}. Tentativa ${loginAttempts}/3.`;
+      let tentativasRestantes = 5 - loginAttempts;
+      
+      if (loginAttempts >= 5) {
+          msg.textContent = `❌ Conta bloqueada por 15 minutos por excesso de tentativas.`;
+          localStorage.setItem(lockoutKey, Date.now()); 
+          checkLoginAttempts(identifier);
+      } else {
+          msg.textContent = `❌ Senha incorreta. Você tem mais ${tentativasRestantes} tentativa(s).`;
+      }
       logError(`Login falhou para [${identifier}]. Msg: ${json.msg}`, identifier, 'warn');
-      checkLoginAttempts(identifier);
     }
   } catch(e) {
     msg.textContent = "❌ Erro de conexão com o servidor.";
@@ -2229,15 +2268,30 @@ async function handleLogin() {
 }
 
 function checkLoginAttempts(user) {
-  if (loginAttempts >= 3) {
+  if (loginAttempts >= 5) {
     loginBlockedUser = user;
     document.getElementById('reset-section').style.display = 'block';
+    document.getElementById('reset-title-text').textContent = "🔒 Conta Bloqueada"; // Título avisando bloqueio
     document.getElementById('reset-flow-step1').style.display = 'block';
     document.getElementById('reset-flow-step2').style.display = 'none';
     document.getElementById('reset-flow-step3').style.display = 'none';
     document.getElementById('reset-flow-pending').style.display = 'none';
     document.getElementById('reset-msg').textContent = '';
   }
+}
+
+// ✨ NOVA FUNÇÃO: Acionada pelo botão de esqueci a senha
+function openForgotPassword() {
+    const userField = document.getElementById('login-user').value.trim();
+    loginBlockedUser = userField || null; 
+    
+    document.getElementById('reset-section').style.display = 'block';
+    document.getElementById('reset-title-text').textContent = "🔒 Recuperação de Senha";
+    document.getElementById('reset-flow-step1').style.display = 'block';
+    document.getElementById('reset-flow-step2').style.display = 'none';
+    document.getElementById('reset-flow-step3').style.display = 'none';
+    document.getElementById('reset-flow-pending').style.display = 'none';
+    document.getElementById('reset-msg').textContent = '';
 }
 
 async function requestPasswordReset() {
@@ -3930,23 +3984,30 @@ function openTrocaModal() {
 
 async function carregarInventarioAlvo() {
   let alvo = document.getElementById('sel-trade-user').value;
-  tradeTargetInv = []; tradeTargetReq = []; 
-  targetInventarioBase = []; // Limpa a memória anterior
-  
+  tradeTargetInv = []; tradeTargetReq = [];
   if (!alvo) { renderTradeUI(); return; }
   
   document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem;">Buscando...</p>';
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getInventarioAlvo', token: getToken(), user: getLoggedUser(), alvo: alvo }) });
     let json = await res.json();
+    
     if(json.status === 'success') {
-      targetInventarioBase = json.inventario; // ✨ Guarda o inventário original
       json.inventario.forEach(i => {
         if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeTargetInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
       });
       renderTradeUI();
+    } else {
+      // ✨ NOVIDADE: Verifica a sessão se der erro ao buscar inventário
+      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro ao buscar.</p>';
+      if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
+          showToast('❌ ' + json.msg);
+          setTimeout(handleSessionExpired, 1500);
+      }
     }
-  } catch(e) { document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:red;">Erro ao buscar.</p>'; }
+  } catch(e) { 
+      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro de conexão.</p>'; 
+  }
 }
 
 function moveItem(item, fromArrStr, toArrStr, max) {
@@ -4058,7 +4119,6 @@ async function loadTrocas() {
           </div>
           
           <div style="display:flex; gap:5px;">
-            <!-- 🔍 NOSSO NOVO BOTÃO DE LUPA -->
             <button class="btn-update" style="background:#3b82f6; font-size:1rem; padding: 0 8px;" onclick='mostrarPreviewTroca(${jsonDa}, ${jsonRecebe})'>🔍</button>
             
             ${isRecebida ? `<button class="btn-update" style="background:var(--green);" onclick="responderTroca('${t.id}', 'aceitar')">✔</button>` : ''}
@@ -4067,8 +4127,17 @@ async function loadTrocas() {
         </div>`;
       });
       ct.innerHTML = html || '<p style="text-align:center; color:var(--muted);">Sem propostas no momento.</p>';
+    } else {
+      // ✨ NOVIDADE: Trata o erro e verifica a sessão!
+      ct.innerHTML = '<p style="text-align:center; color:var(--red-pts);">Erro ao carregar propostas.</p>';
+      if (j.msg && (j.msg.toLowerCase().includes('sessão') || j.msg.toLowerCase().includes('token'))) {
+          showToast('❌ ' + j.msg);
+          setTimeout(handleSessionExpired, 1500);
+      }
     }
-  } catch(e) {}
+  } catch(e) {
+      ct.innerHTML = '<p style="text-align:center; color:var(--red-pts);">Erro de conexão.</p>';
+  }
 }
 
 async function responderTroca(id, resp) {
