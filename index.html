@@ -1809,12 +1809,14 @@
       <div class="steam-container">
         <div class="steam-col">
           <div class="steam-box">
-            <div class="steam-header" style="margin-bottom: 5px;">Seu inventário</div>
+            <div class="steam-header" style="margin-bottom: 5px;">
+              <span>Seu inventário</span>
+              <span id="trade-my-count" style="margin-left: auto; font-size: 0.85rem; color: var(--muted); font-weight: 700;">0/48</span>
+            </div>
             <div style="display:flex; gap:10px; font-size:0.75rem; margin-bottom:10px; padding:6px; background:var(--surface); border:1px solid var(--border); border-radius:6px; color:var(--text);">
               <label style="cursor:pointer; display:flex; align-items:center; gap:4px; flex:1;"><input type="checkbox" id="filtro-minhas-rep" onchange="renderTradeUI()"> Só Repetidas</label>
               <label style="cursor:pointer; display:flex; align-items:center; gap:4px; flex:1;"><input type="checkbox" id="filtro-ele-nao-tem" onchange="renderTradeUI()"> Úteis p/ ele(a)</label>
             </div>
-            
             <div class="steam-grid" id="trade-my-inv"><p style="font-size:0.75rem;">Carregando...</p></div>
           </div>
           <div class="steam-box" style="min-height: 120px;">
@@ -1828,12 +1830,14 @@
 
         <div class="steam-col">
           <div class="steam-box">
-            <div class="steam-header" style="margin-bottom: 5px;">Inventário dele(a)</div>
+            <div class="steam-header" style="margin-bottom: 5px;">
+              <span>Inventário dele(a)</span>
+              <span id="trade-target-count" style="margin-left: auto; font-size: 0.85rem; color: var(--muted); font-weight: 700;">0/48</span>
+            </div>
             <div style="display:flex; gap:10px; font-size:0.75rem; margin-bottom:10px; padding:6px; background:var(--surface); border:1px solid var(--border); border-radius:6px; color:var(--text);">
               <label style="cursor:pointer; display:flex; align-items:center; gap:4px; flex:1;"><input type="checkbox" id="filtro-dele-rep" onchange="renderTradeUI()"> Só Repetidas</label>
               <label style="cursor:pointer; display:flex; align-items:center; gap:4px; flex:1;"><input type="checkbox" id="filtro-eu-nao-tenho" onchange="renderTradeUI()"> Úteis p/ mim</label>
             </div>
-            
             <div class="steam-grid" id="trade-target-inv"><p style="font-size:0.75rem;">Selecione um usuário.</p></div>
           </div>
           <div class="steam-box" style="min-height: 120px;">
@@ -3956,23 +3960,21 @@ function openTrocaModal() {
   tradeMyInv = []; albumData.inventario.forEach(i => {
     if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
   });
-  
   tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = [];
-  targetInventarioBase = []; 
-
-  // ✨ Limpa e desmarca todos os filtros visualmente sempre que fechar/abrir a janela
+  
+  // ✨ Limpa e desmarca todos os filtros ao abrir a tela
   ['filtro-minhas-rep', 'filtro-ele-nao-tem', 'filtro-dele-rep', 'filtro-eu-nao-tenho'].forEach(id => {
       let el = document.getElementById(id);
       if(el) el.checked = false;
   });
-  
+
   renderTradeUI();
   document.getElementById('modal-troca').classList.add('open');
   
   window.trocaDragX = 0; window.trocaDragY = 0;
   let box = document.querySelector('#modal-troca .modal-box');
   if(box) box.style.transform = `translate(0px, 0px)`;
-  
+
   let badge = document.getElementById('trade-badge');
   if (badge && badge.style.display !== 'none') {
       switchTradeTab('lista'); 
@@ -4022,39 +4024,54 @@ function moveItem(item, fromArrStr, toArrStr, max) {
 }
 
 function renderTradeUI() {
-  // 1. Pega estado atual das caixinhas de filtro
+  // 1. Pega o estado atual das caixinhas de filtro
   let myRep = document.getElementById('filtro-minhas-rep')?.checked;
   let eleNaoTem = document.getElementById('filtro-ele-nao-tem')?.checked;
   let deleRep = document.getElementById('filtro-dele-rep')?.checked;
   let euNaoTenho = document.getElementById('filtro-eu-nao-tenho')?.checked;
 
-  // 2. Filtra O SEU INVENTÁRIO (Lado Esquerdo)
+  // 2. 📊 CALCULA OS CONTADORES DO ÁLBUM (Figurinhas Únicas de 0 a 48)
+  // Conta quantos países diferentes existem somando a mesa com a zona de ofertas
+  let meuTotalUnicas = [...new Set([...tradeMyInv, ...tradeMyOffer].map(x => x.time))].length;
+  document.getElementById('trade-my-count').textContent = `${meuTotalUnicas}/48`;
+
+  let alvoSelecionado = document.getElementById('sel-trade-user').value;
+  let alvoTotalUnicas = alvoSelecionado ? [...new Set([...tradeTargetInv, ...tradeTargetReq].map(x => x.time))].length : 0;
+  document.getElementById('trade-target-count').textContent = `${alvoTotalUnicas}/48`;
+
+  // 3. Filtra O SEU INVENTÁRIO (Lado Esquerdo)
   let filteredMyInv = tradeMyInv.filter(i => {
-      let myTotal = albumData.inventario.find(x => x.time === i.time)?.qtd || 0;
-      let targetTotal = targetInventarioBase.find(x => x.time === i.time)?.qtd || 0;
-      if (myRep && myTotal <= 1) return false;      // Esconde únicas suas
-      if (eleNaoTem && targetTotal > 0) return false; // Esconde o que ele já tem
+      let myTotal = tradeMyInv.filter(x => x.time === i.time).length + tradeMyOffer.filter(x => x.time === i.time).length;
+      let targetTotal = tradeTargetInv.filter(x => x.time === i.time).length + tradeTargetReq.filter(x => x.time === i.time).length;
+
+      if (myRep && myTotal <= 1) return false;       
+      if (eleNaoTem && targetTotal > 0) return false;  
       return true;
   });
 
-  // 3. Filtra O INVENTÁRIO DELE (Lado Direito)
+  // 4. Filtra O INVENTÁRIO DELE (Lado Direito)
   let filteredTargetInv = tradeTargetInv.filter(i => {
-      let myTotal = albumData.inventario.find(x => x.time === i.time)?.qtd || 0;
-      let targetTotal = targetInventarioBase.find(x => x.time === i.time)?.qtd || 0;
-      if (deleRep && targetTotal <= 1) return false;  // Esconde únicas dele
-      if (euNaoTenho && myTotal > 0) return false;    // Esconde o que você já tem
+      let myTotal = tradeMyInv.filter(x => x.time === i.time).length + tradeMyOffer.filter(x => x.time === i.time).length;
+      let targetTotal = tradeTargetInv.filter(x => x.time === i.time).length + tradeTargetReq.filter(x => x.time === i.time).length;
+
+      if (deleRep && targetTotal <= 1) return false;  
+      if (euNaoTenho && myTotal > 0) return false;    
       return true;
   });
+
+  // 5. 🔤 ORDENAÇÃO ALFABÉTICA (Aplica o sort antes de renderizar na tela)
+  filteredMyInv.sort((a, b) => a.time.localeCompare(b.time, 'pt'));
+  filteredTargetInv.sort((a, b) => a.time.localeCompare(b.time, 'pt'));
 
   function draw(arr, fromStr, toStr, max) {
     return arr.map(i => `<div class="steam-item" style="${i.rara?'border-color:var(--gold);':''}" onclick="moveItem({id:'${i.id}', time:'${i.time}', rara:${i.rara}}, '${fromStr}', '${toStr}', ${max})"><img src="${getFlagUrl(i.time)}"></div>`).join('');
   }
 
-  // 4. Desenha as listas filtradas!
-  document.getElementById('trade-my-inv').innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha atende ao filtro.</p>';
+  // 6. Desenha as listas ordenadas e filtradas na tela
+  document.getElementById('trade-my-inv').innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
   document.getElementById('trade-my-offer').innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
   
-  document.getElementById('trade-target-inv').innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha atende ao filtro.</p>';
+  document.getElementById('trade-target-inv').innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
   document.getElementById('trade-target-request').innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
 }
 
