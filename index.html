@@ -1792,8 +1792,7 @@
 
 <!-- ── MODAL DO MERCADO DE TROCAS ── -->
 <div class="modal-overlay" id="modal-troca">
-  <div class="modal-box" style="max-width: 800px;">
-    <button class="modal-close" onclick="closeModal('modal-troca')">✕</button>
+  <div class="modal-box" style="max-width: 800px;"> <button class="modal-close" onclick="closeModal('modal-troca')">✕</button>
     <div class="modal-title">🤝 Proposta de Troca</div>
     
     <div class="admin-subtabs" style="margin-bottom: 10px;">
@@ -1802,8 +1801,15 @@
     </div>
 
     <div id="trade-nova-content">
-      <div class="user-select-wrap" style="margin-bottom: 5px;">
+      <div class="user-select-wrap" style="margin-bottom: 8px;">
+        <label>👤 Selecione um participante para negociar:</label>
         <select id="sel-trade-user" onchange="carregarInventarioAlvo()"></select>
+      </div>
+
+      <div style="display:flex; gap:12px; font-size:0.8rem; margin-bottom:15px; padding:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); align-items:center; justify-content:center; flex-wrap:wrap;">
+        <span style="font-weight:700; color:var(--green); font-family:'Barlow Condensed'; text-transform:uppercase; letter-spacing:0.5px;">⚙️ Filtrar Lista de Pessoas:</span>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:600;"><input type="checkbox" id="filtro-global-uteis" onchange="renderDropdownUsuarios()"> Têm figurinhas úteis p/ mim</label>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:600;"><input type="checkbox" id="filtro-global-repetidas" onchange="renderDropdownUsuarios()"> Têm Repetidas em geral</label>
       </div>
 
       <div class="steam-container">
@@ -1970,7 +1976,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxfl3gc7U7pHzDIl7a4WTJouLvbVUU3JqGMq-nlVE-PJrwduCwBhZ0Tfwd3JcwoFQMb/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbww69fOasuXOqILkOJkk61zgYaXEGMTtz8PmJwRgbMX6At0vzf9UfJyrF09OfMST0JH/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -3953,34 +3959,75 @@ async function fundirFigurinhas() {
 let tradeMyInv = [], tradeTargetInv = [], tradeMyOffer = [], tradeTargetReq = [];
 let targetInventarioBase = []; // ✨ NOVA MEMÓRIA PARA OS FILTROS FUNCIONAREM
 
-function openTrocaModal() {
-  let selU = document.getElementById('sel-trade-user'); selU.innerHTML = '<option value="">-- Escolha um usuário --</option>';
-  Object.keys(getUsers()).forEach(u => { if (u !== getLoggedUser()) selU.add(new Option(u, u)); });
-  
-  tradeMyInv = []; albumData.inventario.forEach(i => {
-    if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
+let globalTradeMap = {}; // Memória global para o filtro de usuários funcionar
+
+async function openTrocaModal() {
+  // Limpa os checkboxes de filtro do dropdown ao abrir a janela
+  const chkUteis = document.getElementById('filtro-global-uteis');
+  const chkRep = document.getElementById('filtro-global-repetidas');
+  if (chkUteis) chkUteis.checked = false;
+  if (chkRep) chkRep.checked = false;
+
+  tradeMyInv = []; 
+  albumData.inventario.forEach(i => {
+    if(i.time !== "Coringa" && i.time !== "Itália") { 
+      for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); 
+    }
   });
   tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = [];
+  globalTradeMap = {}; // Reseta o mapa anterior
   
-  // ✨ Limpa e desmarca todos os filtros ao abrir a tela
-  ['filtro-minhas-rep', 'filtro-ele-nao-tem', 'filtro-dele-rep', 'filtro-eu-nao-tenho'].forEach(id => {
-      let el = document.getElementById(id);
-      if(el) el.checked = false;
-  });
-
   renderTradeUI();
   document.getElementById('modal-troca').classList.add('open');
-  
-  window.trocaDragX = 0; window.trocaDragY = 0;
-  let box = document.querySelector('#modal-troca .modal-box');
-  if(box) box.style.transform = `translate(0px, 0px)`;
+  switchTradeTab('nova');
 
-  let badge = document.getElementById('trade-badge');
-  if (badge && badge.style.display !== 'none') {
-      switchTradeTab('lista'); 
-      loadTrocas(); 
-  } else {
-      switchTradeTab('nova');
+  // Desenha a lista inicial em ordem alfabética pura
+  renderDropdownUsuarios();
+
+  // Dispara o cruzamento de dados inteligente em background (sem causar congelamento visual)
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getMapeamentoTrocas', token: getToken(), user: getLoggedUser() }) });
+    let json = await res.json();
+    if (json.status === 'success') {
+      globalTradeMap = json.mapa || {};
+      // Atualiza o dropdown para incorporar a inteligência visual dos filtros
+      renderDropdownUsuarios();
+    }
+  } catch(e) { console.error("Erro no mapeamento de trocas:", e); }
+}
+
+// 🔤 Função responsável por organizar e filtrar a lista de usuários em tempo real
+function renderDropdownUsuarios() {
+  let selU = document.getElementById('sel-trade-user');
+  let usuarioSelecionadoAnteriormente = selU.value;
+  
+  selU.innerHTML = '<option value="">-- Escolha um usuário --</option>';
+  
+  let chkUteis = document.getElementById('filtro-global-uteis')?.checked;
+  let chkRep = document.getElementById('filtro-global-repetidas')?.checked;
+  
+  // Captura as chaves de usuários e aplica Ordem Alfabética nativa (A a Z)
+  let listaUsuarios = Object.keys(getUsers())
+    .filter(u => u !== getLoggedUser())
+    .sort((a, b) => a.localeCompare(b, 'pt'));
+    
+  listaUsuarios.forEach(u => {
+    let info = globalTradeMap[u] || { temRepetida: false, temUtilPraMim: false };
+    
+    // Regras de ocultação dos filtros ativos
+    if (chkUteis && !info.temUtilPraMim) return;
+    if (chkRep && !info.temRepetida) return;
+    
+    selU.add(new Option(u, u));
+  });
+  
+  // Preserva a seleção do usuário se ele persistir ativo após a filtragem
+  if (usuarioSelecionadoAnteriormente && [...selU.options].some(o => o.value === usuarioSelecionadoAnteriormente)) {
+    selU.value = usuarioSelecionadoAnteriormente;
+  } else if (usuarioSelecionadoAnteriormente) {
+    // Se o usuário selecionado sumiu por não se enquadrar no filtro, limpa os tabuleiros dele
+    tradeTargetInv = []; tradeTargetReq = [];
+    renderTradeUI();
   }
 }
 
@@ -3993,23 +4040,19 @@ async function carregarInventarioAlvo() {
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getInventarioAlvo', token: getToken(), user: getLoggedUser(), alvo: alvo }) });
     let json = await res.json();
-    
     if(json.status === 'success') {
       json.inventario.forEach(i => {
         if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeTargetInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
       });
       renderTradeUI();
     } else {
-      // ✨ NOVIDADE: Verifica a sessão se der erro ao buscar inventário
-      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro ao buscar.</p>';
+      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro ao buscar inventário.</p>';
       if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
-          showToast('❌ ' + json.msg);
-          setTimeout(handleSessionExpired, 1500);
+        showToast('❌ ' + json.msg);
+        setTimeout(handleSessionExpired, 1500);
       }
     }
-  } catch(e) { 
-      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro de conexão.</p>'; 
-  }
+  } catch(e) { document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro de conexão.</p>'; }
 }
 
 function moveItem(item, fromArrStr, toArrStr, max) {
@@ -4031,13 +4074,14 @@ function renderTradeUI() {
   let euNaoTenho = document.getElementById('filtro-eu-nao-tenho')?.checked;
 
   // 2. 📊 CALCULA OS CONTADORES DO ÁLBUM (Figurinhas Únicas de 0 a 48)
-  // Conta quantos países diferentes existem somando a mesa com a zona de ofertas
   let meuTotalUnicas = [...new Set([...tradeMyInv, ...tradeMyOffer].map(x => x.time))].length;
-  document.getElementById('trade-my-count').textContent = `${meuTotalUnicas}/48`;
+  let elMyCount = document.getElementById('trade-my-count');
+  if (elMyCount) elMyCount.textContent = `${meuTotalUnicas}/48`;
 
   let alvoSelecionado = document.getElementById('sel-trade-user').value;
   let alvoTotalUnicas = alvoSelecionado ? [...new Set([...tradeTargetInv, ...tradeTargetReq].map(x => x.time))].length : 0;
-  document.getElementById('trade-target-count').textContent = `${alvoTotalUnicas}/48`;
+  let elTargetCount = document.getElementById('trade-target-count');
+  if (elTargetCount) elTargetCount.textContent = `${alvoTotalUnicas}/48`;
 
   // 3. Filtra O SEU INVENTÁRIO (Lado Esquerdo)
   let filteredMyInv = tradeMyInv.filter(i => {
@@ -4068,11 +4112,17 @@ function renderTradeUI() {
   }
 
   // 6. Desenha as listas ordenadas e filtradas na tela
-  document.getElementById('trade-my-inv').innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
-  document.getElementById('trade-my-offer').innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
+  let myInvGrid = document.getElementById('trade-my-inv');
+  if (myInvGrid) myInvGrid.innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
   
-  document.getElementById('trade-target-inv').innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
-  document.getElementById('trade-target-request').innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
+  let myOfferGrid = document.getElementById('trade-my-offer');
+  if (myOfferGrid) myOfferGrid.innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
+  
+  let targetInvGrid = document.getElementById('trade-target-inv');
+  if (targetInvGrid) targetInvGrid.innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
+  
+  let targetReqGrid = document.getElementById('trade-target-request');
+  if (targetReqGrid) targetReqGrid.innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
 }
 
 async function enviarPropostaTroca() {
@@ -4119,12 +4169,9 @@ async function loadTrocas() {
       let html = '';
       j.trocas.forEach(t => {
         let isRecebida = t.para === getLoggedUser();
-        
-        // 1. Separa exatamente o que o usuário logado DÁ e o que ele RECEBE
         let arrayDa = isRecebida ? t.quer : t.oferece;
         let arrayRecebe = isRecebida ? t.oferece : t.quer;
         
-        // 2. Transforma as listas em texto JSON para o botão não quebrar no HTML
         let jsonDa = JSON.stringify(arrayDa).replace(/'/g, "\\'");
         let jsonRecebe = JSON.stringify(arrayRecebe).replace(/'/g, "\\'");
 
@@ -4137,7 +4184,6 @@ async function loadTrocas() {
           
           <div style="display:flex; gap:5px;">
             <button class="btn-update" style="background:#3b82f6; font-size:1rem; padding: 0 8px;" onclick='mostrarPreviewTroca(${jsonDa}, ${jsonRecebe})'>🔍</button>
-            
             ${isRecebida ? `<button class="btn-update" style="background:var(--green);" onclick="responderTroca('${t.id}', 'aceitar')">✔</button>` : ''}
             <button class="btn-update" style="background:#dc2626;" onclick="responderTroca('${t.id}', 'cancelar')">✖</button>
           </div>
@@ -4145,16 +4191,13 @@ async function loadTrocas() {
       });
       ct.innerHTML = html || '<p style="text-align:center; color:var(--muted);">Sem propostas no momento.</p>';
     } else {
-      // ✨ NOVIDADE: Trata o erro e verifica a sessão!
-      ct.innerHTML = '<p style="text-align:center; color:var(--red-pts);">Erro ao carregar propostas.</p>';
+      ct.innerHTML = '<p style="text-align:center; color:var(--red-pts); padding:10px;">Erro ao carregar propostas.</p>';
       if (j.msg && (j.msg.toLowerCase().includes('sessão') || j.msg.toLowerCase().includes('token'))) {
-          showToast('❌ ' + j.msg);
-          setTimeout(handleSessionExpired, 1500);
+        showToast('❌ ' + j.msg);
+        setTimeout(handleSessionExpired, 1500);
       }
     }
-  } catch(e) {
-      ct.innerHTML = '<p style="text-align:center; color:var(--red-pts);">Erro de conexão.</p>';
-  }
+  } catch(e) { ct.innerHTML = '<p style="text-align:center; color:var(--red-pts); padding:10px;">Erro de conexão.</p>'; }
 }
 
 async function responderTroca(id, resp) {
