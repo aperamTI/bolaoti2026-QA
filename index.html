@@ -1362,6 +1362,7 @@
         <label>📅 Selecione a Etapa da Copa:</label>
         <select id="sel-etapa" onchange="renderMatches(); loadUserPalpites();">
           <option value="grupos">Fase de Grupos</option>
+          <option value="16avos">16 Avos de Final</option>
           <option value="oitavas">Oitavas de Final</option>
           <option value="quartas">Quartas de Final</option>
           <option value="semi">Semifinais</option>
@@ -1391,6 +1392,7 @@
         <label>📅 Filtro de Etapa</label>
         <select id="sel-etapa-meus" onchange="renderMyPalpites()">
           <option value="grupos">Fase de Grupos</option>
+          <option value="16avos">16 Avos de Final</option>
           <option value="oitavas">Oitavas de Final</option>
           <option value="quartas">Quartas de Final</option>
           <option value="semi">Semifinais</option>
@@ -1405,7 +1407,28 @@
 <div id="tab-ranking" class="section">
   <div class="sec-title">🏆 Ranking Geral</div>
   <div class="card">
-    <div class="search-box"><input id="rank-search" type="text" placeholder="Buscar participante..." oninput="renderRanking()"></div>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+      <div class="search-box" style="flex: 2; min-width: 200px; margin-bottom: 0;">
+        <input id="rank-search" type="text" placeholder="Buscar participante..." oninput="renderRanking()">
+      </div>
+      <div class="user-select-wrap" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+        <select id="sel-rank-fase" onchange="renderRanking()" style="padding: 9px 12px; height: 100%;">
+          <option value="total">Geral (Todas as Fases)</option>
+          <option value="grupos">Fase de Grupos</option>
+          <option value="16avos">16 Avos de Final</option>
+          <option value="oitavas">Oitavas de Final</option>
+          <option value="quartas">Quartas de Final</option>
+          <option value="semi">Semifinais</option>
+          <option value="final">Grande Final</option>
+        </select>
+      </div>
+    </div>
+    
+    <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 12px; text-align: center;">
+      <b>Prêmios de Fase (Top 3):</b> 📦 Grupos | 🎟️ 16-Avos | 🥉 Oitavas | 🥈 Quartas | 🥇 Semi
+    </div>
+
     <div class="ranking-wrap">
       <table id="ranking-table">
         <thead><tr>
@@ -1633,6 +1656,7 @@
             <label>📅 Etapa:</label>
             <select id="sel-etapa-admin" onchange="toggleAdminRound(); renderAdminMatches()">
               <option value="grupos">Fase de Grupos</option>
+              <option value="16avos">16 Avos de Final</option>
               <option value="oitavas">Oitavas de Final</option>
               <option value="quartas">Quartas de Final</option>
               <option value="semi">Semifinais</option>
@@ -1666,6 +1690,7 @@
           <div class="user-select-wrap" style="min-width:150px; flex:1; margin-bottom:0;">
             <label>📅 Fase:</label>
             <select id="sel-fase-ko" onchange="renderKOEditor()">
+              <option value="16avos">16 Avos de Final</option>
               <option value="oitavas">Oitavas de Final</option>
               <option value="quartas">Quartas de Final</option>
               <option value="semi">Semifinais</option>
@@ -2115,6 +2140,22 @@ const GROUP_MATCHES = [
 ];
 
 const KO_TEMPLATES = [
+  { id:"16A_1", phase:"16avos", slot:1, label:"Jogo 1" },
+  { id:"16A_2", phase:"16avos", slot:2, label:"Jogo 2" },
+  { id:"16A_3", phase:"16avos", slot:3, label:"Jogo 3" },
+  { id:"16A_4", phase:"16avos", slot:4, label:"Jogo 4" },
+  { id:"16A_5", phase:"16avos", slot:5, label:"Jogo 5" },
+  { id:"16A_6", phase:"16avos", slot:6, label:"Jogo 6" },
+  { id:"16A_7", phase:"16avos", slot:7, label:"Jogo 7" },
+  { id:"16A_8", phase:"16avos", slot:8, label:"Jogo 8" },
+  { id:"16A_9", phase:"16avos", slot:9, label:"Jogo 9" },
+  { id:"16A_10", phase:"16avos", slot:10, label:"Jogo 10" },
+  { id:"16A_11", phase:"16avos", slot:11, label:"Jogo 11" },
+  { id:"16A_12", phase:"16avos", slot:12, label:"Jogo 12" },
+  { id:"16A_13", phase:"16avos", slot:13, label:"Jogo 13" },
+  { id:"16A_14", phase:"16avos", slot:14, label:"Jogo 14" },
+  { id:"16A_15", phase:"16avos", slot:15, label:"Jogo 15" },
+  { id:"16A_16", phase:"16avos", slot:16, label:"Jogo 16" },
   { id:25, phase:"oitavas", slot:1, label:"Jogo 1" },
   { id:26, phase:"oitavas", slot:2, label:"Jogo 2" },
   { id:27, phase:"oitavas", slot:3, label:"Jogo 3" },
@@ -2609,12 +2650,13 @@ function calcPts(ph, pa, rh, ra) {
   return 0;
 }
 
-function calcUserTotal(user, excludeMatchId = null) {
+// ✨ ATUALIZADO: Agora aceita filtrar por uma fase específica
+function calcUserTotal(user, excludeMatchId = null, phaseFilter = 'total') {
   const data = getData(), results = getResults();
   let total = 0, c10 = 0, c5 = 0, c3 = 0;
   MATCHES.forEach(m => {
-    // ⏳ Se for o jogo que estamos ignorando, ele pula a contagem!
     if (m.id === excludeMatchId) return; 
+    if (phaseFilter !== 'total' && m.phase !== phaseFilter) return; // Filtra a fase
     
     const p = data[`${user}__${m.id}`], r = results[m.id];
     if (!p || !r) return;
@@ -2625,12 +2667,13 @@ function calcUserTotal(user, excludeMatchId = null) {
 }
 
 // ⏱️ Descobre qual foi o último jogo que teve o placar preenchido pelo Admin
-function getLatestCompletedMatchId() {
+function getLatestCompletedMatchId(phaseFilter = 'total') {
   const results = getResults();
   let latestMatch = null;
   let latestTime = 0;
 
   MATCHES.forEach(m => {
+    if (phaseFilter !== 'total' && m.phase !== phaseFilter) return;
     const r = results[m.id];
     if (r && r.h !== null && r.h !== undefined) {
        if (m.date !== 'A definir' && m.time !== 'A definir' && !m.date.includes('T')) {
@@ -2648,16 +2691,61 @@ function getLatestCompletedMatchId() {
 }
 
 // ⏪ Calcula as posições de todo mundo ANTES do último jogo
-function getPreviousRankingMap() {
-   const latestMatchId = getLatestCompletedMatchId();
+function getPreviousRankingMap(phaseFilter = 'total') {
+   const latestMatchId = getLatestCompletedMatchId(phaseFilter);
    if (!latestMatchId) return {};
 
-   const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name, latestMatchId) }))
+   const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name, latestMatchId, phaseFilter) }))
                       .sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5 || a.name.localeCompare(b.name));
 
    const map = {};
    rows.forEach((r, i) => { map[r.name] = i + 1; });
    return map;
+}
+
+// 🎁 NOVA FUNÇÃO: O Juiz das Premiações
+function getWinnersMap() {
+    const results = getResults();
+    const users = Object.keys(getUsers());
+    let winners = {}; 
+
+    // Ordem oficial da Copa e seus prêmios
+    const PHASE_ORDER = ['grupos', '16avos', 'oitavas', 'quartas', 'semi', 'final'];
+    const MEDALS = { 'grupos': '📦', '16avos': '🎟️', 'oitavas': '🥉', 'quartas': '🥈', 'semi': '🥇', 'final': '🏆' };
+    const NAMES = { 'grupos': 'Grupos', '16avos': '16 Avos', 'oitavas': 'Oitavas', 'quartas': 'Quartas', 'semi': 'Semifinal', 'final': 'Final' };
+
+    PHASE_ORDER.forEach(phase => {
+        // Pega todos os jogos dessa fase que já têm times definidos
+        const phaseMatches = MATCHES.filter(m => m.phase === phase && m.home !== "A definir" && m.away !== "A definir");
+        if (phaseMatches.length === 0) return; 
+
+        // Confere se TODOS os jogos dessa fase já têm placar do Admin (Fase finalizada)
+        const allDone = phaseMatches.every(m => {
+            const r = results[m.id];
+            return r && r.h !== null && r.h !== undefined;
+        });
+
+        if (allDone) {
+            // Calcula o ranking APENAS dessa fase
+            let phaseRank = users.map(name => ({ name, ...calcUserTotal(name, null, phase) }))
+                .sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5 || a.name.localeCompare(b.name));
+
+            // Distribui os 3 prêmios ignorando quem já ganhou antes
+            let prizesGiven = 0;
+            for (let i = 0; i < phaseRank.length; i++) {
+                let candidate = phaseRank[i];
+                if (candidate.total === 0) continue; // Não premia quem fez 0 pontos
+
+                if (!winners[candidate.name]) {
+                    winners[candidate.name] = { medal: MEDALS[phase], label: NAMES[phase] };
+                    prizesGiven++;
+                }
+                if (prizesGiven === 3) break; // Passa para a próxima fase se já completou os 3
+            }
+        }
+    });
+
+    return winners;
 }
 
 function getMatchStatsHTML(m) {
@@ -2990,29 +3078,25 @@ function renderMyPalpites() {
 
 function renderRanking() {
   const filter = (document.getElementById('rank-search')?.value || '').toLowerCase();
+  const phaseFilter = document.getElementById('sel-rank-fase')?.value || 'total';
   
-  // 1. Pegamos a "foto" do ranking antes do último jogo
-  const prevMap = getPreviousRankingMap();
+  const prevMap = getPreviousRankingMap(phaseFilter);
+  const winnersMap = getWinnersMap(); // Resgata quem tem direito a prêmios
 
-  // 2. Calculamos o ranking atual (com desempate alfabético para evitar pulos falsos)
-  const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name) }))
+  const rows = Object.keys(getUsers()).map(name => ({ name, ...calcUserTotal(name, null, phaseFilter) }))
         .sort((a,b) => b.total - a.total || b.c10 - a.c10 || b.c5 - a.c5 || a.name.localeCompare(b.name));
 
   let html = '';
-  
-  // 3. Atribuímos as posições reais atuais
   rows.forEach((r, i) => { r.currentPos = i + 1; });
 
   rows.filter(r => r.name.toLowerCase().includes(filter)).forEach((r) => {
     const rank = r.currentPos;
     const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
     
-    // 4. Lógica das setinhas do Brasileirão!
     let varHtml = `<span style="color:#94a3b8; font-size: 0.8rem; font-weight: bold;">■</span>`; 
     if (prevMap[r.name]) {
        const prevPos = prevMap[r.name];
-       const diff = prevPos - rank; // Ex: Antes era 5º, agora é 3º -> 5 - 3 = +2
-       
+       const diff = prevPos - rank; 
        if (diff > 0) {
           varHtml = `<span style="color:#22c55e; font-size: 0.85rem; font-weight: 900;">▲ ${diff}</span>`;
        } else if (diff < 0) {
@@ -3020,17 +3104,24 @@ function renderRanking() {
        }
     }
 
+    // Se o cara foi premiado, coloca o Emoji do lado do nome!
+    let winnerBadge = '';
+    if (winnersMap[r.name]) {
+        let w = winnersMap[r.name];
+        winnerBadge = ` <span title="Premiado: Top 3 na fase de ${w.label}" style="cursor:help; font-size:1.15rem; vertical-align:middle; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.3));">${w.medal}</span>`;
+    }
+
     html += `<tr>
       <td><span class="rank-pos ${rank<=3?'top'+rank:''}">${medal||rank}</span></td>
       <td style="text-align: center;">${varHtml}</td>
-      <td>${escapeHtml(r.name)}</td><td><span class="rank-pts">${r.total}</span></td>
+      <td>${escapeHtml(r.name)}${winnerBadge}</td>
+      <td><span class="rank-pts">${r.total}</span></td>
       <td style="color:var(--pts10);font-weight:700;">${r.c10||'–'}</td>
       <td style="color:var(--pts5);font-weight:700;">${r.c5||'–'}</td>
       <td style="color:var(--pts3);font-weight:700;">${r.c3||'–'}</td>
     </tr>`;
   });
   
-  // Note o colspan="7" agora, para abraçar a nova coluna!
   document.getElementById('ranking-body').innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhum participante encontrado.</td></tr>';
 }
 
@@ -3141,12 +3232,14 @@ async function saveResult(id) {
 // ════════════════════════════════════════
 
 function renderKOEditor() {
-  const phase = document.getElementById('sel-fase-ko')?.value || 'oitavas';
+  // Alterado o fallback (padrão) para abrir os 16avos direto caso nada seja selecionado
+  const phase = document.getElementById('sel-fase-ko')?.value || '16avos'; 
   const ko = getKO();
   const templates = KO_TEMPLATES.filter(t => t.phase === phase);
   const container = document.getElementById('ko-editor-container');
 
-  const phaseNames = { oitavas:'Oitavas de Final', quartas:'Quartas de Final', semi:'Semifinais', final:'Grande Final' };
+  // ✨ NOVO: Adicionado os "16 Avos de Final" no dicionário de títulos
+  const phaseNames = { '16avos':'16 Avos de Final', oitavas:'Oitavas de Final', quartas:'Quartas de Final', semi:'Semifinais', final:'Grande Final' };
 
   let html = '';
   templates.forEach(tpl => {
@@ -3182,7 +3275,8 @@ function renderKOEditor() {
         </div>
       </div>
       <div class="ko-score-row">
-        <button class="btn-ko-save" onclick="saveKOMatch(${tpl.id})">💾 Salvar Confronto</button>
+        <!-- 🚀 CORREÇÃO: Adicionadas aspas simples envolta do \${tpl.id} -->
+        <button class="btn-ko-save" onclick="saveKOMatch('${tpl.id}')">💾 Salvar Confronto</button>
         ${hasResult
           ? `<span style="font-size:.8rem;color:var(--muted);">Resultado já inserido: <b>${resData.h}–${resData.a}</b></span>`
           : confirmed
@@ -3255,6 +3349,22 @@ async function init() {
 }
 
 init();
+
+// 🔄 MOTOR DE SALTO AUTOMÁTICO PARA O MATA-MATA
+(function autoSwitchFase() {
+    const now = new Date();
+    // Data/hora oficial: 2 horas após o último jogo da fase de grupos (ID 87) que começa dia 27/06/2026 23:00.
+    const endGroupStage = new Date(2026, 5, 28, 1, 0); 
+    
+    if (now >= endGroupStage) {
+        // Altera as duas caixas de seleção da interface de usuário para mostrar os 16-avos por padrão
+        const selEtapa = document.getElementById('sel-etapa');
+        const selMeus = document.getElementById('sel-etapa-meus');
+        
+        if (selEtapa) selEtapa.value = '16avos';
+        if (selMeus) selMeus.value = '16avos';
+    }
+})();
 
 function toggleDark() {
   const isDark = document.body.classList.toggle('dark');
@@ -4136,18 +4246,26 @@ async function enviarPropostaTroca() {
   showLoading(true);
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'enviarTroca', token: getToken(), user: getLoggedUser(), paraUser: para, oferece: offArr, quer: qerArr }) });
-    let j = await res.json(); showLoading(false);
-    if(j.status==='success') { showToast('✅ Proposta Enviada!'); switchTradeTab('lista'); loadTrocas(); 
+    let j = await res.json(); 
+    showLoading(false);
+    
+    if(j.status==='success') { 
+        showToast('✅ Proposta Enviada!'); 
+        switchTradeTab('lista'); 
+        loadTrocas(); 
     } else { 
-        // Agora ele mostra a mensagem real do servidor em vez de um "Erro" genérico
-        showToast('❌ ' + (json.msg || 'Erro ao enviar proposta.')); 
+        // 🚀 CORREÇÃO: Trocado 'json.msg' por 'j.msg'
+        showToast('❌ ' + (j.msg || 'Erro ao enviar proposta.')); 
         
-        // PADRONIZAÇÃO: Logout automático com 1.5s de delay
-        if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
+        if (j.msg && (j.msg.toLowerCase().includes('sessão') || j.msg.toLowerCase().includes('token'))) {
             setTimeout(handleSessionExpired, 1500);
         }
     }
-  } catch(e) { showLoading(false); showToast('❌ Erro.'); logError('Erro de rede ao enviar troca: ' + e.message, getLoggedUser(), 'error');}
+  } catch(e) { 
+      showLoading(false); 
+      showToast('❌ Erro.'); 
+      logError('Erro de rede ao enviar troca: ' + e.message, getLoggedUser(), 'error');
+  }
 }
 
 function switchTradeTab(tab) {
