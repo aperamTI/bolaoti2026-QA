@@ -29,6 +29,17 @@
     --soon-bg: #fffbeb;
     --soon-border: #facc15;
     --soon-text: #92400e;
+
+    /* ── ÁLBUM LEGADO ── */
+    --legacy-sepia: #9c7331;
+    --legacy-sepia-dim: #d4c4a8;
+    --legacy-rare-gold: #FFD700;
+    --legacy-legendary-cyan: #00e5ff;
+    --legacy-legendary-cyan-dim: #00b8d4;
+    --legacy-tradition-gold: #f5c842;
+    --legacy-bg: #fdf6e3;
+    --legacy-card: #f5ead2;
+    --legacy-border: #d4c4a8;
   }
 
   body.dark {
@@ -1209,6 +1220,271 @@
   .pack-br .pack-shine { animation: shine 2.5s infinite; }
   .italia-card { background: #111 !important; border: 2px solid #555 !important; filter: grayscale(100%); }
   .italia-name { background: #000 !important; color: #fff !important; font-style: italic; }
+
+  @keyframes packTopFly { 
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; } 
+  40%  { transform: translateY(-8px) rotate(-3deg); opacity: 1; }
+  100% { transform: translateY(-80px) rotate(-15deg); opacity: 0; } 
+}
+@keyframes packBottomDrop { 
+  0%   { transform: translateY(0); opacity: 1; } 
+  100% { transform: translateY(30px); opacity: 0; } 
+}
+@keyframes sparkleOut { 
+  0%   { opacity: 0; transform: scale(0.5); } 
+  50%  { opacity: 1; } 
+  100% { opacity: 0; transform: scale(2.5) translateY(-20px); } 
+}
+
+  /* ══════════════════════════════════════════
+     🏛️  ÁLBUM LEGADO — ESTILOS COMPLETOS
+     ══════════════════════════════════════════ */
+
+  /* Toggle de abas do álbum */
+  .album-tabs {
+    display: flex; gap: 0; margin-bottom: 20px;
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .album-tab-btn {
+    flex: 1; padding: 12px 8px;
+    background: var(--card); border: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    cursor: pointer; color: var(--muted);
+    transition: background .2s, color .2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .album-tab-btn.active {
+    background: var(--pitch); color: var(--gold);
+  }
+  .album-tab-btn.legacy-tab.active {
+    background: linear-gradient(135deg, #2d1f05, #1a1408);
+    color: var(--legacy-sepia);
+    box-shadow: inset 0 0 20px rgba(200,169,110,0.15);
+  }
+  .album-tab-btn.legacy-tab.locked {
+    opacity: 0.55; cursor: not-allowed;
+  }
+
+  /* Banner de bloqueio do álbum legado */
+  .legacy-locked-banner {
+    background: linear-gradient(135deg, #1a1408, #2d1f05);
+    border: 1px solid var(--legacy-sepia-dim);
+    border-radius: 12px; padding: 32px 20px;
+    text-align: center; color: var(--legacy-sepia);
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .legacy-locked-banner .lock-icon { font-size: 3rem; margin-bottom: 10px; }
+  .legacy-locked-banner h3 {
+    font-size: 1.6rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 8px; color: var(--legacy-sepia);
+  }
+  .legacy-locked-banner p { font-size: .95rem; color: rgba(200,169,110,0.7); line-height: 1.5; }
+  .legacy-progress-bar {
+    margin: 16px auto 0; max-width: 300px;
+    height: 8px; background: rgba(200,169,110,0.15);
+    border-radius: 8px; overflow: hidden;
+  }
+  .legacy-progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--legacy-sepia-dim), var(--legacy-sepia));
+    border-radius: 8px; transition: width .6s ease;
+  }
+  .legacy-progress-label {
+    margin-top: 6px; font-size: .82rem;
+    color: rgba(200,169,110,0.6);
+  }
+
+  /* Cabeçalho do álbum legado */
+  .legacy-album-header {
+    background: linear-gradient(135deg, #0f0b04 0%, #231c0e 50%, #1a1408 100%);
+    border: 1px solid var(--legacy-border);
+    border-radius: 12px; padding: 20px;
+    margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+  .legacy-album-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 20px,
+      rgba(200,169,110,0.025) 20px, rgba(200,169,110,0.025) 40px
+    );
+  }
+  .legacy-album-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.8rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--legacy-sepia);
+    text-shadow: 0 2px 8px rgba(200,169,110,0.4);
+    position: relative;
+  }
+  .legacy-album-subtitle {
+    font-size: .85rem; color: rgba(200,169,110,0.6);
+    margin-top: 4px; position: relative;
+  }
+  .legacy-collection-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--legacy-sepia); position: relative;
+    margin-top: 8px;
+  }
+
+  /* ── FIGURINHAS LEGADAS ── */
+
+  /* Legada Comum — borda sépia com textura envelhecida */
+  .sticker-card.legada {
+    border: 2px solid var(--legacy-sepia-dim) !important;
+    background: #1a1408 !important;
+    box-shadow: 0 2px 8px rgba(200,169,110,0.2),
+                inset 0 0 0 1px rgba(200,169,110,0.05);
+  }
+  .sticker-card.legada .sticker-img { filter: sepia(40%) brightness(0.9); }
+  .sticker-card.legada .sticker-name {
+    background: #0f0b04 !important; color: var(--legacy-sepia) !important;
+    font-style: italic;
+  }
+  .sticker-card.legada .sticker-qtd { background: var(--legacy-sepia-dim) !important; }
+  .sticker-card.legada:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(200,169,110,0.35) !important; }
+
+  /* Legada Rara — dourada com brilho vintage */
+  .sticker-card.legada-rara {
+    border: 2px solid var(--legacy-rare-gold) !important;
+    background: #1a1408 !important;
+    box-shadow: 0 0 12px rgba(255,215,0,0.4),
+                inset 0 0 0 1px rgba(255,215,0,0.1) !important;
+  }
+  .sticker-card.legada-rara::after {
+    content: '★';
+    position: absolute; top: 3px; left: 5px;
+    font-size: .65rem; color: var(--gold); opacity: .8;
+  }
+  .sticker-card.legada-rara .sticker-img { filter: sepia(30%) brightness(0.95); border-bottom-color: var(--gold) !important; }
+  .sticker-card.legada-rara .sticker-name {
+    background: #2d1f05 !important; color: #fcd34d !important;
+    font-style: italic;
+  }
+  .sticker-card.legada-rara .sticker-qtd { background: #ca8a04 !important; }
+
+  /* Legada Lendária — ciano brilhante pulsante */
+  .sticker-card.legada-lendaria {
+    border: 2px solid var(--legacy-legendary-cyan) !important;
+    background: #001a1f !important;
+    box-shadow: 0 0 18px rgba(0,229,255,0.5),
+                inset 0 0 12px rgba(0,229,255,0.08) !important;
+    animation: lendaria-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes lendaria-pulse {
+    0%, 100% { box-shadow: 0 0 18px rgba(0,229,255,0.5), inset 0 0 12px rgba(0,229,255,0.08); }
+    50%       { box-shadow: 0 0 30px rgba(0,229,255,0.85), inset 0 0 20px rgba(0,229,255,0.15); }
+  }
+  .sticker-card.legada-lendaria .sticker-img { filter: brightness(1.05) saturate(1.1); border-bottom-color: var(--legacy-legendary-cyan) !important; }
+  .sticker-card.legada-lendaria .sticker-name {
+    background: #001a1f !important; color: var(--legacy-legendary-cyan) !important;
+    font-weight: 900; letter-spacing: .04em;
+    text-shadow: 0 0 6px rgba(0,229,255,0.6);
+  }
+  .sticker-card.legada-lendaria .sticker-qtd { background: var(--legacy-legendary-cyan-dim) !important; color: #001a1f !important; }
+
+  /* Legada Tradição — dourado vintage com aura */
+  .sticker-card.legada-tradicao {
+    background: #110d03 !important;
+    border: 2px solid var(--legacy-tradition-gold) !important;
+    box-shadow: 0 0 14px rgba(245,200,66,0.35),
+                inset 0 0 8px rgba(245,200,66,0.05) !important;
+    animation: tradicao-glow 3s ease-in-out infinite;
+  }
+  @keyframes tradicao-glow {
+    0%, 100% { box-shadow: 0 0 14px rgba(245,200,66,0.35), inset 0 0 8px rgba(245,200,66,0.05); }
+    50%       { box-shadow: 0 0 24px rgba(245,200,66,0.6), inset 0 0 14px rgba(245,200,66,0.1); }
+  }
+  .sticker-card.legada-tradicao .sticker-img { filter: sepia(20%) saturate(1.1); border-bottom-color: var(--legacy-tradition-gold) !important; }
+  .sticker-card.legada-tradicao .sticker-name {
+    background: #0d0900 !important; color: var(--legacy-tradition-gold) !important;
+    font-style: italic; font-weight: 900;
+    text-shadow: 0 0 5px rgba(245,200,66,0.5);
+  }
+  .sticker-card.legada-tradicao .sticker-qtd { background: #b5860a !important; }
+
+  /* Revealed card para legadas na animação de pacote */
+  .revealed-card.legada       { border: 2px solid var(--legacy-sepia); background: #1a1408; }
+  .revealed-card.legada       .name { color: var(--legacy-sepia); }
+  .revealed-card.legada-rara  { border: 3px solid var(--gold); background: #1a1408; box-shadow: 0 0 20px rgba(255,215,0,0.7); }
+  .revealed-card.legada-rara  .name { color: #fcd34d; }
+  .revealed-card.legada-lendaria { border: 3px solid var(--legacy-legendary-cyan); background: #001a1f; box-shadow: 0 0 30px rgba(0,229,255,0.8); animation: lendaria-pulse 1.5s ease-in-out infinite; }
+  .revealed-card.legada-lendaria .name { color: var(--legacy-legendary-cyan); text-shadow: 0 0 8px rgba(0,229,255,0.8); }
+  .revealed-card.legada-tradicao { border: 3px solid var(--legacy-tradition-gold); background: #110d03; box-shadow: 0 0 20px rgba(245,200,66,0.6); }
+  .revealed-card.legada-tradicao .name { color: var(--legacy-tradition-gold); }
+
+  /* ══════════════════════════════════════════
+     ✨  PACOTE MÍTICO
+     ══════════════════════════════════════════ */
+  .pack-mitico {
+    background: radial-gradient(ellipse at 50% 30%, #1a0a2e 0%, #0a0014 40%, #000005 100%);
+    border: 2px solid #7c3aed;
+    box-shadow: 0 0 20px rgba(124,58,237,0.6),
+                0 0 60px rgba(124,58,237,0.2),
+                inset 0 0 30px rgba(124,58,237,0.1);
+    animation: mitico-aura 2s ease-in-out infinite;
+    position: relative; overflow: hidden;
+  }
+  @keyframes mitico-aura {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(124,58,237,0.6), 0 0 60px rgba(124,58,237,0.2), inset 0 0 30px rgba(124,58,237,0.1);
+    }
+    50% {
+      box-shadow: 0 0 35px rgba(167,139,250,0.9), 0 0 80px rgba(124,58,237,0.4), inset 0 0 40px rgba(167,139,250,0.15);
+    }
+  }
+  .pack-mitico .pack-shine {
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(167,139,250,0.6) 50%, rgba(255,255,255,0) 100%);
+    animation: shine 2s infinite;
+  }
+  /* Estrelas flutuantes dentro do pacote mítico */
+  .pack-mitico::before {
+    content: '✦ ✦ ✦';
+    position: absolute; top: 10px; left: 0; right: 0;
+    text-align: center; font-size: .6rem;
+    color: rgba(167,139,250,0.5);
+    letter-spacing: 4px; z-index: 2;
+    animation: starFloat 3s ease-in-out infinite;
+  }
+  @keyframes starFloat {
+    0%, 100% { transform: translateY(0); opacity: .5; }
+    50%       { transform: translateY(-3px); opacity: 1; }
+  }
+  .pack-mitico .pack-title {
+    color: #c4b5fd;
+    text-shadow: 0 0 15px rgba(167,139,250,0.9), 0 0 30px rgba(124,58,237,0.6);
+    font-size: 1.3rem !important;
+  }
+  .pack-mitico .pack-badge {
+    background: rgba(124,58,237,0.4);
+    border-color: rgba(167,139,250,0.5);
+    color: #ddd6fe;
+  }
+  /* Modal de abertura do pacote mítico */
+  #pack-opening-modal.mitico-mode {
+    background: radial-gradient(ellipse at center, rgba(124,58,237,0.3) 0%, rgba(0,0,5,0.95) 70%);
+    border-radius: 20px;
+    border: 1px solid rgba(167,139,250,0.3);
+  }
+  #pack-opening-modal.mitico-mode #pack-results-title {
+    text-shadow: 0 0 20px rgba(167,139,250,0.8);
+  }
+
+  /* Keyframes auxiliares do legado */
+  @keyframes particleFly {
+    0%, 100% { transform: translateY(0) scale(1); opacity: .6; }
+    50%       { transform: translateY(-12px) scale(1.5); opacity: 1; }
+  }
+  @keyframes lendaria-carta-pulse {
+    0%, 100% { box-shadow: 0 0 50px rgba(0,229,255,0.6), 0 25px 50px rgba(0,0,0,0.9); }
+    50%       { box-shadow: 0 0 80px rgba(0,229,255,0.95), 0 25px 50px rgba(0,0,0,0.9); }
+  }
   /* TEMA DO BOLÃO PARA O MERCADO DE TROCAS */
   .steam-container { display: flex; gap: 10px; margin-top: 10px; background: var(--surface); padding: 10px; border-radius: 8px; }
   .steam-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
@@ -1227,6 +1503,131 @@
   @media (max-width: 500px) {
     .sintese-layout { display: flex; flex-direction: column; align-items: center; gap: 20px; }
     .cat-container { padding-left: 0; justify-content: center; }
+  }
+
+/* ==========================================
+     🔮 ESTILOS DO SIMULADOR MATA-MATA (CORRIGIDO)
+     ========================================== */
+  #tab-simulador { padding: 10px; max-width: 100%; }
+  
+  .simulador-header {
+    background: var(--dark); border-radius: 12px; padding: 20px;
+    text-align: center; color: white; margin-bottom: 20px;
+    border: 1px solid var(--gold); box-shadow: 0 4px 15px rgba(255,215,0,0.15);
+  }
+  .simulador-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+  .simulador-header p { font-size: 0.9rem; color: #aaa; }
+  
+  .simulador-wrapper {
+    width: 100%; overflow-x: auto; background: var(--card);
+    padding: 30px 10px; border-radius: 12px; border: 1px solid var(--border);
+    scrollbar-width: thin; 
+  }
+  
+  .bracket {
+    display: flex; justify-content: space-between; min-width: 850px;
+    font-family: 'Barlow Condensed', sans-serif;
+    padding-top: 20px; /* Espaço pro texto flutuante */
+  }
+  
+  .bracket-half { display: flex; flex: 1; }
+  .bracket-col { display: flex; flex-direction: column; justify-content: space-around; flex: 1; padding: 0 5px; }
+  
+  /* 🧲 ALINHAMENTO MAGNÉTICO PARA O CENTRO */
+  .bracket-half.left .bracket-col { align-items: flex-end; }
+  .bracket-half.right .bracket-col { align-items: flex-start; }
+
+  .bracket-match { display: flex; flex-direction: column; justify-content: center; gap: 10px; margin: 12px 0; }
+
+  /* ── DESIGN DA BOLINHA (AJUSTADO PARA 44px) ── */
+  .b-team {
+    display: flex; align-items: center; gap: 6px;
+    background: transparent; padding: 2px;
+    cursor: pointer; transition: transform 0.2s ease;
+  }
+  .b-team:hover { transform: scale(1.1); }
+  
+  /* Siglas */
+  .b-team span { width: 32px; font-size: 0.9rem; font-weight: 700; color: var(--muted); }
+  .b-team.left span { text-align: right; }
+  .b-team.right span { text-align: left; }
+
+  /* Bandeira Redonda (Ajustado para 44px) */
+  .b-team img {
+    width: 44px; height: 44px; border-radius: 50%;
+    object-fit: cover; border: 3px solid var(--border);
+    background: #fff; z-index: 2;
+  }
+
+  /* Bolinha Vazia (Ajustado para 44px) */
+  .b-team.empty img { display: none; }
+  .empty-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 3px dashed #cbd5e1; background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; font-size: 0.9rem; font-weight: bold; z-index: 2;
+  }
+
+  /* ── CORES DE ESTADO (Acerto, Erro e Seleção) ── */
+  .b-team.selected img, .b-team.selected .empty-circle { border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.6); }
+  .b-team.selected span { color: var(--text); }
+
+  .b-team.correct img { border-color: #22c55e; box-shadow: 0 0 12px rgba(34,197,94,0.6); }
+  .b-team.correct span { color: #16a34a; }
+
+  .b-team.wrong img { border-color: #ef4444; opacity: 0.4; filter: grayscale(100%); }
+  .b-team.wrong span { opacity: 0.4; text-decoration: line-through; color: #ef4444; }
+  
+  /* ── CENTRO DA ÁRVORE (O TROFÉU) ── */
+  .bracket-center { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 25px; min-width: 180px; position: relative; }
+  
+  .champion-circle {
+    width: 80px; height: 80px; 
+    border-radius: 50%; border: 3px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease; cursor: pointer;
+  }
+  
+  /* Estado Fantasma (Vazio) */
+  .champion-circle.empty .trophy-img { width: 50px; filter: grayscale(100%) opacity(0.2) brightness(1.5); }
+  .champion-circle.empty:hover { transform: scale(1.05); border-color: #cbd5e1; }
+  
+  /* Estado Campeão (Preenchido) */
+  .champion-circle.filled {
+    border-color: var(--gold); background: #fff;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+    transform: scale(1.1);
+  }
+  .champion-circle.filled .champion-flag { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .champion-circle.filled .trophy-img { display: none; }
+
+  body.dark .champion-circle.empty { background: #0a0f0b; border-color: #334155; }
+  body.dark .b-team.empty .empty-circle { border-color: #334155; background: #0f1710; color: #475569; }
+/* ── Efeito Preto e Branco para a Legada Tradição (Argentina 70) ── */
+  .sticker-card.legada-tradicao .sticker-img {
+      filter: grayscale(100%) sepia(10%) !important;
+      border-bottom-color: var(--legacy-tradition-gold) !important;
+  }
+/* ── EFEITO NÉVOA PRETA E DOURADA (ARGENTINA 70) ── */
+  .efeito-nevoa-argentina {
+      border: 2px solid var(--legacy-tradition-gold) !important; 
+      animation: nevoaDourada 3s infinite alternate ease-in-out;
+      z-index: 2; 
+  }
+  /* ── EFEITO NEVOA DOURADA ESTÁTICA (ARGENTINA 70) ── */
+  .efeito-nevoa-argentina {
+      border: 2px solid var(--legacy-tradition-gold) !important; 
+      box-shadow: 0 0 18px 3px rgba(245,200,66,0.6) !important;
+      z-index: 2; 
+  }
+
+/* ── SALA DE TROFÉUS ── */
+  .trophy-hall {
+      display: flex; justify-content: center; align-items: center;
+      gap: 20px; padding: 15px; margin-bottom: 20px;
+      background: linear-gradient(145deg, rgba(255,215,0,0.05) 0%, rgba(255,215,0,0.15) 100%);
+      border: 1px solid var(--gold); border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(255,215,0,0.1);
   }
 </style>
 </head>
@@ -1250,6 +1651,7 @@
   <button class="active" onclick="showTab('tab-palpites')">🎯 Palpites</button>
   <button onclick="showTab('tab-meus')">📋 Meus Palpites</button>
   <button onclick="showTab('tab-ranking')">🏆 Ranking</button>
+  <button onclick="showTab('tab-simulador')">🔮 Simulador</button>
   <button onclick="showTab('tab-album')">🃏 Álbum</button> <!-- ADICIONE ESTA LINHA -->
   <button onclick="showTab('tab-regras')">📜 Regras</button>
   <button onclick="showTab('tab-admin')">⚙️ Admin</button>
@@ -1449,60 +1851,625 @@
   </div>
 
   <div id="album-workspace" style="display: none;">
-    <div class="card-title" style="margin-top: 10px;">📦 Seus Pacotes Disponíveis</div>
-    <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Ganhe pacotes acertando palpites no Bolão!</p>
-    <div id="packs-container" class="pack-container">
-      <p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Procurando pacotes...</p>
+
+    <div class="album-tabs">
+      <button class="album-tab-btn active" id="btn-album-2026" onclick="switchAlbumTab('2026')">📖 Copa 2026</button>
+      <button class="album-tab-btn legacy-tab locked" id="btn-album-legado" onclick="switchAlbumTab('legado')">
+        🏛️ Álbum Legado <span id="legado-lock-icon" style="font-size:.85rem;">🔒</span>
+      </button>
     </div>
 
-    <div class="sintese-box">
-      <h3 style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 5px;">🧬 Máquina de Síntese</h3>
-      <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom:20px;">Destrua 3 figurinhas repetidas para criar uma nova. Opcional: Adicione 1 Comum extra (Catalisador) para buffar suas chances!</p>
+    <div id="album-2026-content">
+      <div class="card-title" style="margin-top: 10px;">📦 Seus Pacotes Disponíveis</div>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Ganhe pacotes acertando palpites no Bolão!</p>
       
-      <div class="sintese-layout">
-        <div></div> <!-- Espaçador Invisível (Garante o centro perfeito) -->
-        
-        <!-- Figurinhas Base (Centro Absoluto) -->
-        <div style="display:flex; flex-direction:column; align-items:center;">
-          <div style="font-size:0.8rem; color:var(--border); font-weight:bold; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px;">Figurinhas Base</div>
-          <div class="sintese-slots" id="sintese-slots-container" style="margin:0;">
-            <div class="sintese-slot" onclick="removerDaSintese(0)">+</div>
-            <div class="sintese-slot" onclick="removerDaSintese(1)">+</div>
-            <div class="sintese-slot" onclick="removerDaSintese(2)">+</div>
-          </div>
-        </div>
+      <div id="packs-container" class="pack-container">
+        <p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Procurando pacotes...</p>
+      </div>
 
-        <!-- Catalisador (Flutuando à Direita) -->
-        <div class="cat-container">
+      <div class="sintese-box">
+        <h3 style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 5px;">🧬 Máquina de Síntese 2026</h3>
+        <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom:20px;">Destrua 3 figurinhas repetidas. 1 Cópia é intocável e sempre fica salva no álbum!</p>
+        
+        <div class="sintese-layout">
+          <div></div>
           <div style="display:flex; flex-direction:column; align-items:center;">
-            <div style="font-size:0.8rem; color:#06b6d4; font-weight:bold; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px; text-shadow: 0 0 5px rgba(6,182,212,0.4);">Catalisador</div>
-            <div class="sintese-slots" id="sintese-extra-container" style="margin:0;">
-              <!-- O Slot será renderizado pelo JavaScript aqui dentro -->
+            <div style="font-size:0.8rem; color:var(--border); font-weight:bold; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px;">Base Normal</div>
+            <div class="sintese-slots" id="sintese-slots-container" style="margin:0;">
+              <div class="sintese-slot" onclick="removerDaSintese(0)">+</div>
+              <div class="sintese-slot" onclick="removerDaSintese(1)">+</div>
+              <div class="sintese-slot" onclick="removerDaSintese(2)">+</div>
+            </div>
+          </div>
+          <div class="cat-container">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div style="font-size:0.8rem; color:#06b6d4; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-shadow: 0 0 5px rgba(6,182,212,0.4);">Catalisador</div>
+              <div class="sintese-slots" id="sintese-extra-container" style="margin:0;"></div>
             </div>
           </div>
         </div>
+          
+        <div id="sintese-stats" style="width:100%; max-width:400px; margin: 0 auto; text-align:center; background:rgba(0,0,0,0.25); padding:15px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+          <p style="color:var(--muted); font-size:0.9rem;">Insira as 3 figurinhas base para visualizar as probabilidades...</p>
+        </div>
+        <button class="sintese-btn" id="btn-fundir" style="margin-top:20px;" onclick="tentarFundir()">Fundir Figurinhas</button>
       </div>
-        
-      <!-- Quadro de Estatísticas Embaixo -->
-      <div id="sintese-stats" style="width:100%; max-width:400px; margin: 0 auto; text-align:center; background:rgba(0,0,0,0.25); padding:15px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
-        <p style="color:var(--muted); font-size:0.9rem;">Insira as 3 figurinhas base para visualizar as probabilidades...</p>
+      <button class="btn-save" style="background:#0369a1; margin-bottom: 20px; position:relative;" onclick="openTrocaModal('2026')">
+        🤝 Abrir Mercado de Trocas 
+        <span id="trade-badge" style="display:none; background:#e11d48; color:white; padding:2px 8px; border-radius:12px; font-size:0.85rem; position:absolute; top:-8px; right:-8px; box-shadow:0 2px 4px rgba(0,0,0,0.3);">!</span>
+      </button>
+	<div id="trophy-hall-2026" class="trophy-hall" style="display:none;"></div>
+      <div class="card">
+        <div class="card-title">📖 Sua Coleção (<span id="collection-count">0/48</span>)</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;">Clique nas figurinhas repetidas para enviar para a Máquina de Síntese.</p>
+        <div class="album-grid" id="album-grid"></div>
+      </div>
+    </div><div id="album-legado-content" style="display:none;">
+      <div id="legado-locked-view" class="legacy-locked-banner">
+        <div class="lock-icon">🏛️🔒</div>
+        <h3>Álbum Legado</h3>
+        <p>Complete o Álbum da Copa 2026 para desbloquear esta relíquia histórica.<br>Cada figurinha conquistada te aproxima da era Jules Rimet!</p>
+        <div class="legacy-progress-bar">
+          <div class="legacy-progress-fill" id="legado-progress-fill" style="width:0%"></div>
+        </div>
+        <div class="legacy-progress-label" id="legado-progress-label">0 / 48 figurinhas</div>
       </div>
 
-      <button class="sintese-btn" id="btn-fundir" style="margin-top:20px;" onclick="tentarFundir()">Fundir Figurinhas</button>
+      <div id="legado-unlocked-view" style="display:none;">
+        <div class="legacy-album-header">
+          <div class="legacy-album-title">🏛️ Álbum Legado — Copa 1970</div>
+          <div class="legacy-album-subtitle">A última Copa da Taça Jules Rimet · México 1970</div>
+          <div class="legacy-collection-count">Coleção: <span id="legado-collection-count">0/16</span></div>
+        </div>
+
+        <div class="sintese-box" style="background-color: var(--legacy-card); border-color: var(--legacy-border); margin-bottom: 20px;">
+          <h3 style="font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; color: var(--legacy-sepia); margin-bottom: 5px;">⚡ Forja de Sobrecarga Legada</h3>
+          <p style="font-size: 0.8rem; color: #786445; margin-bottom:20px;">Funda 3 figurinhas legadas. <b>Aposta de Risco:</b> Preencha o 4º slot para tentar ganhar DUAS figurinhas buffadas, mas cuidado... há 35% de chance da máquina explodir e você perder tudo!</p>
+          <div class="sintese-layout">
+            <div></div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div style="font-size:0.8rem; color:var(--legacy-sepia); font-weight:bold; text-transform:uppercase; margin-bottom:8px;">Base Legada</div>
+              <div class="sintese-slots" id="sintese-legado-slots" style="margin:0;">
+                <div class="sintese-slot" style="border-color:var(--legacy-border); color:var(--legacy-sepia);" onclick="removerSinteseLegado(0)">+</div>
+                <div class="sintese-slot" style="border-color:var(--legacy-border); color:var(--legacy-sepia);" onclick="removerSinteseLegado(1)">+</div>
+                <div class="sintese-slot" style="border-color:var(--legacy-border); color:var(--legacy-sepia);" onclick="removerSinteseLegado(2)">+</div>
+              </div>
+            </div>
+            <div class="cat-container">
+              <div style="display:flex; flex-direction:column; align-items:center;">
+                <div style="font-size:0.8rem; color:#ef4444; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-shadow: 0 0 5px rgba(239,68,68,0.4);">Slot de Risco</div>
+                <div class="sintese-slots" id="sintese-legado-extra" style="margin:0;">
+                  <div class="sintese-slot" style="border-color:#ef4444; color:#ef4444; background:rgba(239,68,68,0.1);" onclick="removerSinteseLegado(3)">+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="sintese-legado-stats" style="width:100%; max-width:400px; margin: 0 auto; text-align:center; background:rgba(0,0,0,0.4); padding:15px; border-radius:8px; border:1px solid rgba(200,169,110,0.2);">
+          <p style="color:var(--legacy-sepia-dim); font-size:0.9rem;">Insira as 3 figurinhas legadas para visualizar as probabilidades...</p>
+        </div>
+          <button class="sintese-btn ready" id="btn-fundir-legado" style="margin-top:20px; background:#b91c1c; opacity:1;" onclick="fundirLegado()">⚠️ Ligar Máquina de Risco</button>
+        </div>
+<button class="btn-save" style="background:#0369a1; margin-bottom: 20px; position:relative;" onclick="openTrocaModal('legado')">
+        🤝 Abrir Mercado de Trocas 
+        <span id="trade-badge" style="display:none; background:#e11d48; color:white; padding:2px 8px; border-radius:12px; font-size:0.85rem; position:absolute; top:-8px; right:-8px; box-shadow:0 2px 4px rgba(0,0,0,0.3);">!</span>
+      </button>
+<div id="trophy-hall-legado" class="trophy-hall" style="display:none; background: linear-gradient(145deg, rgba(212, 196, 168, 0.1) 0%, rgba(156, 115, 49, 0.2) 100%); border-color: var(--legacy-sepia);"></div>
+        <div class="card" style="background: #0f0b04; border-color: var(--legacy-border);">
+          <div class="card-title" style="color: var(--legacy-sepia);">📜 Sua Coleção Legada (<span id="legado-collection-count-2">0/16</span>)</div>
+          <p style="font-size: 0.75rem; color: rgba(200,169,110,0.5); margin-bottom: 12px;">
+            <span style="color:var(--legacy-sepia);">Legada</span> · 
+            <span style="color:#fcd34d;">Legada Rara ★</span> · 
+            <span style="color:var(--legacy-legendary-cyan);">Legada Lendária</span> · 
+            <span style="color:var(--legacy-tradition-gold);">Legada Tradição</span>
+          </p>
+          <div class="album-grid" id="legado-grid"></div>
+        </div>
+      </div></div></div></div>
+<div id="tab-simulador" class="section">
+  <div class="simulador-header">
+    <h2>🔮 Simulador de Campeão</h2>
+    <div style="font-size: 2.5rem; font-weight: 900; color: #4ade80;" id="sim-points-display">0 <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span></div>
+    <p>Acompanhe seus acertos, salve sua simulação e concorra a prêmios pelas suas previsões!</p>
+    
+    <div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+      <button class="btn-save" style="width: auto; padding: 10px 20px;" onclick="salvarSimulacao()">💾 Salvar Simulação</button>
+      <button class="btn-save" style="width: auto; padding: 10px 20px; background: #8b5cf6;" onclick="resgatarPremiosSimulador()">🎁 Resgatar Prêmios</button>
     </div>
+  </div>
 
-    <button class="btn-save" style="background:#0369a1; margin-bottom: 20px; position:relative;" onclick="openTrocaModal()">
-      🤝 Abrir Mercado de Trocas 
-      <span id="trade-badge" style="display:none; background:#e11d48; color:white; padding:2px 8px; border-radius:12px; font-size:0.85rem; position:absolute; top:-8px; right:-8px; box-shadow:0 2px 4px rgba(0,0,0,0.3);">!</span>
-    </button>
-
-    <div class="card">
-      <div class="card-title">📖 Sua Coleção (<span id="collection-count">0/48</span>)</div>
-      <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;">Clique nas figurinhas repetidas para enviar para a Máquina de Síntese.</p>
-      <div class="album-grid" id="album-grid"></div>
+  <div class="simulador-wrapper">
+    <div class="bracket" id="simulador-bracket-container" style="min-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between;">
+       <!-- O NOVO SCRIPT VAI INJETAR A CHAVE DE 32 TIMES AQUI -->
     </div>
   </div>
 </div>
+
+<!-- 🔮 SCRIPT DO SIMULADOR DE CAMPEÃO (DINÂMICO E CORRIGIDO) -->
+<script>
+  // 🔒 REGRA MESTRA: Verifica se o ÚLTIMO jogo dos 16-Avos já começou
+  function isBracketLocked() {
+      rebuildMatches();
+      const jogos16 = MATCHES.filter(x => x.phase === '16avos' && x.date && x.date !== 'A definir' && x.time && x.time !== 'A definir');
+      if (jogos16.length === 0) return false;
+      let ultimoKickoff = null;
+      jogos16.forEach(m => {
+          const p = m.date.split('/'); const t = m.time.split(':');
+          const kf = new Date(+p[2], +p[1]-1, +p[0], +t[0], +t[1]);
+          if (!ultimoKickoff || kf > ultimoKickoff) ultimoKickoff = kf;
+      });
+      return ultimoKickoff && new Date() >= ultimoKickoff;
+  }
+
+  function getVencedorOficial(idJogo, home, away) {
+      let idStr = String(idJogo);
+      let results = getResults();
+      let ko = getKO();
+      let r = results[idStr];
+      if (!r || r.h === null || r.h === undefined || r.h === "") return null;
+      if (r.winner) return r.winner;
+      if (Number(r.h) > Number(r.a)) return home;
+      if (Number(r.h) < Number(r.a)) return away;
+      return ko[idStr] ? ko[idStr].winner : null;
+  }
+
+  function initSimulador() {
+      const bracketDiv = document.getElementById('simulador-bracket-container');
+      if (!bracketDiv) return;
+
+      rebuildMatches();
+      const agora = new Date();
+      
+      const m16 = [];
+      for (let i = 1; i <= 16; i++) {
+          const m = MATCHES.find(x => x.id === '16A_' + i);
+          const home = (m && m.home && m.home !== 'A definir') ? m.home : null;
+          const away = (m && m.away && m.away !== 'A definir') ? m.away : null;
+          
+          let locked = false;
+          let winner = null;
+
+          if (m && m.date && m.date !== 'A definir' && m.time && m.time !== 'A definir') {
+              const p = m.date.split('/');
+              const t = m.time.split(':');
+              const kickoff = new Date(+p[2], +p[1]-1, +p[0], +t[0], +t[1]);
+              if (agora >= kickoff) locked = true; // Trava individual do confronto se já começou
+          }
+          
+          if (m) winner = getVencedorOficial(m.id, home, away);
+
+          m16.push({ home, away, locked, winner });
+      }
+      window.m16Data = m16; // Guarda globalmente para a auto-alocação dos vencedores reais
+
+      const buildEmptySlot = (align) => {
+          const ec = `<div class="empty-circle" style="display:flex;"></div>`;
+          const im = `<img src="" style="display:none;">`;
+          return align === 'left' ? `<span>???</span> ${ec}${im}` : `${im}${ec} <span>???</span>`;
+      };
+
+      const buildTeam = (team, align, targetId, locked, isWinner) => {
+          const isEmpty = !team || team === 'A definir' || team === '???';
+          const tClass = `b-team ${align}${isEmpty ? ' empty' : ''}${isWinner ? ' correct' : ''}${locked ? ' locked-match' : ''}`;
+          const tName = isEmpty ? '???' : team.replace('🇧🇷 ', '').substring(0, 3).toUpperCase();
+          
+          const ec = `<div class="empty-circle" style="display:${isEmpty ? 'flex' : 'none'};"></div>`;
+          const im = `<img src="${isEmpty ? '' : getFlagUrl(team)}" style="display:${isEmpty ? 'none' : 'block'};">`;
+          const content = align === 'left' ? `<span>${tName}</span> ${ec}${im}` : `${im}${ec} <span>${tName}</span>`;
+          
+          const clickHandler = `onclick="simularAvanco(this, '${targetId}')"`;
+          return `<div class="${tClass}" data-team="${isEmpty ? '' : team}" ${clickHandler} style="${locked ? 'cursor:not-allowed;' : ''}">${content}</div>`;
+      };
+
+      const buildMatch = (m, align, targetId) => `<div class="bracket-match" data-locked="${m.locked}">${buildTeam(m.home, align, targetId, m.locked, m.winner === m.home)}${buildTeam(m.away, align, targetId, m.locked, m.winner === m.away)}</div>`;
+      
+      const buildEmptyMatch = (nodeId, align, targetId) => {
+          return `<div class="bracket-match">
+              <div class="b-team ${align} empty" id="${nodeId}-h" onclick="simularAvanco(this, '${targetId}')">${buildEmptySlot(align)}</div>
+              <div class="b-team ${align} empty" id="${nodeId}-a" onclick="simularAvanco(this, '${targetId}')">${buildEmptySlot(align)}</div>
+          </div>`;
+      };
+
+      const buildEmptyNode = (nodeId, align, targetId) => {
+          return `<div class="bracket-match"><div class="b-team ${align} empty" id="${nodeId}" onclick="simularAvanco(this, '${targetId}')">${buildEmptySlot(align)}</div></div>`;
+      };
+
+      let leftCol1 = '<div class="bracket-col">';
+      for(let i=0; i<8; i++) leftCol1 += buildMatch(m16[i], 'left', `l-oitavas-${Math.floor(i/2)+1}-${i%2===0?'h':'a'}`);
+      leftCol1 += '</div>';
+
+      let leftCol2 = '<div class="bracket-col">';
+      for(let i=1; i<=4; i++) leftCol2 += buildEmptyMatch(`l-oitavas-${i}`, 'left', `l-quartas-${Math.floor((i-1)/2)+1}-${(i-1)%2===0?'h':'a'}`);
+      leftCol2 += '</div>';
+
+      let leftCol3 = '<div class="bracket-col">';
+      for(let i=1; i<=2; i++) leftCol3 += buildEmptyMatch(`l-quartas-${i}`, 'left', `l-semi-1-${(i-1)%2===0?'h':'a'}`);
+      leftCol3 += '</div>';
+
+      let leftCol4 = '<div class="bracket-col">';
+      leftCol4 += buildEmptyMatch('l-semi-1', 'left', 'l-finalist');
+      leftCol4 += '</div>';
+      
+      let leftCol5 = '<div class="bracket-col">' + buildEmptyNode('l-finalist', 'left', 'champion') + '</div>';
+
+      let rightCol5 = '<div class="bracket-col">' + buildEmptyNode('r-finalist', 'right', 'champion') + '</div>';
+
+      let rightCol4 = '<div class="bracket-col">';
+      rightCol4 += buildEmptyMatch('r-semi-1', 'right', 'r-finalist');
+      rightCol4 += '</div>';
+
+      let rightCol3 = '<div class="bracket-col">';
+      for(let i=1; i<=2; i++) rightCol3 += buildEmptyMatch(`r-quartas-${i}`, 'right', `r-semi-1-${(i-1)%2===0?'h':'a'}`);
+      rightCol3 += '</div>';
+
+      let rightCol2 = '<div class="bracket-col">';
+      for(let i=1; i<=4; i++) rightCol2 += buildEmptyMatch(`r-oitavas-${i}`, 'right', `r-quartas-${Math.floor((i-1)/2)+1}-${(i-1)%2===0?'h':'a'}`);
+      rightCol2 += '</div>';
+
+      let rightCol1 = '<div class="bracket-col">';
+      for(let i=8; i<16; i++) rightCol1 += buildMatch(m16[i], 'right', `r-oitavas-${Math.floor((i-8)/2)+1}-${i%2===0?'h':'a'}`);
+      rightCol1 += '</div>';
+
+      let center = `
+      <div class="bracket-center">
+        <div id="sim-helper-text" style="position:absolute; top:-20px; font-size:0.85rem; color:var(--green); font-weight:bold; text-align:center; font-style:italic; width: max-content;">Clique nos vencedores<br>para simular.</div>
+        <div id="sim-trophy-colored" style="display: none; text-align: center; margin-bottom: 15px;">
+          <img src="https://img.icons8.com/color/512/world-cup.png" style="width: 60px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+          <div style="font-family: 'Barlow Condensed'; font-weight: 700; color: var(--gold); font-size: 1.2rem; text-transform: uppercase; margin-top: 5px; line-height: 1;">Campeão</div>
+          <div id="champion-name-display" style="font-weight: 900; font-size: 1.4rem; color: var(--text);">---</div>
+        </div>
+        <div class="champion-circle empty" id="sim-champion-circle" onclick="desfazerCampeao()">
+          <img src="https://img.icons8.com/color/512/world-cup.png" class="trophy-img" alt="Troféu Fantasma">
+          <img src="" class="champion-flag" style="display:none;" alt="Bandeira Campeã">
+        </div>
+      </div>`;
+
+      bracketDiv.innerHTML = `<div class="bracket-half left">${leftCol1}${leftCol2}${leftCol3}${leftCol4}${leftCol5}</div>${center}<div class="bracket-half right">${rightCol5}${rightCol4}${rightCol3}${rightCol2}${rightCol1}</div>`;
+      
+      carregarBracketSalvo();
+  }
+
+  function simularAvanco(elemento, targetId) {
+      if (isBracketLocked()) {
+          return showToast('⏰ O prazo para simular acabou! O último jogo dos 16 Avos já começou.');
+      }
+
+      if (elemento.classList.contains('locked-match')) {
+          return showToast('🔒 Este jogo já começou! O resultado agora é oficial e não pode ser alterado.');
+      }
+
+      if (elemento.classList.contains('empty')) return;
+
+      const match = elemento.closest('.bracket-match');
+      const times = match.querySelectorAll('.b-team');
+      
+      if (times.length === 2 && (times[0].classList.contains('empty') || times[1].classList.contains('empty'))) {
+          return showToast('⚠️ Defina os dois times deste confronto primeiro antes de avançar!');
+      }
+
+      const jaEstavaSelecionado = elemento.classList.contains('selected');
+      times.forEach(t => t.classList.remove('selected'));
+
+      if (!jaEstavaSelecionado) elemento.classList.add('selected');
+
+      const fullTeamName = elemento.getAttribute('data-team');
+      const spanText = elemento.querySelector('span').innerText;
+      const imgSrc = elemento.querySelector('img') ? elemento.querySelector('img').src : '';
+
+      if (targetId === 'champion') {
+          const circle = document.getElementById('sim-champion-circle');
+          const helper = document.getElementById('sim-helper-text');
+          const trophy = document.getElementById('sim-trophy-colored');
+          const flag = circle.querySelector('.champion-flag');
+          const nomeCampeao = document.getElementById('champion-name-display');
+
+          if (jaEstavaSelecionado) {
+              desfazerCampeao();
+          } else {
+              circle.classList.remove('empty');
+              circle.classList.add('filled');
+              circle.setAttribute('data-team', fullTeamName); 
+              circle.setAttribute('data-user-team', fullTeamName); // 🔒 IDENTIDADE SECRETA DA ESCOLHA
+              helper.style.display = 'none';
+              trophy.style.display = 'block';
+              flag.style.display = 'block';
+              flag.src = imgSrc;
+              nomeCampeao.innerText = spanText;
+              if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 }, zIndex: 9999 });
+          }
+          return;
+      }
+
+      const targetTeam = document.getElementById(targetId);
+      if (targetTeam) {
+          limparAvançosFuturos(targetTeam);
+
+          if (jaEstavaSelecionado) {
+              targetTeam.classList.add('empty');
+              targetTeam.removeAttribute('data-team');
+              targetTeam.removeAttribute('data-user-team');
+              targetTeam.querySelector('span').innerText = '???';
+              let img = targetTeam.querySelector('img'); if (img) { img.style.display = 'none'; img.src = ''; }
+              let ec = targetTeam.querySelector('.empty-circle'); if (ec) ec.style.display = 'flex';
+          } else {
+              targetTeam.classList.remove('empty');
+              targetTeam.setAttribute('data-team', fullTeamName);
+              targetTeam.setAttribute('data-user-team', fullTeamName); // 🔒 IDENTIDADE SECRETA DA ESCOLHA
+              targetTeam.querySelector('span').innerText = spanText;
+              let img = targetTeam.querySelector('img');
+              if (!img) {
+                  img = document.createElement('img');
+                  if (targetTeam.classList.contains('left')) targetTeam.appendChild(img);
+                  else targetTeam.insertBefore(img, targetTeam.firstChild);
+              }
+              img.src = imgSrc; img.style.display = 'block';
+              let ec = targetTeam.querySelector('.empty-circle'); if (ec) ec.style.display = 'none';
+          }
+      }
+  }
+
+  function desfazerCampeao() {
+      if (isBracketLocked()) {
+          return showToast('⏰ O prazo para simular acabou!');
+      }
+      const circle = document.getElementById('sim-champion-circle');
+      if (circle.classList.contains('empty')) return;
+      circle.removeAttribute('data-team'); 
+      circle.removeAttribute('data-user-team');
+      
+      const helper = document.getElementById('sim-helper-text');
+      const trophy = document.getElementById('sim-trophy-colored');
+      const flag = circle.querySelector('.champion-flag');
+      
+      circle.classList.add('empty'); circle.classList.remove('filled');
+      helper.style.display = 'block'; trophy.style.display = 'none'; flag.style.display = 'none';
+
+      let lf = document.getElementById('l-finalist'); let rf = document.getElementById('r-finalist');
+      if (lf) lf.classList.remove('selected'); if (rf) rf.classList.remove('selected');
+  }
+
+  function limparAvançosFuturos(elemento) {
+      if (elemento.classList.contains('selected')) {
+          elemento.classList.remove('selected');
+          const onclickStr = elemento.getAttribute('onclick');
+          if (onclickStr) {
+              const match = onclickStr.match(/'([^']+)'/);
+              if (match && match[1]) {
+                  const nextTargetId = match[1];
+                  if (nextTargetId === 'champion') { desfazerCampeao(); } 
+                  else {
+                      const nextTarget = document.getElementById(nextTargetId);
+                      if (nextTarget) {
+                          nextTarget.classList.add('empty'); 
+                          nextTarget.removeAttribute('data-team');
+                          nextTarget.removeAttribute('data-user-team');
+                          nextTarget.querySelector('span').innerText = '???';
+                          let img = nextTarget.querySelector('img'); if (img) { img.style.display = 'none'; img.src = ''; }
+                          let ec = nextTarget.querySelector('.empty-circle'); if (ec) ec.style.display = 'flex';
+                          limparAvançosFuturos(nextTarget);
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+  function restaurarNode(nodeId, team) {
+      if (!team || team === "null") return; // Proteção contra null strings do banco
+      const el = document.getElementById(nodeId);
+      if (!el) return;
+      el.setAttribute('data-team', team);
+      el.setAttribute('data-user-team', team); // 🔒 Se veio do banco, foi você quem escolheu
+      el.classList.remove('empty');
+      const tName = team.replace('🇧🇷 ', '').substring(0, 3).toUpperCase();
+      
+      el.querySelector('span').innerText = tName;
+      const img = el.querySelector('img');
+      const ec = el.querySelector('.empty-circle');
+      
+      if (img) { img.src = getFlagUrl(team); img.style.display = 'block'; }
+      if (ec) { ec.style.display = 'none'; }
+  }
+
+  function restaurarSelecoesVisuais() {
+      // Repinta os anéis dourados APENAS nas escolhas que têm a IDENTIDADE SECRETA
+      document.querySelectorAll('.b-team').forEach(el => {
+          const team = el.getAttribute('data-user-team');
+          if (!team || team === 'A definir' || team === '???') return;
+          
+          const onclickStr = el.getAttribute('onclick');
+          if (onclickStr) {
+              const match = onclickStr.match(/'([^']+)'/);
+              if (match && match[1]) {
+                  const targetId = match[1];
+                  if (targetId === 'champion') {
+                      const champ = document.getElementById('sim-champion-circle');
+                      if (champ && champ.getAttribute('data-user-team') === team) el.classList.add('selected');
+                  } else {
+                      const targetEl = document.getElementById(targetId);
+                      if (targetEl && targetEl.getAttribute('data-user-team') === team) el.classList.add('selected');
+                  }
+              }
+          }
+      });
+  }
+
+  function carregarBracketSalvo() {
+    const b = albumData.bracket || {}; 
+
+    if (albumData.bracketPts !== undefined) {
+      document.getElementById('sim-points-display').innerHTML = `${albumData.bracketPts} <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span>`;
+    }
+
+    // 1. Restaura primeiro o que VOCÊ salvou
+    const oitavas = b.oitavas || []; let oi = 0;
+    for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`l-oitavas-${i}-h`, oitavas[oi++]); }
+    for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`l-oitavas-${i}-a`, oitavas[oi++]); }
+    oi = 8;
+    for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`r-oitavas-${i}-h`, oitavas[oi++]); }
+    for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`r-oitavas-${i}-a`, oitavas[oi++]); }
+
+    const quartas = b.quartas || []; let qi = 0;
+    for (let i = 1; i <= 2 && qi < quartas.length; i++) { restaurarNode(`l-quartas-${i}-h`, quartas[qi++]); restaurarNode(`l-quartas-${i}-a`, quartas[qi++]); }
+    for (let i = 1; i <= 2 && qi < quartas.length; i++) { restaurarNode(`r-quartas-${i}-h`, quartas[qi++]); restaurarNode(`r-quartas-${i}-a`, quartas[qi++]); }
+
+    const semi = b.semi || [];
+    if (semi[0]) restaurarNode('l-semi-1-h', semi[0]);
+    if (semi[1]) restaurarNode('l-semi-1-a', semi[1]);
+    if (semi[2]) restaurarNode('r-semi-1-h', semi[2]);
+    if (semi[3]) restaurarNode('r-semi-1-a', semi[3]);
+
+    const final = b.final || [];
+    if (final[0]) restaurarNode('l-finalist', final[0]);
+    if (final[1]) restaurarNode('r-finalist', final[1]);
+
+    if (b.campeao && b.campeao !== "null") {
+        const champCircle = document.getElementById('sim-champion-circle');
+        if (champCircle) {
+            champCircle.setAttribute('data-team', b.campeao);
+            champCircle.setAttribute('data-user-team', b.campeao);
+            champCircle.classList.remove('empty');
+            champCircle.classList.add('filled');
+            const champFlag = champCircle.querySelector('.champion-flag');
+            const trophy = champCircle.querySelector('.trophy-img');
+            if (champFlag) { champFlag.src = getFlagUrl(b.campeao); champFlag.style.display = 'block'; }
+            if (trophy) trophy.style.display = 'none';
+            
+            const nameDisplay = document.getElementById('champion-name-display');
+            const trophyColored = document.getElementById('sim-trophy-colored');
+            if (nameDisplay) nameDisplay.textContent = b.campeao.replace('🇧🇷 ', '');
+            if (trophyColored) trophyColored.style.display = 'block';
+            
+            const helperText = document.getElementById('sim-helper-text');
+            if (helperText) helperText.style.display = 'none';
+        }
+    }
+
+    // 🏆 2. SOBREPOSIÇÃO INTELIGENTE DA REALIDADE
+    const OITAVAS_SLOTS = [
+        'l-oitavas-1-h', 'l-oitavas-1-a', 'l-oitavas-2-h', 'l-oitavas-2-a',
+        'l-oitavas-3-h', 'l-oitavas-3-a', 'l-oitavas-4-h', 'l-oitavas-4-a',
+        'r-oitavas-1-h', 'r-oitavas-1-a', 'r-oitavas-2-h', 'r-oitavas-2-a',
+        'r-oitavas-3-h', 'r-oitavas-3-a', 'r-oitavas-4-h', 'r-oitavas-4-a'
+    ];
+    
+    if (window.m16Data) {
+        window.m16Data.forEach((m, idx) => {
+            if (m.winner) {
+                const targetId = OITAVAS_SLOTS[idx];
+                const el = document.getElementById(targetId);
+                if (el) {
+                    el.setAttribute('data-team', m.winner);
+                    // IMPORTANTE: NÃO TOCAMOS NO 'data-user-team' AQUI
+                    el.classList.remove('empty');
+                    const tName = m.winner.replace('🇧🇷 ', '').substring(0, 3).toUpperCase();
+                    const align = el.classList.contains('left') ? 'left' : 'right';
+                    const flag = `<img src="${getFlagUrl(m.winner)}" style="display:block;">`;
+                    const ec = `<div class="empty-circle" style="display:none;"></div>`;
+                    el.innerHTML = align === 'left' ? `<span>${tName}</span> ${ec}${flag}` : `${flag}${ec} <span>${tName}</span>`;
+                    
+                    // Colore de Verde/Vermelho baseado na Escolha do Usuário vs Realidade
+                    const sourceMatches = document.querySelectorAll(`[onclick*="'${targetId}'"]`);
+                    const userChoice = document.getElementById(targetId).getAttribute('data-user-team');
+                    
+                    sourceMatches.forEach(sel => {
+                        const teamInBubble = sel.getAttribute('data-team');
+                        if (teamInBubble === m.winner) {
+                            sel.classList.add('correct');
+                            if (userChoice === m.winner) sel.classList.add('selected');
+                        } else {
+                            if (userChoice === teamInBubble) {
+                                sel.classList.add('wrong'); // Você escolheu e ele perdeu
+                            } else {
+                                sel.classList.add('wrong'); // Só fica cinza opaco
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    restaurarSelecoesVisuais();
+  }
+
+  async function salvarSimulacao() {
+      const user = getLoggedUser();
+      if (!user) return showToast("⚠️ Você precisa fazer login para salvar!");
+      
+      if (isBracketLocked()) {
+          return showToast("⏰ O prazo encerrou! O último jogo dos 16 Avos já começou.");
+      }
+
+      let bracket = { oitavas: [], quartas: [], semi: [], final: [], campeao: "" };
+
+      // 🚀 AGORA SÓ LÊ O `data-user-team` E INJETA "null" SE O CARA NÃO CLICOU
+      function pushNode(id, arr) {
+          const el = document.getElementById(id);
+          if (el) {
+              const t = el.getAttribute('data-user-team'); // LÊ A IDENTIDADE SECRETA
+              if (t && t !== '' && t !== '???' && t !== 'A definir' && t !== 'null') {
+                  arr.push(t);
+              } else {
+                  arr.push("null");
+              }
+          } else {
+              arr.push("null");
+          }
+      }
+
+      // Oitavas (Loops na exata mesma ordem que a função de Carregar)
+      for (let i = 1; i <= 4; i++) pushNode(`l-oitavas-${i}-h`, bracket.oitavas);
+      for (let i = 1; i <= 4; i++) pushNode(`l-oitavas-${i}-a`, bracket.oitavas);
+      for (let i = 1; i <= 4; i++) pushNode(`r-oitavas-${i}-h`, bracket.oitavas);
+      for (let i = 1; i <= 4; i++) pushNode(`r-oitavas-${i}-a`, bracket.oitavas);
+
+      // Quartas
+      for (let i = 1; i <= 2; i++) { pushNode(`l-quartas-${i}-h`, bracket.quartas); pushNode(`l-quartas-${i}-a`, bracket.quartas); }
+      for (let i = 1; i <= 2; i++) { pushNode(`r-quartas-${i}-h`, bracket.quartas); pushNode(`r-quartas-${i}-a`, bracket.quartas); }
+
+      // Semi
+      pushNode('l-semi-1-h', bracket.semi);
+      pushNode('l-semi-1-a', bracket.semi);
+      pushNode('r-semi-1-h', bracket.semi);
+      pushNode('r-semi-1-a', bracket.semi);
+
+      // Final
+      pushNode('l-finalist', bracket.final);
+      pushNode('r-finalist', bracket.final);
+
+      // Campeão
+      const champNode = document.getElementById('sim-champion-circle');
+      let champ = champNode ? champNode.getAttribute('data-user-team') : null;
+      bracket.campeao = (champ && champ !== 'A definir' && champ !== '???') ? champ : "null";
+
+      showLoading(true);
+      try {
+          let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveBracket', token: getToken(), user: user, bracket: bracket }) });
+          let j = await res.json();
+          if (j.status === 'success') { showToast("✅ Simulação Salva com Sucesso!"); }
+          else { showToast("❌ " + (j.msg || 'Erro.')); }
+      } catch(e) { showToast("❌ Erro de conexão."); }
+      showLoading(false);
+  }
+
+  async function resgatarPremiosSimulador() {
+      const user = getLoggedUser();
+      if (!user) return showToast("⚠️ Faça login primeiro!");
+      showLoading(true);
+      try {
+          let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'resgatarPremiosBracket', token: getToken(), user: user }) });
+          let j = await res.json(); showLoading(false);
+          
+          if (j.status === 'success') {
+              document.getElementById('sim-points-display').innerHTML = `${j.pontos} <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span>`;
+              showPackAnimation(j.figurinhas, `Você acertou e ganhou ${j.pacotes} Pacotes Dourados!`);
+          } else { 
+              showToast("⚠️ " + (j.msg || 'Nenhum prêmio.'));
+              if (j.pontos !== undefined) document.getElementById('sim-points-display').innerHTML = `${j.pontos} <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span>`;
+          }
+      } catch(e) { showLoading(false); showToast("❌ Erro de conexão."); }
+  }
+</script>
 
 <div id="tab-regras" class="section">
   <div class="sec-title">📜 Regulamentos</div>
@@ -1593,7 +2560,7 @@
     <div class="card">
       <div class="card-title">🤝 Mercado de Trocas</div>
       <ul class="regras-list">
-        <li><strong>Como funciona:</strong> Envie propostas oferecendo até 3 figurinhas repetidas suas em troca de até 3 figurinhas que você deseja do inventário de um colega.</li>
+        <li><strong>Como funciona:</strong> Envie propostas oferecendo até 5 figurinhas repetidas suas em troca de até 5 figurinhas que você deseja do inventário de um colega.</li>
         <li><strong>Limitações:</strong> As figurinhas especiais <b>Coringa</b> e <b>Tradição</b> não podem ser transferidas ou solicitadas no mercado.</li>
         <li><strong>Bônus de Parceria:</strong> A primeira vez que você concluir uma troca com um novo amigo, existe uma chance rara de 0,8% de ambos serem recompensados com um prêmio secreto misterioso enviado diretamente pelo servidor!</li>
       </ul>
@@ -1804,9 +2771,37 @@
 <div class="modal-overlay" id="modal-pack" style="z-index: 2500; background: rgba(0,0,0,0.85);">
   <div class="modal-box" id="pack-opening-modal">
     <div id="pack-animation-view" style="text-align: center;">
-      <div class="pack-shaking" id="pack-shaking-emoji">📦</div>
-      <h2 style="color:white; font-family:'Barlow Condensed'; font-size:1.5rem; margin-top:20px; letter-spacing:0.05em;" id="pack-status-text">Abrindo...</h2>
-    </div>
+  <div id="pack-tear-container" style="display:inline-block; position:relative; width:140px; height:180px; margin: 0 auto;">
+    <svg id="pack-svg" viewBox="0 0 140 180" width="140" height="180" style="overflow:visible;">
+      <!-- Metade de baixo do pacote (fica parada) -->
+      <g id="pack-bottom">
+        <rect x="15" y="90" width="110" height="80" rx="8" fill="#1a6b2e" stroke="#fde047" stroke-width="2.5"/>
+        <rect x="15" y="105" width="110" height="3" fill="#fde047" opacity="0.4"/>
+        <text x="70" y="140" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="13" font-weight="700" fill="#fde047">FIGURINHAS</text>
+        <text x="70" y="158" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(253,224,71,0.7)">COPA 2026</text>
+      </g>
+      <!-- Metade de cima do pacote (vai voar para cima) -->
+      <g id="pack-top" style="transform-origin:70px 90px;">
+        <rect x="15" y="10" width="110" height="82" rx="8" fill="#15592a" stroke="#fde047" stroke-width="2.5"/>
+        <rect x="15" y="10" width="110" height="30" rx="8" fill="#0d3d1c"/>
+        <rect x="15" y="28" width="110" height="12" fill="#0d3d1c"/>
+        <text x="70" y="30" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="11" font-weight="700" fill="#fde047">⚽ ÁLBUM</text>
+        <!-- Linha de rasgo (serrilhada) -->
+        <polyline points="15,88 28,83 41,91 54,84 67,90 80,83 93,89 106,83 125,90" 
+                  fill="none" stroke="#fde047" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.6"/>
+      </g>
+      <!-- Brilhos que saem quando rasga -->
+      <g id="pack-sparkles" opacity="0">
+        <circle cx="70" cy="90" r="3" fill="#fde047"/>
+        <circle cx="50" cy="80" r="2" fill="#fff"/>
+        <circle cx="90" cy="85" r="2" fill="#fde047"/>
+        <circle cx="35" cy="95" r="1.5" fill="#fff"/>
+        <circle cx="105" cy="92" r="1.5" fill="#fde047"/>
+      </g>
+    </svg>
+  </div>
+  <h2 style="color:white; font-family:'Barlow Condensed'; font-size:1.5rem; margin-top:16px; letter-spacing:0.05em;" id="pack-status-text">Abrindo...</h2>
+</div>
     <div id="pack-results-view" style="display:none; text-align: center;">
       <h2 id="pack-results-title" style="color:var(--gold); font-family:'Barlow Condensed'; font-size:2rem; margin-bottom:10px; letter-spacing:0.05em; text-transform: uppercase;">Novas Figurinhas!</h2>
       <div class="cards-revealed" id="revealed-cards-container"></div>
@@ -1878,7 +2873,7 @@
           </div>
         </div>
       </div>
-      <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-top:10px;">Clique nos itens para movê-los (Máx. 3 de cada lado). Coringa e Itália não são trocáveis.</p>
+      <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-top:10px;">Clique nos itens para movê-los (Máx. 5 de cada lado). Coringa e Tradição não são trocáveis.</p>
       <button class="steam-trade-btn" onclick="enviarPropostaTroca()">Realizar proposta</button>
     </div>
 
@@ -1969,6 +2964,75 @@
 
 </div>
 
+<!-- ── MODAL INSPEÇÃO: FIGURINHA LENDÁRIA BRASIL 70 ── -->
+<div id="modal-inspecionar-lendaria" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,5,0.9); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;" onclick="fecharInspecaoLendaria()">
+
+  <div id="container-3d-lendaria" style="perspective: 1000px; width: 260px; height: 360px; margin-bottom: 40px;" onclick="event.stopPropagation()">
+    <div id="carta-3d-lendaria" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; border-radius: 15px; box-shadow: 0 0 50px rgba(0,229,255,0.6), 0 25px 50px rgba(0,0,0,0.9); border: 2px solid #00e5ff; background: linear-gradient(to bottom, #001a1f, #000f14); overflow: hidden; cursor: grab; animation: lendaria-carta-pulse 2.5s ease-in-out infinite;">
+      
+      <div id="reflexo-carta-lendaria" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10; pointer-events: none; mix-blend-mode: overlay; transition: background 0.1s;"></div>
+
+      <!-- Partículas ciano decorativas -->
+      <div style="position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;">
+        <div style="position:absolute;width:2px;height:2px;background:#00e5ff;border-radius:50%;top:15%;left:20%;animation:particleFly 3s ease-in-out infinite;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#00e5ff;border-radius:50%;top:70%;left:80%;animation:particleFly 4s ease-in-out infinite 1s;"></div>
+        <div style="position:absolute;width:1px;height:1px;background:#00e5ff;border-radius:50%;top:40%;left:10%;animation:particleFly 2.5s ease-in-out infinite 0.5s;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#00e5ff;border-radius:50%;top:85%;left:35%;animation:particleFly 3.5s ease-in-out infinite 2s;"></div>
+      </div>
+      
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transform-style: preserve-3d; z-index:5;">
+        <div style="font-size:.7rem; color:#00e5ff; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; opacity:.7; transform:translateZ(20px);">Lendária</div>
+        <img src="https://flagcdn.com/w160/br.png" style="width: 140px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,229,255,0.5), 0 10px 25px rgba(0,0,0,0.8); transform: translateZ(60px);">
+        <h2 style="color: #00e5ff; margin-top: 20px; font-size: 2rem; transform: translateZ(40px); text-shadow: 0 0 20px rgba(0,229,255,0.9); text-transform: uppercase; letter-spacing: 2px; font-family:'Barlow Condensed',sans-serif;">Brasil 70</h2>
+        <div style="font-size:.65rem; color:rgba(0,229,255,0.5); letter-spacing:2px; text-transform:uppercase; transform:translateZ(30px); margin-top:4px;">Jules Rimet · México</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width: 500px; text-align: center; color: #ddd; padding: 0 25px;" onclick="event.stopPropagation()">
+    <h3 style="color: #00e5ff; margin-bottom: 15px; font-size: 1.6rem; text-transform: uppercase; text-shadow: 0 0 15px rgba(0,229,255,0.7);">🏆 A Maior de Todas</h3>
+    <p style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 12px;">
+      Em 1970, o Brasil alcançou o tricampeonato e conquistou a Taça Jules Rimet em caráter definitivo — a única seleção a atingir esse feito.
+    </p>
+    <p style="font-size: 1.05rem; line-height: 1.6; color: #67e8f9;">
+      Com Pelé, Jairzinho, Tostão, Rivellino e Gérson, o escrete canarinho é considerado o maior time de todos os tempos. A final de 4×1 sobre a Itália é lendária.
+    </p>
+    <p style="margin-top: 25px; font-size: 0.85rem; color: #777; text-transform: uppercase; letter-spacing: 1px;">Clique fora para fechar</p>
+  </div>
+
+</div>
+
+<!-- ── MODAL INSPEÇÃO: ARGENTINA LEGADA TRADIÇÃO ── -->
+<div id="modal-inspecionar-argentina-legada" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;" onclick="fecharInspecaoArgentinaLegada()">
+
+  <div style="perspective: 1000px; width: 260px; height: 360px; margin-bottom: 40px;" onclick="event.stopPropagation()">
+    <div style="width: 100%; height: 100%; position: relative; border-radius: 15px; box-shadow: 0 0 30px rgba(245,200,66,0.4), 0 25px 50px rgba(0,0,0,0.9); border: 2px solid #f5c842; background: linear-gradient(to bottom, #110d03, #0d0900); overflow: hidden; animation: tradicao-glow 3s ease-in-out infinite;">
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="font-size:.7rem; color:#f5c842; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; opacity:.7;">Legada Tradição</div>
+        <img src="https://flagcdn.com/w160/ar.png" style="width: 140px; border-radius: 8px; box-shadow: 0 0 20px rgba(245,200,66,0.4), 0 10px 25px rgba(0,0,0,0.8); filter: sepia(20%);">
+        <h2 style="color: #f5c842; margin-top: 20px; font-size: 2.2rem; text-shadow: 0 0 15px rgba(245,200,66,0.7); text-transform: uppercase; letter-spacing: 2px; font-family:'Barlow Condensed',sans-serif; font-style:italic;">Tradição</h2>
+        <div style="font-size:.65rem; color:rgba(245,200,66,0.5); letter-spacing:2px; text-transform:uppercase; margin-top:4px;">Argentina</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width: 500px; text-align: center; color: #ddd; padding: 0 25px;" onclick="event.stopPropagation()">
+    <h3 style="color: #f5c842; margin-bottom: 15px; font-size: 1.6rem; text-transform: uppercase; text-shadow: 0 0 10px rgba(245,200,66,0.5);">🇦🇷 O Grande Ausente</h3>
+    <p style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 12px;">
+      Bicampeã sul-americana e gigante do futebol mundial, a Argentina ficou de fora da Copa de 1970 — única vez na história moderna que isso aconteceu.
+    </p>
+    <p style="font-size: 1.05rem; line-height: 1.6; color: #fcd34d;">
+      Eliminada pelo Peru nas eliminatórias de 1969, a Albiceleste perdeu a única Copa onde o Brasil conquistou a Taça Jules Rimet definitivamente.
+    </p>
+    <div style="margin-top: 20px; background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.3); border-radius: 8px; padding: 12px 16px;">
+    <p style="font-size: 0.9rem; color: #f5c842; font-weight: bold; margin: 0 0 6px;">⚡ Passiva: O Orgulho Ferido</p>
+    <p style="font-size: 0.85rem; color: rgba(245,200,66,0.8); margin: 0; line-height: 1.5;">Enquanto o Álbum Legado estiver desbloqueado, há 5% de chance de ganhar uma Figurinha Legada Rara bônus ao abrir qualquer pacote.</p>
+  </div>
+    <p style="margin-top: 25px; font-size: 0.85rem; color: #777; text-transform: uppercase; letter-spacing: 1px;">Clique fora para fechar</p>
+  </div>
+
+</div>
+
 <div id="modal-preview-troca" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; align-items: center; justify-content: center;" onclick="fecharPreviewTroca()">
   <div style="background: #22222a; padding: 25px; border-radius: 12px; max-width: 95%; width: 480px; border: 1px solid #444; box-shadow: 0 8px 25px rgba(0,0,0,0.7); color: #fff;" onclick="event.stopPropagation()">
     
@@ -2001,7 +3065,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbww69fOasuXOqILkOJkk61zgYaXEGMTtz8PmJwRgbMX6At0vzf9UfJyrF09OfMST0JH/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzREXo4AAytfO5VYqYEHg8TPSrNRe4fBydhgSD9jjTWd0tqlMGlw4jgGTSQ3m3pUmW_/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -2871,7 +3935,9 @@ function renderMatches() {
   const results = getResults();
   const selectedPhase = document.getElementById('sel-etapa')?.value || 'grupos';
   const filteredMatches = MATCHES.filter(m => m.phase === selectedPhase);
-  const uniqueGroups = [...new Set(filteredMatches.map(m => m.group))].sort();
+  
+  // 🚀 CORREÇÃO AQUI: Adicionado o { numeric: true } para ordenar os números corretamente!
+  const uniqueGroups = [...new Set(filteredMatches.map(m => m.group))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
   let html = '';
   uniqueGroups.forEach(grp => {
@@ -3184,31 +4250,60 @@ function renderAdminMatches() {
     filteredMatches = filteredMatches.filter(m => m.round === r);
   }
 
+  // Vencedores explícitos já definidos (empate/pênaltis)
+  const ko = getKO();
+
   container.innerHTML = filteredMatches.map(m => {
-    const r = NavResults[m.id] || {}, confirmed = (r.h !== undefined && r.h !== null);
+    const r = NavResults[m.id] || {}, confirmed = (r.h !== undefined && r.h !== null && r.h !== '');
     const roundLabel = m.round ? ` (R${m.round})` : '';
     const isDefinir = m.home === 'A definir' || m.away === 'A definir';
-    return `<div class="admin-match">
-      <div class="team-label">${m.date} | ${m.group}${roundLabel}</div>
-      <div style="flex:2;font-weight:600;font-size:.9rem;">${m.home} × ${m.away}</div>
-      ${isDefinir
-        ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Confronto não definido — use "Editar Confrontos"</span>`
-        : `<input type="number" min="0" max="20" id="adm-h-${m.id}" value="${confirmed?r.h:''}" placeholder="–">
-           <span style="font-weight:800;color:var(--muted);">–</span>
-           <input type="number" min="0" max="20" id="adm-a-${m.id}" value="${confirmed?r.a:''}" placeholder="–">
-           <button class="btn-update" onclick="saveResult(${m.id})">Salvar</button>
-           ${confirmed ? `<span class="result-confirmed">✔ ${r.h}–${r.a}</span>` : ''}`
-      }
+
+    // Detecta empate em fase KO (não grupos)
+    const isKO = selectedPhase !== 'grupos';
+    const isEmpate = confirmed && Number(r.h) === Number(r.a);
+    const koSaved = ko[String(m.id)] || {};
+    const vencedorDefinido = r.winner || koSaved.winner || '';
+
+    // Linha do vencedor em empate (só aparece em fases KO com empate no placar)
+    const winnerRow = (isKO && isEmpate && m.home && m.away && m.home !== 'A definir')
+      ? `<div style="margin-top:6px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+           <span style="font-size:0.78rem; color:var(--muted);">🏆 Quem avançou?</span>
+           <button class="btn-update" style="background:${vencedorDefinido===m.home?'#16a34a':'#2563eb'};padding:3px 10px;font-size:0.75rem;"
+             onclick="saveKOWinner('${m.id}', '${escapeHtml(m.home)}')">
+             ${vencedorDefinido===m.home?'✔ ':''}${escapeHtml(m.home)}
+           </button>
+           <button class="btn-update" style="background:${vencedorDefinido===m.away?'#16a34a':'#7c3aed'};padding:3px 10px;font-size:0.75rem;"
+             onclick="saveKOWinner('${m.id}', '${escapeHtml(m.away)}')">
+             ${vencedorDefinido===m.away?'✔ ':''}${escapeHtml(m.away)}
+           </button>
+           ${vencedorDefinido ? `<span style="font-size:0.75rem;color:#22c55e;">✔ ${escapeHtml(vencedorDefinido)} avançou</span>` : ''}
+         </div>`
+      : '';
+
+    return `<div class="admin-match" style="flex-direction:column; align-items:stretch; gap:6px;">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="team-label">${m.date} | ${m.group || ''}${roundLabel}</div>
+        <div style="flex:2;font-weight:600;font-size:.9rem;">${m.home} × ${m.away}</div>
+        ${isDefinir
+          ? `<span style="font-size:.8rem;color:var(--muted);font-style:italic;">Confronto não definido — use "Editar Confrontos"</span>`
+          : `<input type="number" min="0" max="20" id="adm-h-${m.id}" value="${confirmed?r.h:''}" placeholder="–">
+             <span style="font-weight:800;color:var(--muted);">–</span>
+             <input type="number" min="0" max="20" id="adm-a-${m.id}" value="${confirmed?r.a:''}" placeholder="–">
+             <button class="btn-update" onclick="saveResult('${m.id}')">Salvar</button>
+             ${confirmed ? `<span class="result-confirmed">✔ ${r.h}–${r.a}</span>` : ''}`
+        }
+      </div>
+      ${winnerRow}
     </div>`;
   }).join('') || '<p style="text-align:center; color:var(--muted); padding:10px;">Nenhum jogo nesta etapa.</p>';
 }
 
 async function saveResult(id) {
-  const h = document.getElementById(`adm-h-${id}`).value, a = document.getElementById(`adm-a-${id}`).value;
-  if (h === '' || a === '') { showToast('⚠️ Preencha ambos os placares.'); return; }
+  const h = document.getElementById(`adm-h-${id}`)?.value, a = document.getElementById(`adm-a-${id}`)?.value;
+  if (h === '' || h === undefined || a === '' || a === undefined) { showToast('⚠️ Preencha ambos os placares.'); return; }
   showLoading(true);
   try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveResult', token: ADMIN_TOKEN, id: id, h: parseInt(h), a: parseInt(a) }) });
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveResult', token: ADMIN_TOKEN, id: String(id), h: parseInt(h), a: parseInt(a) }) });
     let json = await res.json();
     if(json.status === 'success') {
       await new Promise(r => setTimeout(r, 800));
@@ -3224,6 +4319,21 @@ async function saveResult(id) {
     showToast('❌ Erro de rede.'); 
     logError('Erro de rede Admin ao salvar placar: ' + e.message, 'admin', 'error');
   }
+  showLoading(false);
+}
+
+async function saveKOWinner(id, winner) {
+  showLoading(true);
+  try {
+    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({
+      action: 'saveKOWinner', token: ADMIN_TOKEN, id: id, winner: winner
+    })});
+    let json = await res.json();
+    if (json.status === 'success') {
+      showToast(`✅ ${winner} definido como vencedor por pênaltis!`);
+      await refreshData(); renderAdminMatches();
+    } else { showToast('❌ ' + (json.msg || 'Erro.')); }
+  } catch(e) { showToast('❌ Erro de rede.'); }
   showLoading(false);
 }
 
@@ -3331,10 +4441,11 @@ function showTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idx = ['tab-palpites','tab-meus','tab-ranking','tab-album','tab-regras','tab-admin'].indexOf(id);
+  const idx = ['tab-palpites','tab-meus','tab-ranking','tab-simulador','tab-album','tab-regras','tab-admin'].indexOf(id);
   if (idx !== -1) document.querySelectorAll('nav button')[idx].classList.add('active');
   if (id === 'tab-ranking') renderRanking();
   if (id === 'tab-meus') { updateUsersDropdown(); renderMyPalpites(); }
+  if (id === 'tab-simulador') { rebuildMatches(); initSimulador(); } 
 }
 
 function showToast(msg) {
@@ -3352,18 +4463,96 @@ init();
 
 // 🔄 MOTOR DE SALTO AUTOMÁTICO PARA O MATA-MATA
 (function autoSwitchFase() {
-    const now = new Date();
-    // Data/hora oficial: 2 horas após o último jogo da fase de grupos (ID 87) que começa dia 27/06/2026 23:00.
-    const endGroupStage = new Date(2026, 5, 28, 1, 0); 
-    
-    if (now >= endGroupStage) {
-        // Altera as duas caixas de seleção da interface de usuário para mostrar os 16-avos por padrão
-        const selEtapa = document.getElementById('sel-etapa');
-        const selMeus = document.getElementById('sel-etapa-meus');
-        
-        if (selEtapa) selEtapa.value = '16avos';
-        if (selMeus) selMeus.value = '16avos';
+  // Ordem das fases e o valor do select de ranking correspondente
+  const FASES = [
+    { key: 'grupos',  rankVal: 'grupos'  },
+    { key: '16avos',  rankVal: '16avos'  },
+    { key: 'oitavas', rankVal: 'oitavas' },
+    { key: 'quartas', rankVal: 'quartas' },
+    { key: 'semi',    rankVal: 'semi'    },
+    { key: 'final',   rankVal: 'final'   },
+  ];
+
+  // Acha a data/hora do último jogo de uma fase (2h após o kickoff)
+  function ultimaDataFase(faseKey) {
+    let ultima = null;
+
+    if (faseKey === 'grupos') {
+      // Usa GROUP_MATCHES que têm datas fixas
+      GROUP_MATCHES.forEach(m => {
+        if (!m.date || !m.time || m.phase !== 'grupos') return;
+        const p = m.date.split('/');
+        const t = m.time.split(':');
+        const d = new Date(+p[2], +p[1]-1, +p[0], +t[0], +t[1]);
+        if (!ultima || d > ultima) ultima = d;
+      });
+    } else {
+      // Fases KO: usa o koMatches salvo (que tem datas inseridas pelo admin)
+      const ko = getKO();
+      KO_TEMPLATES.forEach(tpl => {
+        if (tpl.phase !== faseKey) return;
+        const saved = ko[tpl.id];
+        if (!saved || !saved.date) return;
+        // date pode vir em vários formatos — tenta DD/MM/YYYY e ISO
+        let d;
+        if (saved.date.includes('/')) {
+          const p = saved.date.split('/');
+          const t = (saved.time || '00:00').split(':');
+          d = new Date(+p[2], +p[1]-1, +p[0], +t[0], +t[1]);
+        } else {
+          d = new Date(saved.date);
+        }
+        if (!isNaN(d) && (!ultima || d > ultima)) ultima = d;
+      });
     }
+
+    if (!ultima) return null;
+    // 2 horas após o kickoff do último jogo
+    return new Date(ultima.getTime() + 2 * 60 * 60 * 1000);
+  }
+
+  function aplicarFaseAtual() {
+    const now = new Date();
+    let faseAtiva = null; // null = ainda em grupos ou não começou
+
+    // Percorre da última fase para a primeira, acha a primeira que já terminou
+    for (let i = FASES.length - 1; i >= 0; i--) {
+      const fim = ultimaDataFase(FASES[i].key);
+      if (fim && now >= fim) {
+        // A fase seguinte é a atual (ou 'final' se for a última)
+        const proxIdx = Math.min(i + 1, FASES.length - 1);
+        faseAtiva = FASES[proxIdx].rankVal;
+        break;
+      }
+    }
+
+    // Atualiza o select do ranking (só se o usuário não mudou manualmente — verifica se está em 'total')
+    const selRank = document.getElementById('sel-rank-fase');
+    if (selRank && faseAtiva && selRank.value === 'total') {
+      selRank.value = faseAtiva;
+      renderRanking();
+    }
+
+    // Atualiza as abas de palpites (comportamento original mantido)
+    const faseAbaGrupos = ultimaDataFase('grupos');
+    if (faseAbaGrupos && now >= faseAbaGrupos) {
+      const selEtapa = document.getElementById('sel-etapa');
+      const selMeus  = document.getElementById('sel-etapa-meus');
+      // Descobre qual fase KO é a mais recente com jogos cadastrados
+      let melhorFaseKO = '16avos';
+      for (let i = FASES.length - 1; i >= 1; i--) {
+        const fim = ultimaDataFase(FASES[i].key);
+        if (fim) { melhorFaseKO = FASES[i].key; break; }
+      }
+      if (selEtapa && selEtapa.value === 'grupos') selEtapa.value = melhorFaseKO;
+      if (selMeus  && selMeus.value  === 'grupos') selMeus.value  = melhorFaseKO;
+    }
+  }
+
+  // Roda imediatamente e re-verifica a cada 5 minutos
+  // (garante que funciona mesmo quando o admin insere jogos KO e o usuário está com a página aberta)
+  aplicarFaseAtual();
+  setInterval(aplicarFaseAtual, 5 * 60 * 1000);
 })();
 
 function toggleDark() {
@@ -3784,6 +4973,34 @@ async function sendChatMessage() {
 let albumData = { inventario: [], resgatados: [] };
 let sinteseSlots = [];
 
+// ── DADOS DO ÁLBUM LEGADO (COPA 1970) ──
+const LEGADO_LENDARIA  = ["Brasil 70"];
+const LEGADO_RARAS     = ["Itália 70", "Uruguai 70", "Alemanha Oc. 70", "Inglaterra 70", "Peru 70", "México 70", "URSS 70"];
+const LEGADO_TRADICAO  = ["Argentina 70"];
+const LEGADO_COMUNS    = ["Bélgica 70", "Bulgária 70", "Tchecoslováquia 70", "El Salvador 70", "Israel 70", "Marrocos 70", "Romênia 70", "Suécia 70"];
+const TODAS_LEGADAS    = [...LEGADO_LENDARIA, ...LEGADO_RARAS, ...LEGADO_TRADICAO, ...LEGADO_COMUNS];
+
+// Mapa de bandeiras para figurinhas legadas
+const LEGADO_FLAG_MAP = {
+  "Brasil 70":            "br",
+  "Itália 70":            "it",
+  "Uruguai 70":           "uy",
+  "Alemanha Oc. 70":      "de",
+  "Inglaterra 70":        "gb-eng",
+  "Peru 70":              "pe",
+  "México 70":            "mx",
+  "URSS 70":              "ru",
+  "Argentina 70":         "ar",
+  "Bélgica 70":           "be",
+  "Bulgária 70":          "bg",
+  "Tchecoslováquia 70":   "cz",
+  "El Salvador 70":       "sv",
+  "Israel 70":            "il",
+  "Marrocos 70":          "ma",
+  "Romênia 70":           "ro",
+  "Suécia 70":            "se",
+};
+
 const FLAG_MAP = {
   "México":"mx", "África do Sul":"za", "Coreia do Sul":"kr", "Rep. Tcheca":"cz", "Canadá":"ca", 
   "Bósnia e Herzegovina":"ba", "Catar":"qa", "Suíça":"ch", "Marrocos":"ma", "Haiti":"ht", 
@@ -3800,13 +5017,73 @@ const FLAG_MAP = {
 const TODAS_SELECOES = Object.keys(FLAG_MAP).sort((a,b) => a.localeCompare(b, 'pt'));
 
 function getFlagUrl(teamName) {
+  if (!teamName) return 'https://placehold.co/160x100/1a2a1d/ffffff?text=?';
   if (teamName === "Coringa") return "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Joker.png";
-  if (teamName === "Itália") return "https://flagcdn.com/w160/it.png";
-  
-  let clean = teamName.replace('🇧🇷 ', '').trim();
+  if (teamName === "Itália")  return "https://flagcdn.com/w160/it.png";
+  if (LEGADO_FLAG_MAP[teamName]) return `https://flagcdn.com/w160/${LEGADO_FLAG_MAP[teamName]}.png`;
+  if (teamName === "Troféu Copa 26") return "https://img.icons8.com/color/512/world-cup.png";
+  if (teamName === "Álbum Legado") return "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="12" fill="#1a0a00"/><rect x="12" y="10" width="58" height="75" rx="6" fill="#c8960c"/><rect x="14" y="12" width="54" height="71" rx="5" fill="#fffbe6"/><rect x="12" y="10" width="10" height="75" rx="4" fill="#8B5E00"/><rect x="14" y="12" width="6" height="71" rx="3" fill="#a06800"/><line x1="25" y1="28" x2="62" y2="28" stroke="#c8960c" stroke-width="2" stroke-linecap="round"/><line x1="25" y1="38" x2="62" y2="38" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><line x1="25" y1="48" x2="62" y2="48" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><line x1="25" y1="58" x2="50" y2="58" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><text x="38" y="24" text-anchor="middle" font-size="8" font-weight="bold" fill="#8B4500" font-family="serif">1970</text><circle cx="78" cy="22" r="14" fill="#f5c842"/><text x="78" y="27" text-anchor="middle" font-size="18" fill="#1a0a00">★</text></svg>`);
+  if (teamName === "Taça Jules Rimet") return "https://img.icons8.com/color/512/trophy.png";
+
+  // Tenta match direto e sem emoji do Brasil
+  const clean = teamName.replace('🇧🇷 ', '').trim();
   let code = FLAG_MAP[teamName] || FLAG_MAP[clean];
-  if(!code) return 'https://placehold.co/160x100/1a2a1d/ffffff?text=?';
+
+  // Fallback: busca normalizada ignorando acentos e capitalização
+  // Isso resolve "Brasil", "Curaçao", "RD Congo" etc. sem criar aliases no FLAG_MAP
+  // Alias especial: "RD Congo" → "RD do Congo"
+  if (!code) {
+    const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim()
+                           .replace(/^rd congo$/, 'rd do congo');  // alias Congo
+    const needle = normalize(clean);
+    for (const key of Object.keys(FLAG_MAP)) {
+      const keyClean = key.replace('🇧🇷 ', '').trim();
+      if (normalize(keyClean) === needle) { code = FLAG_MAP[key]; break; }
+    }
+  }
+
+  if (!code) return 'https://placehold.co/160x100/1a2a1d/ffffff?text=' + encodeURIComponent(clean.substring(0,3));
   return `https://flagcdn.com/w160/${code}.png`;
+}
+
+function isLegadaFigurinha(time) { return TODAS_LEGADAS.includes(time); }
+function getRaridadeLegada(time) {
+  if (LEGADO_LENDARIA.includes(time))  return 'legada-lendaria';
+  if (LEGADO_RARAS.includes(time))     return 'legada-rara';
+  if (LEGADO_TRADICAO.includes(time))  return 'legada-tradicao';
+  return 'legada';
+}
+
+// ── VERIFICA SE O ÁLBUM ORIGINAL ESTÁ COMPLETO ──
+function albumOriginalCompleto() {
+  let uniqueCount = 0;
+  TODAS_SELECOES.forEach(time => {
+    let inv = albumData.inventario.find(i => i.time === time);
+    if (inv && inv.qtd > 0) uniqueCount++;
+  });
+  return uniqueCount >= 48;
+}
+function contarUnicasOriginal() {
+  let c = 0;
+  TODAS_SELECOES.forEach(time => {
+    let inv = albumData.inventario.find(i => i.time === time);
+    if (inv && inv.qtd > 0) c++;
+  });
+  return c;
+}
+
+// ── TAB SWITCH ──
+let albumTabAtual = '2026';
+function switchAlbumTab(tab) {
+  if (tab === 'legado') {
+    let btn = document.getElementById('btn-album-legado');
+    if (btn && btn.classList.contains('locked')) { showToast('🔒 Complete o Álbum 2026 primeiro!'); return; }
+  }
+  albumTabAtual = tab;
+  document.getElementById('album-2026-content').style.display  = tab === '2026'   ? 'block' : 'none';
+  document.getElementById('album-legado-content').style.display = tab === 'legado' ? 'block' : 'none';
+  document.getElementById('btn-album-2026').classList.toggle('active',  tab === '2026');
+  document.getElementById('btn-album-legado').classList.toggle('active', tab === 'legado');
 }
 
 async function loadAlbumData() {
@@ -3819,6 +5096,11 @@ async function loadAlbumData() {
     if(json.status === 'success') {
       albumData.inventario = json.inventario || [];
       albumData.resgatados = json.resgatados || [];
+      albumData.pacotesPremio = json.pacotesPremio || [];
+      
+      // 🚀 NOVO: Armazena o "Save" do simulador localmente
+      albumData.bracket = json.bracket || null;
+      albumData.bracketPts = json.bracketPts || 0;
       
       let badge = document.getElementById('trade-badge');
       if (badge) {
@@ -3826,8 +5108,97 @@ async function loadAlbumData() {
          else { badge.style.display = 'none'; }
       }
       renderAlbum();
+      verificarConclusaoAlbum();
+
+      // Se a árvore já estiver desenhada na tela, carrega o save instantaneamente!
+      if (albumData.bracket && document.getElementById('simulador-bracket-container').innerHTML.includes('bracket-half')) {
+          carregarBracketSalvo();
+      }
     }
   } catch(e) { console.error("Erro Album:", e); }
+}
+
+// ── VERIFICA CONCLUSÃO E DISPARA RECOMPENSA ──
+async function verificarConclusaoAlbum() {
+  const completo = albumOriginalCompleto();
+  const btnLegado = document.getElementById('btn-album-legado');
+  const lockIcon  = document.getElementById('legado-lock-icon');
+  const total     = contarUnicasOriginal();
+
+  // Atualiza barra de progresso (sempre)
+  let fillEl  = document.getElementById('legado-progress-fill');
+  let labelEl = document.getElementById('legado-progress-label');
+  if (fillEl)  fillEl.style.width  = Math.round((total/48)*100) + '%';
+  if (labelEl) labelEl.textContent = `${total} / 48 figurinhas`;
+
+  if (!completo) {
+    if (btnLegado) { btnLegado.classList.add('locked'); if(lockIcon) lockIcon.textContent = '🔒'; }
+    // Garante que a view correta aparece
+    let lv = document.getElementById('legado-locked-view');
+    let uv = document.getElementById('legado-unlocked-view');
+    if (lv) lv.style.display = 'block';
+    if (uv) uv.style.display = 'none';
+    return;
+  }
+
+  // ÁLBUM COMPLETO!
+  if (btnLegado) { btnLegado.classList.remove('locked'); if(lockIcon) lockIcon.textContent = '🏛️'; }
+  let lv = document.getElementById('legado-locked-view');
+  let uv = document.getElementById('legado-unlocked-view');
+  if (lv) lv.style.display = 'none';
+  if (uv) uv.style.display = 'block';
+
+  // Verifica se a recompensa já foi entregue (flag local)
+  const recompensaKey = 'legado_recompensa_' + getLoggedUser();
+  const jaGanhou = localStorage.getItem(recompensaKey);
+  if (!jaGanhou) {
+    localStorage.setItem(recompensaKey, '1');
+    // Aguarda 800ms e dispara a animação de recompensa
+    await new Promise(r => setTimeout(r, 800));
+    dispararRecompensaAlbumCompleto();
+  }
+
+  renderLegadoGrid();
+}
+
+function dispararRecompensaAlbumCompleto() {
+  // Usa o mesmo modal de pacote com a animação padrão + confetti especial
+  const modal    = document.getElementById('modal-pack');
+  const animView = document.getElementById('pack-animation-view');
+  const resView  = document.getElementById('pack-results-view');
+  const container = document.getElementById('revealed-cards-container');
+  const titleEl  = document.getElementById('pack-results-title');
+  const emojiEl  = document.getElementById('pack-shaking-emoji');
+  const statusEl = document.getElementById('pack-status-text');
+
+  emojiEl.textContent  = '🏆';
+  statusEl.textContent = 'Álbum Completo!';
+  titleEl.innerText    = '🏆 ÁLBUM COMPLETO! ÁLBUM LEGADO DESBLOQUEADO!';
+  titleEl.style.color  = '#00e5ff';
+
+  animView.style.display = 'block';
+  resView.style.display  = 'none';
+  modal.classList.add('open');
+
+  setTimeout(() => {
+    animView.style.display = 'none';
+    resView.style.display  = 'block';
+
+    // Confetti especial em ciano e ouro
+    confetti({ particleCount: 250, spread: 140, origin: { y: 0.4 }, zIndex: 3000, colors: ['#00e5ff','#FFD700','#ffffff','#a78bfa'] });
+
+    // Mostra a figurinha troféu (Brasil 70) como recompensa
+    container.innerHTML = `
+      <div class="revealed-card legada-lendaria" style="animation-delay:.1s;">
+        <img src="https://flagcdn.com/w160/br.png" alt="Brasil 70">
+        <div class="name" style="color:#00e5ff; font-size:.7rem;">Brasil 70</div>
+      </div>
+      <div class="revealed-card" style="border:2px solid #a78bfa; background:#1a0a2e; box-shadow:0 0 15px rgba(167,139,250,0.5); animation-delay:.3s;">
+        <div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:2.5rem;">🏛️</div>
+        <div class="name" style="color:#a78bfa;">Álbum Legado</div>
+      </div>
+    `;
+  }, 1800);
 }
 
 function renderAlbum() {
@@ -3836,13 +5207,15 @@ function renderAlbum() {
 
 function renderPacks() {
   let html = ''; const user = getLoggedUser(); const data = getData(), results = getResults();
-  let packsCount = 0; // Inicia o contador de pacotes
+  let packsCount = 0;
+  const temLegado = albumOriginalCompleto();
 
   MATCHES.forEach(m => {
     const isBR = m.home.includes('Brasil') || m.away.includes('Brasil');
     if (isBR && isMatchLocked(m.date, m.time) && !albumData.resgatados.includes(m.id + "_BR")) {
-       html += `<div class="pack-item pack-br" data-id="${m.id}_BR" data-type="BR" onclick="abrirPacote('${m.id}_BR', 'BR')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title" style="color:#ffdf00; text-shadow:1px 1px 3px #009c3b;">Brasil</div><div class="pack-badge">Especial Jogo</div></div></div>`;
-       packsCount++;
+      // Pacote BR: se tem legado, chance de vir lendária
+      html += `<div class="pack-item pack-br" data-id="${m.id}_BR" data-type="BR" onclick="abrirPacote('${m.id}_BR', 'BR')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title" style="color:#ffdf00; text-shadow:1px 1px 3px #009c3b;">Brasil</div><div class="pack-badge">Especial Jogo</div></div></div>`;
+      packsCount++;
     }
 
     const p = data[`${user}__${m.id}`], r = results[m.id];
@@ -3881,76 +5254,204 @@ function renderPacks() {
     }
   });
 
-  // Se tiver mais de 1 pacote, cria o botão de Abrir Todos
+  // Verifica se existe pacote mítico a resgatar (vindo do backend como tipo 'mitico')
+  // Pacotes míticos são adicionados pelo admin via backend — checamos o inventário
+  const LABELS_PREMIO = {
+    mitico:    { cls: 'pack-mitico',  titulo: 'Mítico',    badge: '🏆 Prêmio Grupos' },
+    brilhante: { cls: 'pack-10pts',   titulo: 'Brilhante', badge: '🏆 Prêmio Grupos' },
+    dourado:   { cls: 'pack-5pts',    titulo: 'Dourado',   badge: '🏆 Prêmio Grupos' },
+    c1:        { cls: 'pack-3pts',    titulo: 'Comum',     badge: '🏆 Prêmio Grupos' },
+  };
+  (albumData.pacotesPremio || []).forEach(pid => {
+    if (albumData.resgatados.includes(pid)) return;
+    const partes = pid.split('_'); // ["premio","grupos","mitico","NomeUser"]
+    const tipo = partes[2] || 'c1';
+    const L = LABELS_PREMIO[tipo] || LABELS_PREMIO['c1'];
+    html += `<div class="pack-item ${L.cls}" data-id="${pid}" data-type="${tipo}" onclick="abrirPacote('${pid}', '${tipo}')"><div class="pack-shine"></div><div class="pack-content"><div class="pack-title">${L.titulo}</div><div class="pack-badge">${L.badge}</div></div></div>`;
+    packsCount++;
+  });
+
   let btnAbrirTodos = '';
   if (packsCount > 1) {
-      btnAbrirTodos = `
-      <div style="width: 100%; text-align: center; margin-bottom: 20px;">
-        <button class="btn-save" style="background:#8b5cf6; max-width:320px; margin:0 auto;" onclick="abrirTodosOsPacotes()">
-          📦 Abrir Todos os Pacotes (${packsCount})
-        </button>
-      </div>`;
+    btnAbrirTodos = `
+    <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+      <button class="btn-save" style="background:#8b5cf6; max-width:320px; margin:0 auto;" onclick="abrirTodosOsPacotes()">
+        📦 Abrir Todos os Pacotes (${packsCount})
+      </button>
+    </div>`;
   }
 
   document.getElementById('packs-container').innerHTML = btnAbrirTodos + (html || '<p style="font-size: 0.85rem; color: var(--muted); padding: 10px;">Sem pacotes no momento. Acompanhe os jogos!</p>');
 }
 
 function renderCollection() {
-  let html = ''; let uniqueCount = 0;
-  
-  // Coringa agora SÓ APARECE se a quantidade for maior que 0!
+  let html = ''; let uniqueCount = 0; const albumCompleto = albumOriginalCompleto();
   let coringaItem = albumData.inventario.find(i => i.time === "Coringa");
   if (coringaItem && coringaItem.qtd > 0) {
-    html += `
-      <div class="sticker-card coringa-card" onclick="openCoringaModal(${coringaItem.qtd})">
-        <div class="sticker-qtd" style="background:#a855f7;">${coringaItem.qtd}</div>
-        <div style="font-size:2.5rem; display:flex; align-items:center; justify-content:center; flex:1; background:#2e1065; color:white;">🃏</div>
-        <div class="sticker-name" style="background:#4c1d95; color:white;">Coringa</div>
-      </div>
-    `;
+    html += `<div class="sticker-card coringa-card" onclick="openCoringaModal(${coringaItem.qtd}, '2026')"><div class="sticker-qtd" style="background:#a855f7;">${coringaItem.qtd}</div><div style="font-size:2.5rem; display:flex; align-items:center; justify-content:center; flex:1; background:#2e1065; color:white;">🃏</div><div class="sticker-name" style="background:#4c1d95; color:white;">Coringa</div></div>`;
   }
 
-  TODAS_SELECOES.forEach(time => {
-    let invItem = albumData.inventario.find(i => i.time === time);
-    let qtd = invItem ? invItem.qtd : 0;
-    let rara = invItem ? invItem.rara : false;
-    let inSlotCount = sinteseSlots.filter(s => s.time === time).length;
-    let inExtraCount = (sinteseExtraSlot && sinteseExtraSlot.time === time) ? 1 : 0;
-    let displayQtd = qtd - inSlotCount - inExtraCount;
-    let flagUrl = getFlagUrl(time);
-    let cardClass = displayQtd > 0 ? (rara ? 'rara' : '') : 'zero';
-    let classeBrasil = (time === "🇧🇷 Brasil" && qtd > 0) ? "carta-do-brasil" : "";
-    if (qtd > 0 && time !== "Coringa" && time !== "Itália") uniqueCount++;
+  // PÓDIO 2026: Oculto até ganhar o Troféu 2026. A Taça Jules Rimet fica apagada do lado!
+  let th26 = document.getElementById('trophy-hall-2026');
+  if (th26) {
+    let t26 = albumData.inventario.find(i => i.time === "Troféu Copa 26");
+    let t70 = albumData.inventario.find(i => i.time === "Taça Jules Rimet");
 
-    html += `
-      <div class="sticker-card ${cardClass} ${classeBrasil}" onclick="addToSintese('${time}', ${rara}, ${qtd}, ${displayQtd})">
-        <div class="sticker-qtd ${displayQtd>0?'':'zero'}">${displayQtd}</div>
-        <img src="${flagUrl}" class="sticker-img" alt="${time}">
-        <div class="sticker-name">${time}</div>
-      </div>
-    `;
+    if (t26 && t26.qtd > 0) {
+      th26.style.display = 'flex';
+      let trofeuHtml = `<div class="sticker-card rara" onclick="showToast('🏆 Passiva: +10% de chance de vir uma figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
+        <div class="sticker-qtd" style="background:#ca8a04;">${t26.qtd}</div>
+        <img src="https://img.icons8.com/color/512/world-cup.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#fffbea;">
+        <div class="sticker-name" style="background:#ca8a04; color:white; font-size:0.75rem;">Troféu 2026</div></div>`;
+
+      if (t70 && t70.qtd > 0) {
+        trofeuHtml += `<div class="sticker-card legada-tradicao" onclick="showToast('🏆 Passiva: +10% de chance de figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
+          <div class="sticker-qtd" style="background:#b5860a;">${t70.qtd}</div>
+          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
+          <div class="sticker-name" style="background:#000; color:var(--legacy-tradition-gold); font-size:0.75rem;">Jules Rimet</div></div>`;
+      } else {
+        trofeuHtml += `<div class="sticker-card zero" onclick="showToast('🔒 Complete o Álbum Legado para desbloquear!')" style="flex: 0 0 95px; height: 135px; margin: 0; opacity: 0.5; filter: grayscale(100%); border-color: #555;">
+          <div class="sticker-qtd zero">0</div>
+          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
+          <div class="sticker-name" style="background:#000; color:#888; font-size:0.75rem;">Jules Rimet</div></div>`;
+      }
+      th26.innerHTML = trofeuHtml;
+    } else {
+      th26.style.display = 'none'; th26.innerHTML = '';
+    }
+  }
+
+  TODAS_SELECOES.forEach(timeName => {
+    let invItem = albumData.inventario.find(i => i.time === timeName);
+    let qtd = invItem ? invItem.qtd : 0; let rara = invItem ? invItem.rara : false;
+    let emUso = sinteseSlots.filter(s => s.time === timeName).length + ((sinteseExtraSlot && sinteseExtraSlot.time === timeName) ? 1 : 0);
+    let displayQtd = qtd - emUso;
+    let isLegada = false;
+    if (typeof LEGADO_RARAS !== 'undefined') isLegada = LEGADO_RARAS.includes(timeName) || LEGADO_COMUNS.includes(timeName) || timeName === "Brasil 70" || timeName === "Argentina 70" || timeName === "Taça Jules Rimet";
+    let protegida = albumCompleto && !isLegada;
+    let podeUsar = (protegida ? Math.max(0, qtd - 1) : qtd) - emUso > 0;
+
+    if (qtd > 0 && timeName !== "Coringa" && timeName !== "Itália" && timeName !== "Troféu Copa 26" && timeName !== "Taça Jules Rimet") uniqueCount++;
+
+    let lockBadge = (!podeUsar && qtd > 0) ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.0);z-index:5;display:flex;align-items:flex-start;justify-content:flex-start;padding:2px;"><span style="font-size:.6rem;background:#15803d;color:white;border-radius:3px;padding:1px 3px;line-height:1;">🔒</span></div>` : '';
+    let onclick = '';
+    if (displayQtd <= 0 && qtd > 0) onclick = `onclick="showToast('🔒 Todas as cópias estão na máquina!')"`;
+    else if (!podeUsar && qtd > 0)  onclick = `onclick="showToast('🔒 Cópia protegida no álbum!')"`;
+    else if (podeUsar)              onclick = `onclick="addToSintese('${timeName}', ${rara}, ${qtd}, ${displayQtd})"`;
+
+    let efetivamenteVazio = (qtd === 0) || (!protegida && displayQtd <= 0 && !albumCompleto);
+    html += `<div class="sticker-card ${!efetivamenteVazio ? (rara ? 'rara' : '') : 'zero'} ${timeName === "🇧🇷 Brasil" && !efetivamenteVazio ? "carta-do-brasil" : ""}\" ${onclick}>
+    ${lockBadge} <div class="sticker-qtd ${displayQtd>0?'':'zero'}">${efetivamenteVazio ? '' : displayQtd}</div>
+    <img src="${getFlagUrl(timeName)}" class="sticker-img"> <div class="sticker-name">${timeName}</div></div>`;
   });
 
-  // Itália Tradição SÓ APARECE se a quantidade for maior que 0!
   let it = albumData.inventario.find(i => i.time === "Itália");
-  if (it && it.qtd > 0) {
-    html += `<div class="sticker-card italia-card efeito-nevoa-italia" onclick="abrirInspecaoItalia()"><div class="sticker-qtd" style="background:#333;">${it.qtd}</div><img src="https://flagcdn.com/w160/it.png" class="sticker-img"><div class="sticker-name italia-name">Tradição</div></div>`;
-  }
+  if (it && it.qtd > 0) html += `<div class="sticker-card italia-card efeito-nevoa-italia" onclick="abrirInspecaoItalia()"><div class="sticker-qtd" style="background:#333;">${it.qtd}</div><img src="https://flagcdn.com/w160/it.png" class="sticker-img"><div class="sticker-name italia-name">Tradição</div></div>`;
   document.getElementById('album-grid').innerHTML = html;
   document.getElementById('collection-count').innerText = `${uniqueCount}/48`;
 }
 
-// ──────────────── MÁQUINA DE SÍNTESE + CATALISADOR ────────────────
-let sinteseExtraSlot = null; // max 1 extra
+// ── RENDER DO ÁLBUM LEGADO ──
+function renderLegadoGrid() {
+  let html = ''; let uniqueLegado = 0;
+  let coringaItem = albumData.inventario.find(i => i.time === "Coringa");
+  if (coringaItem && coringaItem.qtd > 0) {
+    html += `<div class="sticker-card coringa-card" onclick="openCoringaModal(${coringaItem.qtd}, 'legado')"><div class="sticker-qtd" style="background:#a855f7;">${coringaItem.qtd}</div><div style="font-size:2.5rem; display:flex; align-items:center; justify-content:center; flex:1; background:#2e1065; color:white;">🃏</div><div class="sticker-name" style="background:#4c1d95; color:white;">Coringa</div></div>`;
+  }
+
+  // PÓDIO LEGADO: Espelha exatamente a mesma inteligência da aba normal
+  let th70 = document.getElementById('trophy-hall-legado');
+  if (th70) {
+    let t26 = albumData.inventario.find(i => i.time === "Troféu Copa 26");
+    let t70 = albumData.inventario.find(i => i.time === "Taça Jules Rimet");
+
+    if (t26 && t26.qtd > 0) {
+      th70.style.display = 'flex';
+      let trofeuHtml = `<div class="sticker-card rara" onclick="showToast('🏆 Passiva: +10% de chance de vir uma figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
+        <div class="sticker-qtd" style="background:#ca8a04;">${t26.qtd}</div>
+        <img src="https://img.icons8.com/color/512/world-cup.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#fffbea;">
+        <div class="sticker-name" style="background:#ca8a04; color:white; font-size:0.75rem;">Troféu 2026</div></div>`;
+
+      if (t70 && t70.qtd > 0) {
+        trofeuHtml += `<div class="sticker-card legada-tradicao" onclick="showToast('🏆 Passiva: +10% de chance de figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
+          <div class="sticker-qtd" style="background:#b5860a;">${t70.qtd}</div>
+          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
+          <div class="sticker-name" style="background:#000; color:var(--legacy-tradition-gold); font-size:0.75rem;">Jules Rimet</div></div>`;
+      } else {
+        trofeuHtml += `<div class="sticker-card zero" onclick="showToast('🔒 Complete o Álbum Legado para desbloquear!')" style="flex: 0 0 95px; height: 135px; margin: 0; opacity: 0.5; filter: grayscale(100%); border-color: #555;">
+          <div class="sticker-qtd zero">0</div>
+          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
+          <div class="sticker-name" style="background:#000; color:#888; font-size:0.75rem;">Jules Rimet</div></div>`;
+      }
+      th70.innerHTML = trofeuHtml;
+    } else {
+      th70.style.display = 'none'; th70.innerHTML = '';
+    }
+  }
+
+  const ordemDisplay = [...LEGADO_LENDARIA, ...LEGADO_RARAS, ...LEGADO_COMUNS].sort((a, b) => a.localeCompare(b, 'pt'));
+
+  ordemDisplay.forEach(timeName => {
+    let invItem = albumData.inventario.find(i => i.time === timeName);
+    let qtd = invItem ? invItem.qtd : 0;
+    let raridade = getRaridadeLegada(timeName);
+    let emUso = slotLegadoBase.filter(s => s === timeName).length + (slotLegadoRisco === timeName ? 1 : 0);
+    let displayQtd = qtd - emUso;
+    let podeUsar = Math.max(0, qtd - 1) - emUso > 0;
+
+    if (qtd > 0) uniqueLegado++;
+
+    let lockBadge = (!podeUsar && qtd > 0) ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.0);z-index:5;display:flex;align-items:flex-start;justify-content:flex-start;padding:2px;"><span style="font-size:.6rem;background:#7c3aed;color:white;border-radius:3px;padding:1px 3px;line-height:1;">🔒</span></div>` : '';
+    let onclick = '';
+    if (timeName === "Brasil 70" && qtd > 0) onclick = `onclick="abrirInspecaoLendaria()"`;
+    else if (displayQtd <= 0 && qtd > 0) onclick = `onclick="showToast('🔒 Todas as cópias estão na Forja!')"`;
+    else if (!podeUsar && qtd > 0)       onclick = `onclick="showToast('🔒 A relíquia original fica protegida no álbum!')"`;
+    else if (podeUsar)                   onclick = `onclick="addSinteseLegado('${timeName}')"`;
+    else                                 onclick = `onclick="showToast('Você ainda não tem esta figurinha.')"`;
+
+    html += `<div class="sticker-card ${qtd > 0 ? raridade : `${raridade} zero`}" ${onclick} style="cursor:pointer;">
+        ${lockBadge} <div class="sticker-qtd ${displayQtd>0?'':'zero'}" style="${raridade==='legada-lendaria'?'background:var(--legacy-legendary-cyan-dim);color:#001a1f;':raridade==='legada-rara'?'background:#ca8a04;':'background:var(--legacy-sepia-dim);'}">${displayQtd}</div>
+        <img src="${getFlagUrl(timeName)}" class="sticker-img"> <div class="sticker-name">${timeName}</div></div>`;
+  });
+
+  let arg = albumData.inventario.find(i => i.time === "Argentina 70");
+  if (arg && arg.qtd > 0) {
+      html += `<div class="sticker-card legada-tradicao efeito-nevoa-argentina" onclick="abrirInspecaoArgentinaLegada()" style="cursor:pointer;"><div class="sticker-qtd" style="background:#b5860a;">${arg.qtd}</div><img src="https://flagcdn.com/w160/ar.png" class="sticker-img" style="filter: grayscale(100%); border-bottom: 2px solid var(--legacy-tradition-gold);"><div class="sticker-name" style="background:#000; color:var(--legacy-tradition-gold); font-style:italic;">Tradição</div></div>`;
+  }
+
+  let gridEl = document.getElementById('legado-grid');
+  if (gridEl) gridEl.innerHTML = html;
+  
+  // O Contador do Legado agora exclui a Argentina e bate certinho em 0/16!
+  let countEl = document.getElementById('legado-collection-count');
+  if (countEl) countEl.textContent = `${uniqueLegado}/16`;
+  let countEl2 = document.getElementById('legado-collection-count-2');
+  if (countEl2) countEl2.textContent = `${uniqueLegado}/16`;
+}
+
+// ── FUNÇÕES DE INSPEÇÃO ──
+function abrirInspecaoItalia()          { document.getElementById('modal-inspecionar-italia').style.display = 'flex'; }
+function fecharInspecao()               { document.getElementById('modal-inspecionar-italia').style.display = 'none'; }
+function abrirInspecaoLendaria()        { document.getElementById('modal-inspecionar-lendaria').style.display = 'flex'; }
+function fecharInspecaoLendaria()       { document.getElementById('modal-inspecionar-lendaria').style.display = 'none'; }
+function abrirInspecaoArgentinaLegada() { document.getElementById('modal-inspecionar-argentina-legada').style.display = 'flex'; }
+function fecharInspecaoArgentinaLegada(){ document.getElementById('modal-inspecionar-argentina-legada').style.display = 'none'; }
+
+// ────────────────────────────────────────
+// MÁQUINA DE SÍNTESE + CATALISADOR
+// ────────────────────────────────────────
+let sinteseExtraSlot = null;
 
 function addToSintese(time, rara, totalQtd, displayQtd) {
   if (displayQtd <= 0) return; 
   if (time === "Coringa" || time === "Itália") { showToast('⚠️ Esta figurinha não pode ser sintetizada.'); return; }
+  if (time === "Brasil 70" || time === "Argentina 70") { showToast('⚠️ Figurinhas Tradição/Lendárias únicas não podem ser sintetizadas.'); return; }
   
   if (sinteseSlots.length < 3) {
     sinteseSlots.push({ time: time, rara: rara }); renderAlbum();
   } else if (!sinteseExtraSlot) {
-    if (rara) { showToast('⚠️ O Catalisador aceita APENAS figurinhas Comuns.'); return; }
+    let isRaraOuLegada = rara || isLegadaFigurinha(time);
+    if (isRaraOuLegada) { showToast('⚠️ O Catalisador aceita APENAS figurinhas Comuns.'); return; }
     sinteseExtraSlot = { time: time, rara: rara }; renderAlbum();
   } else { 
     showToast('⚠️ A máquina já está cheia!'); 
@@ -3971,7 +5472,9 @@ function renderSinteseSlots() {
   for (let i = 0; i < 3; i++) {
     if (sinteseSlots[i]) {
       let flagUrl = getFlagUrl(sinteseSlots[i].time);
-      let borderStyle = sinteseSlots[i].rara ? 'border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.5);' : 'border-color: #9ca3af;';
+      let isLeg = isLegadaFigurinha(sinteseSlots[i].time);
+      let borderStyle = sinteseSlots[i].rara || isLeg ? 'border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.5);' : 'border-color: #9ca3af;';
+      if (isLeg) borderStyle = 'border-color: var(--legacy-sepia); box-shadow: 0 0 10px rgba(200,169,110,0.4);';
       html += `<div class="sintese-slot filled" style="${borderStyle}" onclick="removerDaSintese(${i})"><img src="${flagUrl}"></div>`;
     } else {
       html += `<div class="sintese-slot" onclick="removerDaSintese(${i})">+</div>`;
@@ -3981,10 +5484,10 @@ function renderSinteseSlots() {
 
   let catColor = '#06b6d4';
   if (sinteseExtraSlot) {
-      let flagUrl = getFlagUrl(sinteseExtraSlot.time);
-      extraContainer.innerHTML = `<div class="sintese-slot filled" style="border-color:${catColor}; box-shadow: 0 0 12px rgba(6,182,212,0.6);" onclick="removerDaSintese('extra')"><img src="${flagUrl}"></div>`;
+    let flagUrl = getFlagUrl(sinteseExtraSlot.time);
+    extraContainer.innerHTML = `<div class="sintese-slot filled" style="border-color:${catColor}; box-shadow: 0 0 12px rgba(6,182,212,0.6);" onclick="removerDaSintese('extra')"><img src="${flagUrl}"></div>`;
   } else {
-      extraContainer.innerHTML = `<div class="sintese-slot" style="border-color:${catColor}; color:${catColor}; border-style:dashed;" onclick="removerDaSintese('extra')">+</div>`;
+    extraContainer.innerHTML = `<div class="sintese-slot" style="border-color:${catColor}; color:${catColor}; border-style:dashed;" onclick="removerDaSintese('extra')">+</div>`;
   }
 
   const btn = document.getElementById('btn-fundir');
@@ -3998,8 +5501,11 @@ function updateSinteseStats() {
      pnl.innerHTML = '<p style="color:rgba(255,255,255,0.6); font-size:0.9rem; text-align:center;">Insira as 3 figurinhas base para visualizar as probabilidades...</p>';
      return;
   }
-  let raras = sinteseSlots.filter(s => s.rara).length;
+  
+  // Impede erro caso a função isLegadaFigurinha não esteja definida no contexto
+  let raras = sinteseSlots.filter(s => s.rara || (typeof isLegadaFigurinha === 'function' && isLegadaFigurinha(s.time) && getRaridadeLegada(s.time) !== 'legada')).length;
   let hasExtra = sinteseExtraSlot !== null;
+  const temLegado = albumOriginalCompleto();
 
   let chanceRara = raras === 0 ? 5 : raras === 1 ? 35 : raras === 2 ? 68 : 100;
   let extraChance = 20; let extraRaraChance = 6;
@@ -4011,40 +5517,70 @@ function updateSinteseStats() {
      else if (raras === 3) { extraChance = 42; extraRaraChance = 15; } 
   }
 
-  // Passiva da Itália (Visual)
   let hasItalia = albumData.inventario.some(i => i.time === "Itália" && i.qtd > 0);
-  if (hasItalia) {
-      if (chanceRara < 100) chanceRara += 1;
-      extraRaraChance += 1;
-  }
+  if (hasItalia) { if (chanceRara < 100) chanceRara += 1; extraRaraChance += 1; }
 
   let html = `<h4 style="color:var(--gold); margin-bottom:8px; font-family:'Barlow Condensed'; font-size:1.2rem; text-transform:uppercase; text-align:center;">📊 Previsão da Síntese</h4>`;
   
   if (raras < 3) {
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${chanceRara}%</b></div>`;
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>Chance de Comum:</span> <b style="color:rgba(255,255,255,0.7);">${100 - chanceRara}%</b></div>`;
+     let italia = hasItalia ? 1 : 0;
+     let chanceLegada = temLegado ? Math.round((100 - italia - chanceRara) / 2) : 0;
+     let chanceComum  = temLegado ? Math.round((100 - italia - chanceRara) / 2) : 100 - chanceRara - italia;
+     let chanceLegadaRara  = temLegado ? Math.round(chanceRara / 2) : 0;
+     if (temLegado) {
+      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${chanceLegadaRara}%</b></div>`;
+      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-sepia);"><span>Chance de Legada Rara:</span> <b>${chanceLegadaRara}%</b></div>`;
+    } else {
+      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:0px;"><span>Chance de Rara:</span> <b>${chanceRara}%</b></div>`;
+    }
+     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:${temLegado?'4':'0'}px;"><span>Chance de Comum:</span> <b style="color:rgba(255,255,255,0.7);">${chanceComum}%</b></div>`;
+     if (temLegado) {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--legacy-sepia);"><span>Chance de Legada:</span> <b>${chanceLegada}%</b></div>`;
+     }
   } else {
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Figurinha Garantida:</span> <b style="color:var(--gold);">100% RARA</b></div>`;
+     if (temLegado) {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Figurinha Garantida:</span> <b style="color:var(--gold);">100% RARA / LEGADA</b></div>`;
+     } else {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Nova Figurinha Garantida:</span> <b style="color:var(--gold);">100% RARA</b></div>`;
+     }
+
      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de +1 Bônus:</span> <b>${extraChance}%</b></div>`;
-     html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara:</span> <b>${extraRaraChance}%</b></div>`;
+
+     if (temLegado) {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Bônus:</span> <b>${extraRaraChance/2}%</b></div>`;
+     } else {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Bônus:</span> <b>${extraRaraChance}%</b></div>`;
+     }
      
-     // NOVIDADE: Mostra a chance do Drop Secreto (Muda de forma inteligente)
      let nomeSecreta = hasItalia ? "Coringa 🃏" : "Tradição 🇮🇹";
-     let corSecreta = hasItalia ? "#c084fc" : "#e5e7eb";
+     let corSecreta  = hasItalia ? "#c084fc" : "#e5e7eb";
      html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(255,255,255,0.2);">
-                <span style="color:${corSecreta};">Drop Místico (${nomeSecreta}):</span> 
-                <b style="color:${corSecreta}; text-shadow:0 0 5px ${corSecreta};">1%</b>
-              </div>`;
+               <span style="color:${corSecreta};">Drop Místico (${nomeSecreta}):</span> 
+               <b style="color:${corSecreta}; text-shadow:0 0 5px ${corSecreta};">1%</b></div>`;
+     if (temLegado) {
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:4px; color:var(--legacy-sepia);"><span>Chance Legada Rara Bônus:</span> <b>${Math.round(extraRaraChance/2)}%</b></div>`;
+     }
   }
 
-  if (hasExtra) html += `<div style="background:rgba(74, 222, 128, 0.2); border:1px solid #4ade80; color:#4ade80; font-size:0.8rem; padding:6px; border-radius:4px; margin-top:8px; font-weight:bold; text-align:center;">✨ Buff do Catalisador Ativo!</div>`;
-  if (hasItalia) html += `<div style="background:rgba(168, 85, 247, 0.2); border:1px solid #a855f7; color:#c084fc; font-size:0.8rem; padding:4px; border-radius:4px; margin-top:5px; font-weight:bold; text-align:center;">🔮 Passiva da Tradição: +1% Drop Raro</div>`;
+  // OS BANNERS DE BUFF
+  if (hasExtra) html += `<div style="background:rgba(74,222,128,0.2); border:1px solid #4ade80; color:#4ade80; font-size:0.8rem; padding:6px; border-radius:4px; margin-top:8px; font-weight:bold; text-align:center;">✨ Buff do Catalisador Ativo!</div>`;
+  if (hasItalia) html += `<div style="background:rgba(168,85,247,0.2); border:1px solid #a855f7; color:#c084fc; font-size:0.8rem; padding:4px; border-radius:4px; margin-top:5px; font-weight:bold; text-align:center;">🔮 Passiva da Tradição: +1% Drop Raro</div>`;
+  
+  // BANNER DO TROFÉU
+  let temTrofeu = albumData.inventario.some(i => i.time === "Troféu Copa 26" && i.qtd > 0);
+  let temTaca = albumData.inventario.some(i => i.time === "Taça Jules Rimet" && i.qtd > 0);
+  if (temTrofeu || temTaca) {
+      html += `<div style="background:rgba(202,138,4,0.2); border:1px solid #ca8a04; color:#fde047; font-size:0.8rem; padding:4px; border-radius:4px; margin-top:5px; font-weight:bold; text-align:center;">🏆 Passivas de Troféus Ativas: +10% Drop Extra!</div>`;
+  }
+
+  if (temLegado) html += `<div style="background:rgba(200,169,110,0.15); border:1px solid var(--legacy-sepia-dim); color:var(--legacy-sepia); font-size:0.8rem; padding:4px; border-radius:4px; margin-top:5px; font-weight:bold; text-align:center;">🏛️ Álbum Legado desbloqueado — figurinhas legadas incluídas!</div>`;
   
   pnl.innerHTML = html;
 }
 
 async function fundirFigurinhas() {
   if (sinteseSlots.length < 3) return;
+  playSom('sintese');
   showLoading(true);
   try {
     let payload = { action: 'sintetizarFigurinhas', token: getToken(), user: getLoggedUser(), fig1: sinteseSlots[0].time, fig2: sinteseSlots[1].time, fig3: sinteseSlots[2].time };
@@ -4057,11 +5593,10 @@ async function fundirFigurinhas() {
       showPackAnimation(json.figurinhas, "Síntese Concluída!");
     } else { 
       showToast('❌ ' + (json.msg || 'Erro ao fundir.')); 
-      // PADRONIZAÇÃO: Logout automático com 1.5s de delay
       if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
         setTimeout(handleSessionExpired, 1500);
       }
-}
+    }
   } catch(e) { showLoading(false); showToast('❌ Erro de conexão.'); logError('Erro de rede ao fundir figurinhas: ' + e.message, getLoggedUser(), 'error');}
 }
 
@@ -4071,39 +5606,87 @@ let targetInventarioBase = []; // ✨ NOVA MEMÓRIA PARA OS FILTROS FUNCIONAREM
 
 let globalTradeMap = {}; // Memória global para o filtro de usuários funcionar
 
-async function openTrocaModal() {
-  // Limpa os checkboxes de filtro do dropdown ao abrir a janela
-  const chkUteis = document.getElementById('filtro-global-uteis');
-  const chkRep = document.getElementById('filtro-global-repetidas');
-  if (chkUteis) chkUteis.checked = false;
-  if (chkRep) chkRep.checked = false;
+// ── MERCADO DE TROCAS ISOLADO POR ABA ──
+let currentTradeMode = '2026';
 
-  tradeMyInv = []; 
+async function openTrocaModal(mode) {
+  currentTradeMode = mode || '2026';
+  const chkUteis = document.getElementById('filtro-global-uteis');
+  const chkRep   = document.getElementById('filtro-global-repetidas');
+  if (chkUteis) chkUteis.checked = false;
+  if (chkRep)   chkRep.checked   = false;
+
+  const albumCompleto = albumOriginalCompleto();
+  tradeMyInv = [];
+
   albumData.inventario.forEach(i => {
-    if(i.time !== "Coringa" && i.time !== "Itália") { 
-      for(let j=0; j<i.qtd; j++) tradeMyInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); 
+    if (["Coringa","Itália","Troféu Copa 26","Taça Jules Rimet","Argentina 70"].includes(i.time)) return;
+    const isLegada = isLegadaFigurinha(i.time);
+    if (!((currentTradeMode === '2026' && !isLegada) || (currentTradeMode === 'legado' && isLegada))) return;
+
+    // Legada: 1 cópia protegida sempre. Normal: 1 protegida só se álbum completo.
+    const temProtegida = isLegada ? true : albumCompleto;
+
+    if (temProtegida) {
+      tradeMyInv.push({ id: i.time + '_locked', time: i.time, rara: i.rara, bloqueada: true });
+      for (let j = 1; j < i.qtd; j++)
+        tradeMyInv.push({ id: i.time + '_' + j, time: i.time, rara: i.rara, bloqueada: false });
+    } else {
+      for (let j = 0; j < i.qtd; j++)
+        tradeMyInv.push({ id: i.time + '_' + j, time: i.time, rara: i.rara, bloqueada: false });
     }
   });
-  tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = [];
-  globalTradeMap = {}; // Reseta o mapa anterior
-  
+
+  tradeMyOffer = []; tradeTargetReq = []; tradeTargetInv = []; globalTradeMap = {};
   renderTradeUI();
   document.getElementById('modal-troca').classList.add('open');
-  switchTradeTab('nova');
-
-  // Desenha a lista inicial em ordem alfabética pura
+  const badge = document.getElementById('trade-badge');
+  const temPendentes = badge && badge.style.display !== 'none' && parseInt(badge.innerText || '0') > 0;
+  if (temPendentes) {
+    switchTradeTab('lista');
+    loadTrocas();
+  } else {
+    switchTradeTab('nova');
+  }
   renderDropdownUsuarios();
 
-  // Dispara o cruzamento de dados inteligente em background (sem causar congelamento visual)
-  try {
-    let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getMapeamentoTrocas', token: getToken(), user: getLoggedUser() }) });
-    let json = await res.json();
-    if (json.status === 'success') {
-      globalTradeMap = json.mapa || {};
-      // Atualiza o dropdown para incorporar a inteligência visual dos filtros
-      renderDropdownUsuarios();
-    }
-  } catch(e) { console.error("Erro no mapeamento de trocas:", e); }
+  globReconstruirMapa();
+}
+
+function globReconstruirMapa() {
+  // Reconstrói o globalTradeMap usando apenas dados já carregados no cliente.
+  // Para cada usuário, busca seu inventário via getAlbumData em background e constrói o mapa.
+  // Como getAlbumData é async por usuário (caro), usamos uma estratégia diferente:
+  // O CACHE_DATA já tem todos os usuários (getUsers). Fazemos uma única chamada ao backend
+  // que retorna todos os inventários de uma vez (nova action getAllInventarios).
+  globalTradeMap = {};
+
+  const meInv = {};
+  (albumData.inventario || []).forEach(i => { meInv[i.time] = i.qtd; });
+
+  fetch(API_URL, { method: 'POST', body: JSON.stringify({
+    action: 'getAllInventarios', token: getToken(), user: getLoggedUser(), tradeMode: currentTradeMode
+  })})
+  .then(r => r.json())
+  .then(json => {
+    if (json.status !== 'success') return;
+    const ESPECIAIS = ["Coringa","Itália","Argentina 70","Troféu Copa 26","Taça Jules Rimet","Brasil 70"];
+    Object.entries(json.inventarios).forEach(([u, inv]) => {
+      Object.entries(inv).forEach(([fig, qtd]) => {
+        if (ESPECIAIS.includes(fig)) return;
+        const isLegada = isLegadaFigurinha(fig);
+        if (currentTradeMode === '2026' && isLegada) return;
+        if (currentTradeMode === 'legado' && !isLegada) return;
+        if (qtd >= 2) {
+          if (!globalTradeMap[u]) globalTradeMap[u] = { temRepetida: false, temUtilPraMim: false };
+          globalTradeMap[u].temRepetida = true;
+          if ((meInv[fig] || 0) === 0) globalTradeMap[u].temUtilPraMim = true;
+        }
+      });
+    });
+    renderDropdownUsuarios();
+  })
+  .catch(() => {});
 }
 
 // 🔤 Função responsável por organizar e filtrar a lista de usuários em tempo real
@@ -4145,94 +5728,147 @@ async function carregarInventarioAlvo() {
   let alvo = document.getElementById('sel-trade-user').value;
   tradeTargetInv = []; tradeTargetReq = [];
   if (!alvo) { renderTradeUI(); return; }
-  
+
   document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem;">Buscando...</p>';
   try {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getInventarioAlvo', token: getToken(), user: getLoggedUser(), alvo: alvo }) });
     let json = await res.json();
-    if(json.status === 'success') {
+    if (json.status === 'success') {
+      // Verifica se o álbum NORMAL do alvo está completo (para saber se as figuras normais dele são protegidas)
+      let alvoPossuidasNormais = 0;
       json.inventario.forEach(i => {
-        if(i.time !== "Coringa" && i.time !== "Itália") { for(let j=0; j<i.qtd; j++) tradeTargetInv.push({ id: i.time+'_'+j, time: i.time, rara: i.rara }); }
+        if (!isLegadaFigurinha(i.time) && i.time !== "Coringa" && i.time !== "Itália" && i.time !== "Troféu Copa 26") {
+          if (i.qtd > 0) alvoPossuidasNormais++;
+        }
+      });
+      let alvoAlbumCompleto = alvoPossuidasNormais >= 48;
+
+      json.inventario.forEach(i => {
+        if (i.time === "Coringa" || i.time === "Itália" || i.time === "Troféu Copa 26" || i.time === "Taça Jules Rimet" || i.time === "Argentina 70") return;
+        let isLegada = isLegadaFigurinha(i.time);
+        if (!((currentTradeMode === '2026' && !isLegada) || (currentTradeMode === 'legado' && isLegada))) return;
+
+        // Mesma lógica de proteção aplicada ao próprio inventário
+        let temProtegida = isLegada ? true : alvoAlbumCompleto;
+
+        if (temProtegida) {
+          // Cópia protegida aparece com cadeado
+          tradeTargetInv.push({ id: i.time + '_locked', time: i.time, rara: i.rara, bloqueada: true });
+          // Cópias extras (livres para troca)
+          for (let j = 1; j < i.qtd; j++) {
+            tradeTargetInv.push({ id: i.time + '_' + j, time: i.time, rara: i.rara, bloqueada: false });
+          }
+        } else {
+          // Sem proteção: todas as cópias são livres
+          for (let j = 0; j < i.qtd; j++) {
+            tradeTargetInv.push({ id: i.time + '_' + j, time: i.time, rara: i.rara, bloqueada: false });
+          }
+        }
       });
       renderTradeUI();
     } else {
-      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro ao buscar inventário.</p>';
-      if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
-        showToast('❌ ' + json.msg);
-        setTimeout(handleSessionExpired, 1500);
-      }
+      document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro.</p>';
     }
-  } catch(e) { document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro de conexão.</p>'; }
+  } catch(e) {
+    document.getElementById('trade-target-inv').innerHTML = '<p style="font-size:0.75rem; color:var(--red-pts);">Erro.</p>';
+  }
 }
 
 function moveItem(item, fromArrStr, toArrStr, max) {
   let fromArr = fromArrStr === 'tradeMyInv' ? tradeMyInv : fromArrStr === 'tradeMyOffer' ? tradeMyOffer : fromArrStr === 'tradeTargetInv' ? tradeTargetInv : tradeTargetReq;
   let toArr = toArrStr === 'tradeMyInv' ? tradeMyInv : toArrStr === 'tradeMyOffer' ? tradeMyOffer : toArrStr === 'tradeTargetInv' ? tradeTargetInv : tradeTargetReq;
   
-  if (toArr.length >= max && toArrStr.includes('Offer')) { showToast("⚠️ Limite de 3 figurinhas!"); return; }
-  if (toArr.length >= max && toArrStr.includes('Req')) { showToast("⚠️ Limite de 3 figurinhas!"); return; }
+  if (toArr.length >= max && toArrStr.includes('Offer')) { showToast("⚠️ Limite de 5 figurinhas!"); return; }
+  if (toArr.length >= max && toArrStr.includes('Req')) { showToast("⚠️ Limite de 5 figurinhas!"); return; }
   
   let idx = fromArr.findIndex(x => x.id === item.id);
   if (idx > -1) { toArr.push(fromArr.splice(idx, 1)[0]); renderTradeUI(); }
 }
 
 function renderTradeUI() {
-  // 1. Pega o estado atual das caixinhas de filtro
-  let myRep = document.getElementById('filtro-minhas-rep')?.checked;
-  let eleNaoTem = document.getElementById('filtro-ele-nao-tem')?.checked;
-  let deleRep = document.getElementById('filtro-dele-rep')?.checked;
-  let euNaoTenho = document.getElementById('filtro-eu-nao-tenho')?.checked;
+  const myRep      = document.getElementById('filtro-minhas-rep')?.checked;
+  const eleNaoTem  = document.getElementById('filtro-ele-nao-tem')?.checked;
+  const deleRep    = document.getElementById('filtro-dele-rep')?.checked;
+  const euNaoTenho = document.getElementById('filtro-eu-nao-tenho')?.checked;
 
-  // 2. 📊 CALCULA OS CONTADORES DO ÁLBUM (Figurinhas Únicas de 0 a 48)
-  let meuTotalUnicas = [...new Set([...tradeMyInv, ...tradeMyOffer].map(x => x.time))].length;
-  let elMyCount = document.getElementById('trade-my-count');
+  // Contadores de únicas
+  const meuTotalUnicas = new Set([...tradeMyInv, ...tradeMyOffer].map(x => x.time)).size;
+  const elMyCount = document.getElementById('trade-my-count');
   if (elMyCount) elMyCount.textContent = `${meuTotalUnicas}/48`;
 
-  let alvoSelecionado = document.getElementById('sel-trade-user').value;
-  let alvoTotalUnicas = alvoSelecionado ? [...new Set([...tradeTargetInv, ...tradeTargetReq].map(x => x.time))].length : 0;
-  let elTargetCount = document.getElementById('trade-target-count');
-  if (elTargetCount) elTargetCount.textContent = `${alvoTotalUnicas}/48`;
+  const alvoSelecionado = document.getElementById('sel-trade-user').value;
+  const alvoUnicas = alvoSelecionado ? new Set([...tradeTargetInv,...tradeTargetReq].map(x => x.time)).size : 0;
+  const elTargetCount = document.getElementById('trade-target-count');
+  if (elTargetCount) elTargetCount.textContent = `${alvoUnicas}/48`;
 
-  // 3. Filtra O SEU INVENTÁRIO (Lado Esquerdo)
-  let filteredMyInv = tradeMyInv.filter(i => {
-      let myTotal = tradeMyInv.filter(x => x.time === i.time).length + tradeMyOffer.filter(x => x.time === i.time).length;
-      let targetTotal = tradeTargetInv.filter(x => x.time === i.time).length + tradeTargetReq.filter(x => x.time === i.time).length;
+  // ── Filtra MEU inventário ──
+  const filteredMyInv = tradeMyInv.filter(i => {
+    // Cópias livres = entradas não-bloqueadas no inv + as que já foram para oferta
+    const livresInv    = tradeMyInv.filter(x => x.time === i.time && !x.bloqueada).length;
+    const livresOferta = tradeMyOffer.filter(x => x.time === i.time).length;
+    const totalLivres  = livresInv + livresOferta;
 
-      if (myRep && myTotal <= 1) return false;       
-      if (eleNaoTem && targetTotal > 0) return false;  
-      return true;
+    if (myRep) {
+      // Bloqueada sem nenhuma cópia livre → figurinha única → some
+      if (i.bloqueada  && totalLivres === 0) return false;
+      // Única cópia livre sem nenhuma na oferta → some
+      if (!i.bloqueada && totalLivres < 1 && livresOferta === 0) return false;
+    }
+
+    const targetTotal = tradeTargetInv.filter(x => x.time === i.time).length
+                      + tradeTargetReq.filter(x => x.time === i.time).length;
+    if (eleNaoTem && targetTotal > 0) return false;
+    return true;
   });
 
-  // 4. Filtra O INVENTÁRIO DELE (Lado Direito)
-  let filteredTargetInv = tradeTargetInv.filter(i => {
-      let myTotal = tradeMyInv.filter(x => x.time === i.time).length + tradeMyOffer.filter(x => x.time === i.time).length;
-      let targetTotal = tradeTargetInv.filter(x => x.time === i.time).length + tradeTargetReq.filter(x => x.time === i.time).length;
-
-      if (deleRep && targetTotal <= 1) return false;  
-      if (euNaoTenho && myTotal > 0) return false;    
-      return true;
+  // ── Filtra inventário DELE ──
+  const filteredTargetInv = tradeTargetInv.filter(i => {
+    const myTotal     = tradeMyInv.filter(x => x.time === i.time).length
+                      + tradeMyOffer.filter(x => x.time === i.time).length;
+    const targetTotal = tradeTargetInv.filter(x => x.time === i.time).length
+                      + tradeTargetReq.filter(x => x.time === i.time).length;
+    if (deleRep    && targetTotal <= 1) return false;
+    if (euNaoTenho && myTotal     > 0)  return false;
+    return true;
   });
 
-  // 5. 🔤 ORDENAÇÃO ALFABÉTICA (Aplica o sort antes de renderizar na tela)
-  filteredMyInv.sort((a, b) => a.time.localeCompare(b.time, 'pt'));
+  // Ordenação: bloqueada do mesmo time fica antes das livres
+  filteredMyInv.sort((a, b) => {
+    if (a.time !== b.time) return a.time.localeCompare(b.time, 'pt');
+    return (b.bloqueada ? 1 : 0) - (a.bloqueada ? 1 : 0);
+  });
   filteredTargetInv.sort((a, b) => a.time.localeCompare(b.time, 'pt'));
 
+  // ── Render com suporte a cadeado ──
   function draw(arr, fromStr, toStr, max) {
-    return arr.map(i => `<div class="steam-item" style="${i.rara?'border-color:var(--gold);':''}" onclick="moveItem({id:'${i.id}', time:'${i.time}', rara:${i.rara}}, '${fromStr}', '${toStr}', ${max})"><img src="${getFlagUrl(i.time)}"></div>`).join('');
+    return arr.map(i => {
+      if (i.bloqueada) {
+        return `<div class="steam-item" style="${i.rara ? 'border-color:var(--gold);' : ''}opacity:0.5;position:relative;cursor:not-allowed;"
+          onclick="showToast('🔒 Esta cópia está protegida no álbum e não pode ser negociada!')">
+          <img src="${getFlagUrl(i.time)}">
+          <div style="position:absolute;top:2px;left:2px;font-size:0.65rem;background:rgba(0,0,0,0.75);color:#fff;border-radius:3px;padding:1px 3px;">🔒</div>
+        </div>`;
+      }
+      return `<div class="steam-item" style="${i.rara ? 'border-color:var(--gold);' : ''}"
+        onclick="moveItem({id:'${i.id}',time:'${i.time}',rara:${i.rara}},'${fromStr}','${toStr}',${max})">
+        <img src="${getFlagUrl(i.time)}">
+      </div>`;
+    }).join('');
   }
 
-  // 6. Desenha as listas ordenadas e filtradas na tela
-  let myInvGrid = document.getElementById('trade-my-inv');
-  if (myInvGrid) myInvGrid.innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
-  
-  let myOfferGrid = document.getElementById('trade-my-offer');
-  if (myOfferGrid) myOfferGrid.innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
-  
-  let targetInvGrid = document.getElementById('trade-target-inv');
-  if (targetInvGrid) targetInvGrid.innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 3) || '<p style="font-size:0.7rem; padding:5px; color:var(--muted);">Nenhuma figurinha.</p>';
-  
-  let targetReqGrid = document.getElementById('trade-target-request');
-  if (targetReqGrid) targetReqGrid.innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
+  const empty = '<p style="font-size:0.7rem;padding:5px;color:var(--muted);">Nenhuma figurinha.</p>';
+
+  const g1 = document.getElementById('trade-my-inv');
+  if (g1) g1.innerHTML = draw(filteredMyInv, 'tradeMyInv', 'tradeMyOffer', 5) || empty;
+
+  const g2 = document.getElementById('trade-my-offer');
+  if (g2) g2.innerHTML = draw(tradeMyOffer, 'tradeMyOffer', 'tradeMyInv', 99);
+
+  const g3 = document.getElementById('trade-target-inv');
+  if (g3) g3.innerHTML = draw(filteredTargetInv, 'tradeTargetInv', 'tradeTargetReq', 5) || empty;
+
+  const g4 = document.getElementById('trade-target-request');
+  if (g4) g4.innerHTML = draw(tradeTargetReq, 'tradeTargetReq', 'tradeTargetInv', 99);
 }
 
 async function enviarPropostaTroca() {
@@ -4324,12 +5960,21 @@ async function responderTroca(id, resp) {
     let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'responderTroca', token: getToken(), user: getLoggedUser(), idTroca: id, resp: resp }) });
     let json = await res.json(); showLoading(false);
     if (json.status === 'success') {
-      showToast(resp === 'aceitar' ? '✅ Troca Concluída!' : '🚫 Cancelada.');
-      loadTrocas(); loadAlbumData();
-      
-      // ANIMAÇÃO NA TELA EM VEZ DE MENSAGEM DO SISTEMA
-      if (json.extra && json.extra.length > 0) {
+      loadTrocas(); await loadAlbumData();
+      if (resp === 'aceitar') {
+        // 🚀 Atualizado para brilhar se ganhar QUALQUER um dos dois Troféus!
+        const temTrofeu = json.extra && json.extra.some(f => f.time === "Troféu Copa 26" || f.time === "Taça Jules Rimet");
+        
+        if (temTrofeu) {
+          const figsAnimacao = json.extra.filter(f => f.time !== "Álbum Legado");
+          showPackAnimation(figsAnimacao, "🏆 ÁLBUM COMPLETO! Troféu Desbloqueado!");
+        } else if (json.extra && json.extra.length > 0) {
           setTimeout(() => { showPackAnimation(json.extra, "🎁 Bônus de Parceria!"); }, 500);
+        } else {
+          showToast('✅ Troca Concluída!');
+        }
+      } else {
+        showToast('🚫 Cancelada.');
       }
     } else { 
         showToast('❌ ' + (json.msg || 'Erro ao responder troca.')); 
@@ -4408,35 +6053,27 @@ function fecharPreviewTroca() {
 let coringaTargetSelecionado = "";
 let coringaSelectedElement = null;
 
-function openCoringaModal(qtd) {
+function openCoringaModal(qtd, albumTipo = '2026') {
   if (qtd <= 0) { showToast('⚠️ Você não tem figurinhas Coringa.'); return; }
-  
-  // Limpa as seleções anteriores
-  coringaTargetSelecionado = "";
-  coringaSelectedElement = null;
+  coringaTargetSelecionado = ""; coringaSelectedElement = null;
   document.getElementById('coringa-selecionada-text').innerText = "Nenhuma";
   
-  let grid = document.getElementById('coringa-grid');
-  let html = '';
-  
+  let grid = document.getElementById('coringa-grid'); let html = '';
   const RARAS_LIST = ["🇧🇷 Brasil", "Argentina", "França", "Inglaterra", "Espanha", "Alemanha", "Portugal", "Holanda", "Bélgica", "Uruguai"];
   
-  // Desenha as figurinhas na tela
-  TODAS_SELECOES.forEach(time => {
-    let flagUrl = getFlagUrl(time);
-    let rara = RARAS_LIST.includes(time);
-    let cardClass = rara ? 'rara' : '';
-    
-    html += `
-      <div class="sticker-card ${cardClass}" onclick="selecionarAlvoCoringa('${time}', this)">
-        <img src="${flagUrl}" class="sticker-img" alt="${time.replace('🇧🇷 ', '')}">
-        <div class="sticker-name">${time.replace('🇧🇷 ', '')}</div>
-      </div>
-    `;
-  });
-  
-  grid.innerHTML = html;
-  document.getElementById('modal-coringa').classList.add('open');
+  if (albumTipo === 'legado') {
+      // CORREÇÃO: "Argentina 70" foi removida desta lista para não ser selecionável
+      [...LEGADO_RARAS, ...LEGADO_COMUNS].forEach(time => {
+          let cardClass = getRaridadeLegada(time);
+          html += `<div class="sticker-card ${cardClass}" onclick="selecionarAlvoCoringa('${time}', this)"><img src="${getFlagUrl(time)}" class="sticker-img"><div class="sticker-name">${time}</div></div>`;
+      });
+  } else {
+      TODAS_SELECOES.forEach(time => {
+        let cardClass = RARAS_LIST.includes(time) ? 'rara' : '';
+        html += `<div class="sticker-card ${cardClass}" onclick="selecionarAlvoCoringa('${time}', this)"><img src="${getFlagUrl(time)}" class="sticker-img"><div class="sticker-name">${time.replace('🇧🇷 ', '')}</div></div>`;
+      });
+  }
+  grid.innerHTML = html; document.getElementById('modal-coringa').classList.add('open');
 }
 
 function selecionarAlvoCoringa(time, element) {
@@ -4470,8 +6107,12 @@ async function confirmarCoringa() {
     let json = await res.json();
     showLoading(false);
     if (json.status === 'success') {
-      closeModal('modal-coringa'); await loadAlbumData(); 
-      showPackAnimation([json.figurinha], "Coringa Trocado!");
+      closeModal('modal-coringa'); await loadAlbumData();
+      const todasFigs = [json.figurinha, ...(json.extras || [])];
+      const titulo = (json.extras && json.extras.length > 0)
+        ? "🏆 ÁLBUM COMPLETO! Troféu Desbloqueado!"
+        : "Coringa Trocado!";
+      showPackAnimation(todasFigs, titulo);
     } else { 
       showToast('❌ ' + (json.msg || 'Erro na troca.')); 
       if (json.msg && (json.msg.toLowerCase().includes('sessão') || json.msg.toLowerCase().includes('token'))) {
@@ -4558,26 +6199,57 @@ function showPackAnimation(figurinhas, titulo) {
   const resView = document.getElementById('pack-results-view');
   const container = document.getElementById('revealed-cards-container');
   const titleEl = document.getElementById('pack-results-title');
-  
+
   let hasSecret = figurinhas.some(f => f.time === 'Itália' || f.time === 'Coringa');
+  let isSintese = titulo && (titulo.includes('Síntese') || titulo.includes('Forja'));
   titleEl.innerText = hasSecret ? "✨ FIGURINHA SECRETA ENCONTRADA! ✨" : (titulo || "Novas Figurinhas!");
   titleEl.style.color = hasSecret ? "#c084fc" : "var(--gold)";
 
+  // Reseta animação do pacote
+  const packTop = document.getElementById('pack-top');
+  const packBottom = document.getElementById('pack-bottom');
+  const sparkles = document.getElementById('pack-sparkles');
+  const packContainer = document.getElementById('pack-tear-container');
+  if (packTop) { packTop.style.animation = 'none'; packTop.style.opacity = '1'; }
+  if (packBottom) { packBottom.style.animation = 'none'; packBottom.style.opacity = '1'; }
+  if (sparkles) { sparkles.style.animation = 'none'; sparkles.style.opacity = '0'; }
+
   animView.style.display = 'block'; resView.style.display = 'none'; modal.classList.add('open');
+
+  // Fase 1: shake por 800ms
+  if (packTop) packTop.style.animation = '';
+  setTimeout(() => {
+    // Fase 2: rasgo!
+    playSom('pacote');
+    if (packTop) {
+      packTop.style.animation = 'packTopFly 0.5s ease-in forwards';
+    }
+    if (packBottom) {
+      packBottom.style.animation = 'packBottomDrop 0.5s ease-in forwards';
+    }
+    if (sparkles) {
+      sparkles.style.animation = 'sparkleOut 0.6s ease-out forwards';
+    }
+  }, 900);
 
   setTimeout(() => {
     animView.style.display = 'none'; resView.style.display = 'block';
-    
     confetti({ particleCount: hasSecret ? 300 : 150, spread: hasSecret ? 130 : 90, origin: { y: 0.5 }, zIndex: 3000 });
-
     let html = '';
     figurinhas.forEach(fig => {
+      if (fig.time === 'Álbum Legado') {
+        html += `<div class="revealed-card rara" style="background:linear-gradient(135deg,#1a0a00,#4a2800);border:2px solid #f5c842;">
+          <img src="${getFlagUrl('Álbum Legado')}" alt="Álbum Legado" style="object-fit:contain;padding:6px;background:transparent;">
+          <div class="name" style="color:#f5c842;font-size:0.65rem;line-height:1.2;">🏛️ ÁLBUM LEGADO<br>DESBLOQUEADO!</div>
+        </div>`;
+        return;
+      }
       let flagUrl = getFlagUrl(fig.time);
       let raraCls = fig.rara || fig.time === 'Coringa' || fig.time === 'Itália' ? 'rara' : '';
       html += `<div class="revealed-card ${raraCls}"><img src="${flagUrl}" alt="${fig.time.replace('🇧🇷 ', '')}"><div class="name">${fig.time.replace('🇧🇷 ', '')}</div></div>`;
     });
     container.innerHTML = html;
-  }, 1500);
+  }, 1600);
 }
 
 // Intercepta o clique no botão "Fundir"
@@ -4726,6 +6398,252 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchmove', onPointerMove, {passive: false});
     document.addEventListener('touchend', onPointerUp);
 });
+
+// VARIÁVEIS DA MÁQUINA LEGADA
+let slotLegadoBase = [];
+let slotLegadoRisco = null;
+
+function addSinteseLegado(time) {
+    let invItem = albumData.inventario.find(i => i.time === time);
+    let qtd = invItem ? invItem.qtd : 0;
+    
+    let inSlotCount = slotLegadoBase.filter(s => s === time).length;
+    let inExtraCount = slotLegadoRisco === time ? 1 : 0;
+    let emUso = inSlotCount + inExtraCount;
+    let qtdLivreParaUso = Math.max(0, qtd - 1);
+
+    // Validação extra por segurança
+    if ((qtdLivreParaUso - emUso) <= 0) return showToast('🔒 Sem cópias repetidas disponíveis!');
+
+    if (slotLegadoBase.length < 3) {
+        slotLegadoBase.push(time);
+    } else if (!slotLegadoRisco) {
+        // Slot de Risco só aceita figurinhas LEGADAS COMUNS
+        let raridadeItem = getRaridadeLegada(time);
+        if (raridadeItem !== 'legada') {
+            return showToast('⚠️ O Slot de Risco só aceita Figurinhas Legadas Comuns!');
+        }
+        slotLegadoRisco = time;
+    } else {
+        return showToast('⚠️ Todos os slots da Forja estão cheios!');
+    }
+    
+    atualizarUIForja(); renderLegadoGrid();
+}
+
+function removerSinteseLegado(index) {
+    if (index === 3) slotLegadoRisco = null;
+    else slotLegadoBase.splice(index, 1);
+    atualizarUIForja();
+    renderLegadoGrid();
+}
+
+// ── ESTATÍSTICAS DA FORJA LEGADA ──
+function atualizarUIForja() {
+    let slots = document.getElementById('sintese-legado-slots').children;
+    for(let i=0; i<3; i++) {
+        if(slotLegadoBase[i]) slots[i].innerHTML = `<img src="${getFlagUrl(slotLegadoBase[i])}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
+        else slots[i].innerHTML = '+';
+    }
+    let risco = document.getElementById('sintese-legado-extra').children[0];
+    if (slotLegadoRisco) risco.innerHTML = `<img src="${getFlagUrl(slotLegadoRisco)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px; border: 2px solid #ef4444;">`;
+    else risco.innerHTML = '+';
+    
+    updateSinteseLegadoStats();
+}
+
+function updateSinteseLegadoStats() {
+    const pnl = document.getElementById('sintese-legado-stats');
+    if (slotLegadoBase.length < 3) {
+       pnl.innerHTML = '<p style="color:var(--legacy-sepia-dim); font-size:0.9rem;">Insira as 3 figurinhas legadas base para visualizar as probabilidades...</p>';
+       return;
+    }
+    let raras = slotLegadoBase.filter(t => getRaridadeLegada(t) !== 'legada').length;
+    let hasExtra = slotLegadoRisco !== null;
+
+    let chanceRara = raras === 0 ? 5 : raras === 1 ? 35 : raras === 2 ? 68 : 100;
+    let chanceLendaria = raras * 1; 
+    let mistico = (raras === 3) ? 1 : 0;
+    
+    let html = `<h4 style="color:var(--legacy-sepia); margin-bottom:8px; font-family:'Barlow Condensed'; font-size:1.2rem; text-transform:uppercase; text-align:center;">📊 Previsão da Forja Legada</h4>`;
+    
+    if (!hasExtra) {
+       let cRaraExibida = chanceRara;
+       let cComumExibida = Math.max(0, 100 - cRaraExibida - chanceLendaria - mistico); // A MATEMÁTICA CRAVADA QUE FECHA EM 100%
+       
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Legada:</span> <b style="color:var(--gold);">${cRaraExibida}%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComumExibida}%</b></div>`;
+       if (chanceLendaria > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>Drop Lendário (Brasil 70):</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLendaria}%</b></div>`;
+       if (mistico > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3); color:var(--legacy-tradition-gold);"><span>Drop Místico (Tradição/Coringa):</span> <b style="text-shadow:0 0 5px var(--legacy-tradition-gold);">1%</b></div>`;
+    } else {
+       let cRaraExibida = Math.min(100, chanceRara + 50);
+       let cComumExibida = Math.max(0, 100 - cRaraExibida - chanceLendaria - mistico);
+       
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:#ef4444;"><span>Risco de Explosão Crítica:</span> <b style="text-shadow:0 0 5px #ef4444;">35%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Legada (+50% Buff):</span> <b style="color:var(--gold);">${cRaraExibida}%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComumExibida}%</b></div>`;
+       if (chanceLendaria > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>Drop Lendário (Brasil 70):</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLendaria}%</b></div>`;
+       if (mistico > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3); color:var(--legacy-tradition-gold);"><span>Drop Místico (Tradição/Coringa):</span> <b style="text-shadow:0 0 5px var(--legacy-tradition-gold);">1%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3);"><span>Bônus: 2ª Figurinha Garantida:</span> <b style="color:#4ade80;">100%</b></div>`;
+    }
+
+    // EXIBE AS PASSIVAS DOS TROFÉUS NA FORJA
+    let temTrofeu = albumData.inventario.some(i => i.time === "Troféu Copa 26" && i.qtd > 0);
+    let temTaca = albumData.inventario.some(i => i.time === "Taça Jules Rimet" && i.qtd > 0);
+    if (temTrofeu || temTaca) {
+        html += `<div style="margin-top:8px; padding:4px; background:rgba(202, 138, 4, 0.2); border: 1px solid #ca8a04; border-radius:4px; font-size:0.8rem; color:#fde047;">🏆 Passivas de Troféus Ativas: +10% Drop Extra!</div>`;
+    }
+
+    pnl.innerHTML = html;
+}
+
+async function fundirLegado() {
+    if (slotLegadoBase.length < 3) return showToast('⚠️ Coloque 3 figurinhas legadas na base!');
+    playSom('bigorna');
+    showLoading(true);
+    try {
+        // CORREÇÃO (ERRO AÇÃO DESCONHECIDA): Renomeado para 'sintetizarFigurinhas'
+        let req = { action: 'sintetizarFigurinhas', token: getToken(), user: getLoggedUser(), 
+                    fig1: slotLegadoBase[0], fig2: slotLegadoBase[1], fig3: slotLegadoBase[2] };
+        if (slotLegadoRisco) req.figExtra = slotLegadoRisco;
+        
+        let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(req) });
+        let j = await res.json(); showLoading(false);
+
+        if (j.status === 'success') {
+            slotLegadoBase = []; slotLegadoRisco = null; atualizarUIForja();
+            if (j.falhaRisco) { 
+              playSom('explosao');
+              await loadAlbumData();
+              renderLegadoGrid();
+              showToast('💥 BOOM! A MÁQUINA SOBRECARREGOU E VOCÊ PERDEU TUDO!', 5000); 
+            } else { 
+              await loadAlbumData(); 
+              showPackAnimation(j.figurinhas, "Forja Concluída!"); 
+            }
+        } else { showToast('❌ ' + j.msg); }
+    } catch(e) { showLoading(false); showToast('❌ Erro na Forja.'); }
+}
+
+// ── SISTEMA DE SONS ────────────────────────────────────────────
+const _AC = window.AudioContext || window.webkitAudioContext;
+let _ac = null;
+function getAC() { if (!_ac) _ac = new _AC(); if (_ac.state === 'suspended') _ac.resume(); return _ac; }
+
+function playSom(tipo) {
+  try {
+    const ac = getAC();
+    const master = ac.createGain(); master.gain.value = 0.18; master.connect(ac.destination);
+
+    if (tipo === 'bigorna') {
+      // Impacto 1: pancada grave seca (como martelo no metal)
+      function baterBigorna(delayMs) {
+        setTimeout(() => {
+          const t = ac.currentTime;
+          // Corpo do impacto: noise burst curtíssimo + grave
+          const buf = ac.createBuffer(1, Math.floor(ac.sampleRate * 0.08), ac.sampleRate);
+          const d = buf.getChannelData(0);
+          for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/d.length, 4);
+          const nSrc = ac.createBufferSource();
+          const lpf  = ac.createBiquadFilter(); lpf.type = 'lowpass'; lpf.frequency.value = 400;
+          const nGain = ac.createGain();
+          nSrc.buffer = buf; nSrc.connect(lpf); lpf.connect(nGain); nGain.connect(master);
+          nGain.gain.setValueAtTime(2.5, t); nGain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+          nSrc.start(t);
+
+          // Campainha metálica aguda (o "ding" característico)
+          [440, 880, 1320].forEach((freq, idx) => {
+            const osc = ac.createOscillator(); const g = ac.createGain();
+            osc.connect(g); g.connect(master);
+            osc.type = 'sine'; osc.frequency.value = freq;
+            const vol = [0.5, 0.25, 0.12][idx];
+            g.gain.setValueAtTime(vol, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.6 - idx * 0.1);
+            osc.start(t); osc.stop(t + 0.6);
+          });
+
+          // Sub-grave do impacto (peso da bigorna)
+          const sub = ac.createOscillator(); const subG = ac.createGain();
+          sub.connect(subG); subG.connect(master);
+          sub.type = 'triangle'; sub.frequency.setValueAtTime(120, t);
+          sub.frequency.exponentialRampToValueAtTime(40, t + 0.12);
+          subG.gain.setValueAtTime(0.8, t);
+          subG.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+          sub.start(t); sub.stop(t + 0.12);
+        }, delayMs);
+      }
+      baterBigorna(0);
+      baterBigorna(280);
+      baterBigorna(520);
+    }
+
+    if (tipo === 'sintese') {
+      // Sequência ascendente futurista
+      const freqs = [220, 330, 440, 660, 880];
+      freqs.forEach((f, idx) => {
+        setTimeout(() => {
+          const osc = ac.createOscillator(); const g = ac.createGain();
+          osc.connect(g); g.connect(master);
+          osc.type = 'sine'; osc.frequency.value = f;
+          g.gain.setValueAtTime(0, ac.currentTime);
+          g.gain.linearRampToValueAtTime(0.6, ac.currentTime + 0.05);
+          g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
+          osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.3);
+        }, idx * 80);
+      });
+      // Whoosh final
+      setTimeout(() => {
+        const osc = ac.createOscillator(); const g = ac.createGain();
+        osc.connect(g); g.connect(master);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(300, ac.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ac.currentTime + 0.5);
+        g.gain.setValueAtTime(0.4, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.5);
+        osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.5);
+      }, 400);
+    }
+
+    if (tipo === 'explosao') {
+      // Ruído branco com queda rápida + sub-grave
+      const dur = 1.2;
+      const buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
+      const src = ac.createBufferSource(); const ng = ac.createGain();
+      src.buffer = buf; src.connect(ng); ng.connect(master);
+      ng.gain.value = 1.8; src.start(ac.currentTime);
+      // Sub-grave de impacto
+      const osc = ac.createOscillator(); const og = ac.createGain();
+      osc.connect(og); og.connect(master);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(80, ac.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(20, ac.currentTime + 0.4);
+      og.gain.setValueAtTime(1, ac.currentTime);
+      og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.4);
+      osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.4);
+    }
+
+    if (tipo === 'pacote') {
+      // Rasgar de papel: ruído branco curto + pop
+      const dur = 0.3;
+      const buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 1.5);
+      const hpf = ac.createBiquadFilter(); hpf.type = 'highpass'; hpf.frequency.value = 800;
+      const src = ac.createBufferSource(); src.buffer = buf;
+      src.connect(hpf); hpf.connect(master); src.start(ac.currentTime);
+      // Pop
+      setTimeout(() => {
+        const o = ac.createOscillator(); const g = ac.createGain();
+        o.connect(g); g.connect(master);
+        o.type = 'sine'; o.frequency.setValueAtTime(600, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(200, ac.currentTime + 0.1);
+        g.gain.setValueAtTime(0.5, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.1);
+        o.start(ac.currentTime); o.stop(ac.currentTime + 0.1);
+      }, 150);
+    }
+  } catch(e) {}
+}
 </script>
 </body>
 </html>
