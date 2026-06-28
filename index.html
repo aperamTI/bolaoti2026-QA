@@ -5803,21 +5803,16 @@ function renderTradeUI() {
 
   // ── Filtra MEU inventário ──
   const filteredMyInv = tradeMyInv.filter(i => {
-    // Cópias livres = entradas não-bloqueadas no inv + as que já foram para oferta
-    const livresInv    = tradeMyInv.filter(x => x.time === i.time && !x.bloqueada).length;
-    const livresOferta = tradeMyOffer.filter(x => x.time === i.time).length;
-    const totalLivres  = livresInv + livresOferta;
+    // Conta TODAS as cópias dessa figurinha que você possui (no inventário + na oferta)
+    const totalGeral = tradeMyInv.filter(x => x.time === i.time).length + tradeMyOffer.filter(x => x.time === i.time).length;
 
-    if (myRep) {
-      // Bloqueada sem nenhuma cópia livre → figurinha única → some
-      if (i.bloqueada  && totalLivres === 0) return false;
-      // Única cópia livre sem nenhuma na oferta → some
-      if (!i.bloqueada && totalLivres < 1 && livresOferta === 0) return false;
-    }
+    // A mágica: Se marcou "Só Repetidas" e você tem 1 (ou menos), esconde da tela!
+    if (myRep && totalGeral <= 1) return false;
 
     const targetTotal = tradeTargetInv.filter(x => x.time === i.time).length
                       + tradeTargetReq.filter(x => x.time === i.time).length;
     if (eleNaoTem && targetTotal > 0) return false;
+    
     return true;
   });
 
@@ -5827,6 +5822,7 @@ function renderTradeUI() {
                       + tradeMyOffer.filter(x => x.time === i.time).length;
     const targetTotal = tradeTargetInv.filter(x => x.time === i.time).length
                       + tradeTargetReq.filter(x => x.time === i.time).length;
+    
     if (deleRep    && targetTotal <= 1) return false;
     if (euNaoTenho && myTotal     > 0)  return false;
     return true;
