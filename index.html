@@ -2475,7 +2475,8 @@
   <div class="sec-title">📜 Regulamentos</div>
   <div class="admin-subtabs">
     <button class="admin-subtab active" id="btn-regras-bolao" onclick="switchRegrasTab('bolao')">🎯 Regras do Bolão</button>
-    <button class="admin-subtab" id="btn-regras-album" onclick="switchRegrasTab('album')">🃏 Como Funciona o Álbum</button>
+    <button class="admin-subtab" id="btn-regras-album" onclick="switchRegrasTab('album')">🃏 Álbum de Figurinhas</button>
+    <button class="admin-subtab" id="btn-regras-simulador" onclick="switchRegrasTab('simulador')">🔮 Simulador</button>
   </div>
 
   <!-- REGRAS DO BOLÃO -->
@@ -2524,72 +2525,146 @@
 
   <!-- REGRAS DO ÁLBUM -->
   <div id="regras-album-content" style="display:none;">
-    
+
     <div class="card">
-      <div class="card-title">📦 Pacotes e Probabilidades</div>
-      <p style="font-size:0.9rem; margin-bottom:10px;">Acertar palpites no Bolão rende pacotes! Veja abaixo a quantidade de figurinhas garantidas por pacote e as chances de tirar as cobiçadas Raras ou o Coringa (as porcentagens de raridade são calculadas <b>para cada figurinha tirada</b>):</p>
+      <div class="card-title">📦 Como Ganhar Pacotes</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Acertar palpites no Bolão rende pacotes de figurinhas. As chances de raridade valem <b>por figurinha sorteada</b>:</p>
       <div class="ranking-wrap">
         <table>
-          <thead><tr><th>Seu Acerto</th><th>O que você ganha</th><th>Probabilidades (Por Figurinha)</th></tr></thead>
+          <thead><tr><th>Acerto</th><th>Pacote</th><th>Chances por Figurinha</th></tr></thead>
           <tbody>
-            <tr>
-              <td><strong>3 pontos</strong></td>
-              <td><b>2x Pacotes Comuns</b><br><small>(1 figurinha garantida em cada)</small></td>
-              <td><b>4%</b> Rara | <b>0.4%</b> Coringa</td>
-            </tr>
-            <tr>
-              <td><strong>5 pontos</strong></td>
-              <td><b>1x Pacote Dourado</b> (1 figurinha garantida)<br><small>+ 1x Pacote Comum Bônus</small></td>
-              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>60% de chance</b> de vir uma 2ª figurinha extra no Dourado)</small></td>
-            </tr>
-            <tr>
-              <td><strong>10 pontos</strong></td>
-              <td><b>1x Pacote Brilhante</b> (2 figurinhas garantidas)<br><small>+ 1x Pacote Comum Bônus</small></td>
-              <td><b>9%</b> Rara | <b>0.9%</b> Coringa<br><small>(<b>18% de chance</b> de vir uma 3ª figurinha extra no Brilhante)</small></td>
-            </tr>
-            <tr>
-              <td><strong>Jogo do Brasil 🇧🇷</strong></td>
-              <td><b>1x Pacote Especial</b> (2 figurinhas garantidas)<br><small>(Liberado no momento em que o jogo começa)</small></td>
-              <td><b>7%</b> Rara | <b>0.7%</b> Coringa<br><small>(<b>33% de chance</b> do pacote vir com 3 figurinhas e <b>18% de chance</b> de vir com 4 figurinhas!)</small></td>
-            </tr>
+            <tr><td><b>3 pts</b></td><td>2× Comuns (1 fig. cada)</td><td>4% Rara · 0,4% Coringa</td></tr>
+            <tr><td><b>5 pts</b></td><td>1× Dourado + 1× Comum Bônus</td><td>7% Rara · 0,7% Coringa<br><small>60% de chance de 2ª figurinha no Dourado</small></td></tr>
+            <tr><td><b>10 pts</b></td><td>1× Brilhante (2 figs.) + 1× Comum Bônus</td><td>9% Rara · 0,9% Coringa<br><small>18% de chance de 3ª figurinha no Brilhante</small></td></tr>
+            <tr><td><b>Jogo do Brasil 🇧🇷</b></td><td>1× Especial Brasil (2 figs.)</td><td>7% Rara · 0,7% Coringa<br><small>33% chance de 3 figs · 18% chance de 4 figs</small></td></tr>
+            <tr style="background:rgba(168,85,247,0.08)"><td><b>🏆 Acertar o Campeão<br><small>(Simulador)</small></b></td><td><b>1× Pacote Mítico</b><br><small>(1 Rara garantida)</small></td><td>100% Rara · 20% Coringa/Tradição<br><small>Ganho ao acertar o vencedor da Copa no Simulador</small></td></tr>
+            <tr style="background:rgba(168,85,247,0.05)"><td><b>Alta pontuação<br><small>(Ranking)</small></b></td><td>Mítico (200+ pts) · Brilhante (150+) · Dourado (100+) · Comum (&lt;100)</td><td>Distribuídos automaticamente ao fim de cada fase</td></tr>
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⭐ Figurinhas Especiais</div>
+      <ul class="regras-list">
+        <li><b>Coringa 🃏</b> — Clique nele no inventário para transformá-lo em qualquer figurinha comum ou rara da sua escolha. Vale também para figurinhas do Álbum Legado!</li>
+        <li><b>Itália 🇮🇹 (Tradição)</b> — A maior seleção fora da Copa 2026. Aparece em eventos rarísimos (1% em certos sorteios). Concede passiva de <b>+1% de chance de Rara</b> em todos os pacotes.</li>
+        <li><b>Troféu Copa 2026 🏆</b> — Ganho ao completar o álbum normal. Concede passiva de <b>+10% de chance de figurinha extra</b> em todo pacote ou síntese aberto.</li>
+      </ul>
     </div>
 
     <div class="card">
       <div class="card-title">🤝 Mercado de Trocas</div>
       <ul class="regras-list">
-        <li><strong>Como funciona:</strong> Envie propostas oferecendo até 5 figurinhas repetidas suas em troca de até 5 figurinhas que você deseja do inventário de um colega.</li>
-        <li><strong>Limitações:</strong> As figurinhas especiais <b>Coringa</b> e <b>Tradição</b> não podem ser transferidas ou solicitadas no mercado.</li>
-        <li><strong>Bônus de Parceria:</strong> A primeira vez que você concluir uma troca com um novo amigo, existe uma chance rara de 0,8% de ambos serem recompensados com um prêmio secreto misterioso enviado diretamente pelo servidor!</li>
+        <li><b>Como funciona:</b> Proponha trocas oferecendo até 5 figurinhas repetidas suas em troca de até 5 figurinhas de um colega. Coringa e Tradição não são trocáveis.</li>
+        <li><b>Figurinhas protegidas:</b> Ao completar o álbum, 1 cópia de cada figurinha fica bloqueada permanentemente (aparece com 🔒). No Álbum Legado, 1 cópia é sempre protegida desde o início.</li>
+        <li><b>Bônus de Parceria:</b> A primeira troca concluída com cada amigo tem uma chance rara de 0,8% de dar a ambos um prêmio secreto do servidor!</li>
       </ul>
     </div>
 
     <div class="card">
-      <div class="card-title">🧬 Máquina de Síntese</div>
-      <p style="font-size:0.9rem; margin-bottom:10px;">Destrua 3 figurinhas repetidas para criar uma nova. A raridade das figurinhas usadas como sacrifício define as chances de sucesso!</p>
+      <div class="card-title">🧬 Máquina de Síntese 2026</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Sacrifique 3 figurinhas repetidas para criar uma nova. A raridade do sacrifício define as chances:</p>
       <div class="ranking-wrap">
         <table>
-          <thead><tr><th>Sacrifício (3 figurinhas)</th><th>Nova Figurinha</th><th>Efeito Colateral</th></tr></thead>
+          <thead><tr><th>Sacrifício</th><th>Resultado</th></tr></thead>
           <tbody>
-            <tr><td>3 Comuns</td><td>1 Figurinha (5% Rara)</td><td>-</td></tr>
-            <tr><td>2 Comuns + 1 Rara</td><td>1 Figurinha (35% Rara)</td><td>-</td></tr>
-            <tr><td>1 Comum + 2 Raras</td><td>1 Figurinha (68% Rara)</td><td>-</td></tr>
-            <tr><td>3 Raras</td><td>1 Figurinha <b>(100% Rara!)</b></td><td>20% de chance de vir +1 Figurinha Extra (6% Rara)</td></tr>
+            <tr><td>3 Comuns</td><td>1 fig. (5% Rara)</td></tr>
+            <tr><td>2 Comuns + 1 Rara</td><td>1 fig. (35% Rara)</td></tr>
+            <tr><td>1 Comum + 2 Raras</td><td>1 fig. (68% Rara)</td></tr>
+            <tr><td><b>3 Raras</b></td><td>1 fig. <b>100% Rara</b> + 20% de chance de +1 fig. extra (6% Rara)</td></tr>
           </tbody>
         </table>
       </div>
-      
-      <div style="margin-top: 15px; padding: 12px; background: rgba(6, 182, 212, 0.1); border-left: 4px solid #06b6d4; border-radius: 4px; font-size: 0.88rem;">
-        🧪 <strong>Catalisador (Opcional):</strong> Você pode adicionar <strong>1 Figurinha Comum</strong> extra no slot isolado da máquina para potencializar a fusão! O catalisador calcula o bônus com base no seu sacrifício: ele concede <strong>+2% de chance para cada figurinha Comum</strong> e <strong>+5% para cada figurinha Rara</strong> utilizada na combinação base.<br><br>
-        🔥 <strong>Síntese Suprema:</strong> Se você sacrificar <strong>3 Raras</strong> e adicionar o <strong>Catalisador</strong>, a chance do efeito colateral (vir uma figurinha extra) sobe para <strong>42%</strong>, e a chance dessa figurinha extra ser Rara sobe para <strong>12%</strong>!
+      <p style="font-size:0.85rem; margin-top:10px; padding:10px; background:rgba(6,182,212,0.08); border-left:3px solid #06b6d4; border-radius:4px;">
+        🧪 <b>Catalisador (opcional):</b> Adicione 1 figurinha comum no slot extra para potencializar — +2% por comum e +5% por rara no sacrifício base. Com 3 Raras + Catalisador, a chance de figurinha extra sobe para 42%!
+      </p>
+    </div>
+
+    <div class="card" style="border-left: 3px solid var(--legacy-sepia, #c8960c);">
+      <div class="card-title">🏛️ Álbum Legado — Copa 1970</div>
+      <p style="font-size:0.9rem; margin-bottom:12px;">Ao completar o Álbum Copa 2026 você desbloqueia o <b>Álbum Legado</b>, uma coleção especial dedicada à última Copa com a <b>Taça Jules Rimet</b> — realizada no México em 1970. São <b>16 figurinhas</b> exclusivas para colecionar.</p>
+      <ul class="regras-list">
+        <li><b>Figurinhas Legadas</b> aparecem automaticamente nos pacotes normais assim que o Álbum Legado é desbloqueado, misturadas com as figurinhas da Copa 2026.</li>
+        <li><b>Argentina 70 (Tradição Legada)</b> — A maior seleção fora da Copa de 1970. Passiva: <b>5% de chance de ganhar uma Figurinha Legada Rara bônus</b> em todo pacote aberto.</li>
+        <li><b>Brasil 70 (Lendária)</b> — A figurinha mais rara do álbum. Só pode vir em pacotes ou pela Forja Legada.</li>
+        <li><b>Taça Jules Rimet 🏆</b> — Ganha ao completar o Álbum Legado. Concede passiva de <b>+10% de figurinha extra</b> em pacotes e sínteses.</li>
+      </ul>
+    </div>
+
+    <div class="card" style="border-left: 3px solid #f59e0b;">
+      <div class="card-title">⚒️ Forja Legada</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">A Forja é a Máquina de Síntese exclusiva do Álbum Legado. Sacrifique 3 figurinhas legadas para criar uma nova:</p>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Sacrifício</th><th>Resultado</th></tr></thead>
+          <tbody>
+            <tr><td>3 Comuns Legadas</td><td>1 fig. (5% Rara)</td></tr>
+            <tr><td>1 Rara + 2 Comuns</td><td>1 fig. (34,6% Rara · 1% Brasil 70)</td></tr>
+            <tr><td>2 Raras + 1 Comum</td><td>1 fig. (66,6% Rara · 2% Brasil 70)</td></tr>
+            <tr><td><b>3 Raras Legadas</b></td><td>1 fig. <b>(92% Rara · 8% Brasil 70)</b></td></tr>
+          </tbody>
+        </table>
       </div>
+      <p style="font-size:0.85rem; margin-top:10px; padding:10px; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px;">
+        ⚠️ <b>Slot de Risco (opcional):</b> Adicione 1 Figurinha Legada Comum para potencializar — mas há <b>35% de chance de explodir</b> e perder tudo. Se sobreviver: +50% de chance de Rara na 1ª figurinha e <b>2ª figurinha garantida</b>. A raridade da 2ª escala com o sacrifício: 20% Rara (3 Comuns) → 40% (1 Rara) → 60% (2 Raras) → 80% (3 Raras).
+      </p>
     </div>
-    
-    <div class="rules-alert">
-      ⭐ <strong>Figurinhas Especiais:</strong> O <b>Coringa 🃏</b> pode ser clicado no seu inventário para se transformar em qualquer figurinha comum ou rara da sua escolha. E dizem as lendas que a equipe da <b>Itália 🇮🇹 (Tradição: Fora da Copa)</b> pode aparecer para os mais sortudos em raríssimos eventos de 1%...
+
+  </div>
+
+  <div id="regras-simulador-content" style="display:none;">
+
+    <div class="card">
+      <div class="card-title">🔮 O que é o Simulador de Campeão?</div>
+      <p style="font-size:0.9rem; line-height:1.6;">O Simulador permite que você monte seu próprio <b>chaveamento da Copa</b> escolhendo quem você acha que vai vencer cada confronto do Mata-Mata — dos 16 Avos até a Grande Final. Conforme os jogos reais acontecem, seus palpites são comparados com os resultados e você acumula pontos!</p>
     </div>
+
+    <div class="card">
+      <div class="card-title">📋 Como Usar</div>
+      <ul class="regras-list">
+        <li><b>Passo 1:</b> Acesse a aba <b>Simulador</b> no menu principal.</li>
+        <li><b>Passo 2:</b> Assim que os confrontos dos 16 Avos forem definidos, os times aparecerão no chaveamento. Clique no time que você acredita que vai vencer cada jogo para fazê-lo avançar.</li>
+        <li><b>Passo 3:</b> Monte toda a sua simulação até escolher o <b>Campeão</b> no centro do bracket.</li>
+        <li><b>Passo 4:</b> Clique em <b>Salvar Simulação</b>. Você pode alterar sua simulação a qualquer momento, mas apenas <b>antes do primeiro jogo dos 16 Avos começar</b>.</li>
+        <li><b>Jogos já encerrados:</b> O vencedor real já aparece fixo no bracket (com borda dourada) e não pode ser alterado — mas você ainda pode continuar sua simulação a partir daí.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏅 Sistema de Pontuação</div>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Acerto</th><th>Pontos</th></tr></thead>
+          <tbody>
+            <tr><td>Time correto avançando nos <b>16 Avos</b></td><td>1 pt por time</td></tr>
+            <tr><td>Time correto nas <b>Oitavas</b></td><td>2 pts por time</td></tr>
+            <tr><td>Time correto nas <b>Quartas</b></td><td>3 pts por time</td></tr>
+            <tr><td>Time correto na <b>Semifinal</b></td><td>4 pts por time</td></tr>
+            <tr><td>Time correto na <b>Final</b></td><td>5 pts por time</td></tr>
+            <tr style="background:rgba(168,85,247,0.08)"><td><b>🏆 Acertar o Campeão</b></td><td><b>10 pts + 1 Pacote Mítico</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.85rem; margin-top:10px; color:var(--muted);">Pontuação máxima possível: <b>57 pontos</b> (acertando absolutamente tudo).</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎁 Prêmios por Pontuação</div>
+      <p style="font-size:0.9rem; margin-bottom:10px;">Além do Pacote Mítico por acertar o campeão, conforme você acumula pontos no Simulador você ganha pacotes de figurinhas extras. Clique em <b>Resgatar Prêmios</b> para receber:</p>
+      <div class="ranking-wrap">
+        <table>
+          <thead><tr><th>Pontos acumulados</th><th>Prêmio</th></tr></thead>
+          <tbody>
+            <tr><td>A cada <b>5 pontos</b></td><td>1× Pacote Dourado</td></tr>
+            <tr><td>A cada <b>15 pontos</b></td><td>1× Pacote Brilhante</td></tr>
+            <tr style="background:rgba(168,85,247,0.08)"><td><b>Acertar o Campeão</b></td><td>1× Pacote Mítico 🏆</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.85rem; margin-top:8px; color:var(--muted);">Os prêmios são cumulativos e incrementais — a cada novo jogo encerrado que você acertou, volte ao Simulador e clique em Resgatar Prêmios para receber o que for novo.</p>
+    </div>
+
   </div>
 </div>
 
@@ -3065,7 +3140,7 @@
 //  CONFIGURAÇÃO
 // ════════════════════════════════════════
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzREXo4AAytfO5VYqYEHg8TPSrNRe4fBydhgSD9jjTWd0tqlMGlw4jgGTSQ3m3pUmW_/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzL8d0N6INpfnQbOwLGvK8puLgPKTM5NHvBwuBRYB6g13JTfjbw4Pv9i8bP_JXA-kpI/exec";
 
 // ════════════════════════════════════════
 //  SEGURANÇA E AUXILIARES
@@ -4835,7 +4910,7 @@ function downloadLogs() {
 }
 
 window.addEventListener('load', () => {
-  setTimeout(startLiveUpdates, 1800);
+  startLiveUpdates();
   
   // Radar de Notificações: Checa novas trocas a cada 30 segundos de forma invisível
   setInterval(async () => {
@@ -5962,8 +6037,7 @@ async function responderTroca(id, resp) {
         const temTrofeu = json.extra && json.extra.some(f => f.time === "Troféu Copa 26" || f.time === "Taça Jules Rimet");
         
         if (temTrofeu) {
-          const figsAnimacao = json.extra.filter(f => f.time !== "Álbum Legado");
-          showPackAnimation(figsAnimacao, "🏆 ÁLBUM COMPLETO! Troféu Desbloqueado!");
+          showPackAnimation(json.extra, "🏆 ÁLBUM COMPLETO! Troféu Desbloqueado!");
         } else if (json.extra && json.extra.length > 0) {
           setTimeout(() => { showPackAnimation(json.extra, "🎁 Bônus de Parceria!"); }, 500);
         } else {
@@ -6119,10 +6193,12 @@ async function confirmarCoringa() {
 }
 
 function switchRegrasTab(tab) {
-  document.getElementById('regras-bolao-content').style.display = tab === 'bolao' ? 'block' : 'none';
-  document.getElementById('regras-album-content').style.display = tab === 'album' ? 'block' : 'none';
-  document.getElementById('btn-regras-bolao').classList.toggle('active', tab === 'bolao');
-  document.getElementById('btn-regras-album').classList.toggle('active', tab === 'album');
+  document.getElementById('regras-bolao-content').style.display    = tab === 'bolao'      ? 'block' : 'none';
+  document.getElementById('regras-album-content').style.display    = tab === 'album'      ? 'block' : 'none';
+  document.getElementById('regras-simulador-content').style.display = tab === 'simulador' ? 'block' : 'none';
+  document.getElementById('btn-regras-bolao').classList.toggle('active',     tab === 'bolao');
+  document.getElementById('btn-regras-album').classList.toggle('active',     tab === 'album');
+  document.getElementById('btn-regras-simulador').classList.toggle('active', tab === 'simulador');
 }
 
 async function abrirPacote(packId, packType) {
@@ -6458,38 +6534,50 @@ function updateSinteseLegadoStats() {
     let hasExtra = slotLegadoRisco !== null;
 
     let chanceRara = raras === 0 ? 5 : raras === 1 ? 35 : raras === 2 ? 68 : 100;
-    let chanceLendaria = raras * 1; 
-    let mistico = (raras === 3) ? 1 : 0;
-    
+    let chanceLend = raras === 3 ? 8 : raras * 1;  // 0%, 1%, 2%, 8%
+    let mistico = raras === 3 ? 1 : 0;
+
+    // 2ª fig do Slot de Risco: 20% + 20% por rara
+    let extraRaraChanceLeg = 20 + raras * 20; // 20, 40, 60, 80
+
     let html = `<h4 style="color:var(--legacy-sepia); margin-bottom:8px; font-family:'Barlow Condensed'; font-size:1.2rem; text-transform:uppercase; text-align:center;">📊 Previsão da Forja Legada</h4>`;
-    
+
     if (!hasExtra) {
-       let cRaraExibida = chanceRara;
-       let cComumExibida = Math.max(0, 100 - cRaraExibida - chanceLendaria - mistico); // A MATEMÁTICA CRAVADA QUE FECHA EM 100%
-       
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Legada:</span> <b style="color:var(--gold);">${cRaraExibida}%</b></div>`;
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComumExibida}%</b></div>`;
-       if (chanceLendaria > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>Drop Lendário (Brasil 70):</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLendaria}%</b></div>`;
+       let cRara = chanceRara;
+       // Com chanceLend, a rara real é (100 - chanceLend) * chanceRara/100
+       let cRaraReal = Math.round((100 - chanceLend) * chanceRara / 100);
+       let cComum = Math.max(0, 100 - cRaraReal - chanceLend - mistico);
+
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Legada:</span> <b style="color:var(--gold);">${cRaraReal}%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComum}%</b></div>`;
+       if (chanceLend > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>Drop Lendário (Brasil 70):</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLend}%</b></div>`;
        if (mistico > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3); color:var(--legacy-tradition-gold);"><span>Drop Místico (Tradição/Coringa):</span> <b style="text-shadow:0 0 5px var(--legacy-tradition-gold);">1%</b></div>`;
     } else {
-       let cRaraExibida = Math.min(100, chanceRara + 50);
-       let cComumExibida = Math.max(0, 100 - cRaraExibida - chanceLendaria - mistico);
-       
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:#ef4444;"><span>Risco de Explosão Crítica:</span> <b style="text-shadow:0 0 5px #ef4444;">35%</b></div>`;
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Rara Legada (+50% Buff):</span> <b style="color:var(--gold);">${cRaraExibida}%</b></div>`;
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>Chance de Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComumExibida}%</b></div>`;
-       if (chanceLendaria > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>Drop Lendário (Brasil 70):</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLendaria}%</b></div>`;
-       if (mistico > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3); color:var(--legacy-tradition-gold);"><span>Drop Místico (Tradição/Coringa):</span> <b style="text-shadow:0 0 5px var(--legacy-tradition-gold);">1%</b></div>`;
-       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:6px; padding-top:6px; border-top: 1px dashed rgba(200,169,110,0.3);"><span>Bônus: 2ª Figurinha Garantida:</span> <b style="color:#4ade80;">100%</b></div>`;
+       let cRaraComRisco = Math.min(100, chanceRara + 50);
+       let cRaraRealRisco = Math.round((100 - chanceLend) * cRaraComRisco / 100);
+       let cComumRisco = Math.max(0, 100 - cRaraRealRisco - chanceLend - mistico);
+
+       // 2ª fig
+       let pL2 = chanceLend;
+       let pR2 = Math.round((100 - pL2) * extraRaraChanceLeg / 100);
+       let pC2 = Math.max(0, 100 - pL2 - pR2);
+
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:#ef4444;"><span>Risco de Explosão:</span> <b style="text-shadow:0 0 5px #ef4444;">35%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>1ª fig — Rara Legada (+50% buff):</span> <b style="color:var(--gold);">${cRaraRealRisco}%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px;"><span>1ª fig — Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${cComumRisco}%</b></div>`;
+       if (chanceLend > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-legendary-cyan);"><span>1ª fig — Brasil 70:</span> <b style="text-shadow:0 0 5px var(--legacy-legendary-cyan);">${chanceLend}%</b></div>`;
+       if (mistico > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:4px; color:var(--legacy-tradition-gold);"><span>Drop Místico:</span> <b>1%</b></div>`;
+       html += `<div style="margin-top:8px; padding-top:6px; border-top:1px dashed rgba(200,169,110,0.3); font-size:0.85rem; color:#4ade80;"><b>2ª Figurinha Garantida:</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:4px; margin-bottom:2px;"><span>  Rara Legada:</span> <b style="color:var(--gold);">${pR2}%</b></div>`;
+       html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:2px;"><span>  Comum Legada:</span> <b style="color:rgba(255,255,255,0.7);">${pC2}%</b></div>`;
+       if (pL2 > 0) html += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--legacy-legendary-cyan);"><span>  Brasil 70:</span> <b>${pL2}%</b></div>`;
     }
 
-    // EXIBE AS PASSIVAS DOS TROFÉUS NA FORJA
     let temTrofeu = albumData.inventario.some(i => i.time === "Troféu Copa 26" && i.qtd > 0);
     let temTaca = albumData.inventario.some(i => i.time === "Taça Jules Rimet" && i.qtd > 0);
     if (temTrofeu || temTaca) {
-        html += `<div style="margin-top:8px; padding:4px; background:rgba(202, 138, 4, 0.2); border: 1px solid #ca8a04; border-radius:4px; font-size:0.8rem; color:#fde047;">🏆 Passivas de Troféus Ativas: +10% Drop Extra!</div>`;
+        html += `<div style="margin-top:8px; padding:4px; background:rgba(202,138,4,0.2); border:1px solid #ca8a04; border-radius:4px; font-size:0.8rem; color:#fde047;">🏆 Passivas de Troféus Ativas: +10% Drop Extra!</div>`;
     }
-
     pnl.innerHTML = html;
 }
 
