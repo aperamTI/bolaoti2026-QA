@@ -2012,6 +2012,24 @@
       return ko[idStr] ? ko[idStr].winner : null;
   }
 
+  // ☠️ NOVO: Varre a realidade e lista todas as seleções eliminadas do torneio
+  function getEliminatedTeams() {
+      const eliminated = [];
+      const ko = getKO();
+      MATCHES.forEach(m => {
+          if (m.phase === 'grupos') return;
+          let realHome = ko[m.id] && ko[m.id].home ? ko[m.id].home : m.home;
+          let realAway = ko[m.id] && ko[m.id].away ? ko[m.id].away : m.away;
+          
+          const winner = getVencedorOficial(m.id, realHome, realAway);
+          if (winner) {
+              if (realHome && realHome !== winner && realHome !== 'A definir') eliminated.push(realHome);
+              if (realAway && realAway !== winner && realAway !== 'A definir') eliminated.push(realAway);
+          }
+      });
+      return eliminated;
+  }
+
   function initSimulador() {
       const bracketDiv = document.getElementById('simulador-bracket-container');
       if (!bracketDiv) return;
@@ -2032,7 +2050,7 @@
               const p = m.date.split('/');
               const t = m.time.split(':');
               const kickoff = new Date(+p[2], +p[1]-1, +p[0], +t[0], +t[1]);
-              if (agora >= kickoff) locked = true; // Trava individual do confronto se já começou
+              if (agora >= kickoff) locked = true; // Trava individual se o jogo já começou
           }
           
           if (m) winner = getVencedorOficial(m.id, home, away);
@@ -2139,6 +2157,23 @@
 
       if (elemento.classList.contains('empty')) return;
 
+      const fullTeamName = elemento.getAttribute('data-team');
+      const userTeamName = elemento.getAttribute('data-user-team');
+      const eliminatedTeams = getEliminatedTeams();
+
+      // 🛡️ BLINDAGEM 1: Se você clicou num time que já foi eliminado na vida real
+      if (fullTeamName && eliminatedTeams.includes(fullTeamName)) {
+          return showToast('❌ Seleção eliminada na vida real! Este palpite não pode mais avançar.');
+      }
+
+      // 🛡️ BLINDAGEM 2: Impedir de roubar a seleção real se o usuário palpitou ERRADO
+      if (elemento.id && fullTeamName && userTeamName !== fullTeamName) {
+          // Se o usuário não tinha palpitado nada aqui (null/vazio), nós liberamos para ele seguir com a realidade
+          if (userTeamName && userTeamName !== 'null' && userTeamName !== '???') {
+              return showToast('❌ Galho quebrado! Você palpitou em outra seleção originalmente, então não pode usar esta.');
+          }
+      }
+
       const match = elemento.closest('.bracket-match');
       const times = match.querySelectorAll('.b-team');
       
@@ -2146,12 +2181,24 @@
           return showToast('⚠️ Defina os dois times deste confronto primeiro antes de avançar!');
       }
 
+      // 🛡️ BLINDAGEM 3 (A MÁXIMA): O GALHO MORTO
+      let hasEliminatedPick = false;
+      times.forEach(t => {
+          let uTeam = t.getAttribute('data-user-team');
+          if (uTeam && uTeam !== 'null' && eliminatedTeams.includes(uTeam)) {
+              hasEliminatedPick = true;
+          }
+      });
+
+      if (hasEliminatedPick) {
+          return showToast('❌ Galho morto! Uma das suas seleções nesta ramificação já foi eliminada na vida real. Você não pode mais alterar este confronto.');
+      }
+
       const jaEstavaSelecionado = elemento.classList.contains('selected');
       times.forEach(t => t.classList.remove('selected'));
 
       if (!jaEstavaSelecionado) elemento.classList.add('selected');
 
-      const fullTeamName = elemento.getAttribute('data-team');
       const spanText = elemento.querySelector('span').innerText;
       const imgSrc = elemento.querySelector('img') ? elemento.querySelector('img').src : '';
 
@@ -2168,7 +2215,7 @@
               circle.classList.remove('empty');
               circle.classList.add('filled');
               circle.setAttribute('data-team', fullTeamName); 
-              circle.setAttribute('data-user-team', fullTeamName); // 🔒 IDENTIDADE SECRETA DA ESCOLHA
+              circle.setAttribute('data-user-team', fullTeamName); 
               helper.style.display = 'none';
               trophy.style.display = 'block';
               flag.style.display = 'block';
@@ -2193,7 +2240,7 @@
           } else {
               targetTeam.classList.remove('empty');
               targetTeam.setAttribute('data-team', fullTeamName);
-              targetTeam.setAttribute('data-user-team', fullTeamName); // 🔒 IDENTIDADE SECRETA DA ESCOLHA
+              targetTeam.setAttribute('data-user-team', fullTeamName); 
               targetTeam.querySelector('span').innerText = spanText;
               let img = targetTeam.querySelector('img');
               if (!img) {
@@ -2254,11 +2301,11 @@
   }
 
   function restaurarNode(nodeId, team) {
-      if (!team || team === "null") return; // Proteção contra null strings do banco
+      if (!team || team === "null") return;
       const el = document.getElementById(nodeId);
       if (!el) return;
       el.setAttribute('data-team', team);
-      el.setAttribute('data-user-team', team); // 🔒 Se veio do banco, foi você quem escolheu
+      el.setAttribute('data-user-team', team); 
       el.classList.remove('empty');
       const tName = team.replace('🇧🇷 ', '').substring(0, 3).toUpperCase();
       
@@ -2271,7 +2318,6 @@
   }
 
   function restaurarSelecoesVisuais() {
-      // Repinta os anéis dourados APENAS nas escolhas que têm a IDENTIDADE SECRETA
       document.querySelectorAll('.b-team').forEach(el => {
           const team = el.getAttribute('data-user-team');
           if (!team || team === 'A definir' || team === '???') return;
@@ -2300,7 +2346,6 @@
       document.getElementById('sim-points-display').innerHTML = `${albumData.bracketPts} <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span>`;
     }
 
-    // 1. Restaura primeiro o que VOCÊ salvou
     const oitavas = b.oitavas || []; let oi = 0;
     for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`l-oitavas-${i}-h`, oitavas[oi++]); }
     for (let i = 1; i <= 4 && oi < oitavas.length; i++) { restaurarNode(`l-oitavas-${i}-a`, oitavas[oi++]); }
@@ -2344,7 +2389,6 @@
         }
     }
 
-    // 🏆 2. SOBREPOSIÇÃO INTELIGENTE DA REALIDADE
     const OITAVAS_SLOTS = [
         'l-oitavas-1-h', 'l-oitavas-1-a', 'l-oitavas-2-h', 'l-oitavas-2-a',
         'l-oitavas-3-h', 'l-oitavas-3-a', 'l-oitavas-4-h', 'l-oitavas-4-a',
@@ -2359,7 +2403,6 @@
                 const el = document.getElementById(targetId);
                 if (el) {
                     el.setAttribute('data-team', m.winner);
-                    // IMPORTANTE: NÃO TOCAMOS NO 'data-user-team' AQUI
                     el.classList.remove('empty');
                     const tName = m.winner.replace('🇧🇷 ', '').substring(0, 3).toUpperCase();
                     const align = el.classList.contains('left') ? 'left' : 'right';
@@ -2367,9 +2410,8 @@
                     const ec = `<div class="empty-circle" style="display:none;"></div>`;
                     el.innerHTML = align === 'left' ? `<span>${tName}</span> ${ec}${flag}` : `${flag}${ec} <span>${tName}</span>`;
                     
-                    // Colore de Verde/Vermelho baseado na Escolha do Usuário vs Realidade
                     const sourceMatches = document.querySelectorAll(`[onclick*="'${targetId}'"]`);
-                    const userChoice = document.getElementById(targetId).getAttribute('data-user-team');
+                    const userChoice = el.getAttribute('data-user-team');
                     
                     sourceMatches.forEach(sel => {
                         const teamInBubble = sel.getAttribute('data-team');
@@ -2378,9 +2420,9 @@
                             if (userChoice === m.winner) sel.classList.add('selected');
                         } else {
                             if (userChoice === teamInBubble) {
-                                sel.classList.add('wrong'); // Você escolheu e ele perdeu
+                                sel.classList.add('wrong'); 
                             } else {
-                                sel.classList.add('wrong'); // Só fica cinza opaco
+                                sel.classList.add('wrong'); 
                             }
                         }
                     });
@@ -2402,11 +2444,10 @@
 
       let bracket = { oitavas: [], quartas: [], semi: [], final: [], campeao: "" };
 
-      // 🚀 AGORA SÓ LÊ O `data-user-team` E INJETA "null" SE O CARA NÃO CLICOU
       function pushNode(id, arr) {
           const el = document.getElementById(id);
           if (el) {
-              const t = el.getAttribute('data-user-team'); // LÊ A IDENTIDADE SECRETA
+              const t = el.getAttribute('data-user-team'); 
               if (t && t !== '' && t !== '???' && t !== 'A definir' && t !== 'null') {
                   arr.push(t);
               } else {
@@ -2417,27 +2458,22 @@
           }
       }
 
-      // Oitavas (Loops na exata mesma ordem que a função de Carregar)
       for (let i = 1; i <= 4; i++) pushNode(`l-oitavas-${i}-h`, bracket.oitavas);
       for (let i = 1; i <= 4; i++) pushNode(`l-oitavas-${i}-a`, bracket.oitavas);
       for (let i = 1; i <= 4; i++) pushNode(`r-oitavas-${i}-h`, bracket.oitavas);
       for (let i = 1; i <= 4; i++) pushNode(`r-oitavas-${i}-a`, bracket.oitavas);
 
-      // Quartas
       for (let i = 1; i <= 2; i++) { pushNode(`l-quartas-${i}-h`, bracket.quartas); pushNode(`l-quartas-${i}-a`, bracket.quartas); }
       for (let i = 1; i <= 2; i++) { pushNode(`r-quartas-${i}-h`, bracket.quartas); pushNode(`r-quartas-${i}-a`, bracket.quartas); }
 
-      // Semi
       pushNode('l-semi-1-h', bracket.semi);
       pushNode('l-semi-1-a', bracket.semi);
       pushNode('r-semi-1-h', bracket.semi);
       pushNode('r-semi-1-a', bracket.semi);
 
-      // Final
       pushNode('l-finalist', bracket.final);
       pushNode('r-finalist', bracket.final);
 
-      // Campeão
       const champNode = document.getElementById('sim-champion-circle');
       let champ = champNode ? champNode.getAttribute('data-user-team') : null;
       bracket.campeao = (champ && champ !== 'A definir' && champ !== '???') ? champ : "null";
@@ -2447,7 +2483,12 @@
           let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'saveBracket', token: getToken(), user: user, bracket: bracket }) });
           let j = await res.json();
           if (j.status === 'success') { showToast("✅ Simulação Salva com Sucesso!"); }
-          else { showToast("❌ " + (j.msg || 'Erro.')); }
+          else { 
+              showToast("❌ " + (j.msg || 'Erro.')); 
+              if (j.msg && (j.msg.toLowerCase().includes('sessão') || j.msg.toLowerCase().includes('token'))) {
+                  setTimeout(handleSessionExpired, 1500);
+              }
+          }
       } catch(e) { showToast("❌ Erro de conexão."); }
       showLoading(false);
   }
@@ -2466,6 +2507,10 @@
           } else { 
               showToast("⚠️ " + (j.msg || 'Nenhum prêmio.'));
               if (j.pontos !== undefined) document.getElementById('sim-points-display').innerHTML = `${j.pontos} <span style="font-size: 1rem; color: #aaa;">/ 57 pts</span>`;
+              
+              if (j.msg && (j.msg.toLowerCase().includes('sessão') || j.msg.toLowerCase().includes('token'))) {
+                  setTimeout(handleSessionExpired, 1500);
+              }
           }
       } catch(e) { showLoading(false); showToast("❌ Erro de conexão."); }
   }
