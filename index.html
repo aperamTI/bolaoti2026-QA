@@ -5023,7 +5023,7 @@ function getFlagUrl(teamName) {
   if (LEGADO_FLAG_MAP[teamName]) return `https://flagcdn.com/w160/${LEGADO_FLAG_MAP[teamName]}.png`;
   if (teamName === "Troféu Copa 26") return "https://img.icons8.com/color/512/world-cup.png";
   if (teamName === "Álbum Legado") return "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="12" fill="#1a0a00"/><rect x="12" y="10" width="58" height="75" rx="6" fill="#c8960c"/><rect x="14" y="12" width="54" height="71" rx="5" fill="#fffbe6"/><rect x="12" y="10" width="10" height="75" rx="4" fill="#8B5E00"/><rect x="14" y="12" width="6" height="71" rx="3" fill="#a06800"/><line x1="25" y1="28" x2="62" y2="28" stroke="#c8960c" stroke-width="2" stroke-linecap="round"/><line x1="25" y1="38" x2="62" y2="38" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><line x1="25" y1="48" x2="62" y2="48" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><line x1="25" y1="58" x2="50" y2="58" stroke="#e5c76b" stroke-width="1.5" stroke-linecap="round"/><text x="38" y="24" text-anchor="middle" font-size="8" font-weight="bold" fill="#8B4500" font-family="serif">1970</text><circle cx="78" cy="22" r="14" fill="#f5c842"/><text x="78" y="27" text-anchor="middle" font-size="18" fill="#1a0a00">★</text></svg>`);
-  if (teamName === "Taça Jules Rimet") return "https://img.icons8.com/color/512/trophy.png";
+  if (teamName === "Taça Jules Rimet") return "julesrimet.png";
 
   // Tenta match direto e sem emoji do Brasil
   const clean = teamName.replace('🇧🇷 ', '').trim();
@@ -5307,12 +5307,12 @@ function renderCollection() {
       if (t70 && t70.qtd > 0) {
         trofeuHtml += `<div class="sticker-card legada-tradicao" onclick="showToast('🏆 Passiva: +10% de chance de figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
           <div class="sticker-qtd" style="background:#b5860a;">${t70.qtd}</div>
-          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
+          <img src="julesrimet.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
           <div class="sticker-name" style="background:#000; color:var(--legacy-tradition-gold); font-size:0.75rem;">Jules Rimet</div></div>`;
       } else {
         trofeuHtml += `<div class="sticker-card zero" onclick="showToast('🔒 Complete o Álbum Legado para desbloquear!')" style="flex: 0 0 95px; height: 135px; margin: 0; opacity: 0.5; filter: grayscale(100%); border-color: #555;">
           <div class="sticker-qtd zero">0</div>
-          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
+          <img src="julesrimet.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
           <div class="sticker-name" style="background:#000; color:#888; font-size:0.75rem;">Jules Rimet</div></div>`;
       }
       th26.innerHTML = trofeuHtml;
@@ -5375,12 +5375,12 @@ function renderLegadoGrid() {
       if (t70 && t70.qtd > 0) {
         trofeuHtml += `<div class="sticker-card legada-tradicao" onclick="showToast('🏆 Passiva: +10% de chance de figurinha extra!')" style="flex: 0 0 95px; height: 135px; margin: 0;">
           <div class="sticker-qtd" style="background:#b5860a;">${t70.qtd}</div>
-          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
+          <img src="julesrimet.png" class="sticker-img" style="object-fit:contain; padding:10px; filter:sepia(100%); background:#110d03;">
           <div class="sticker-name" style="background:#000; color:var(--legacy-tradition-gold); font-size:0.75rem;">Jules Rimet</div></div>`;
       } else {
         trofeuHtml += `<div class="sticker-card zero" onclick="showToast('🔒 Complete o Álbum Legado para desbloquear!')" style="flex: 0 0 95px; height: 135px; margin: 0; opacity: 0.5; filter: grayscale(100%); border-color: #555;">
           <div class="sticker-qtd zero">0</div>
-          <img src="https://img.icons8.com/color/512/trophy.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
+          <img src="julesrimet.png" class="sticker-img" style="object-fit:contain; padding:10px; background:#110d03;">
           <div class="sticker-name" style="background:#000; color:#888; font-size:0.75rem;">Jules Rimet</div></div>`;
       }
       th70.innerHTML = trofeuHtml;
